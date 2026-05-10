@@ -10,117 +10,89 @@ import requests
 import pandas as pd
 from io import BytesIO
 from dotenv import load_dotenv
-import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
+import base64
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
-# Gemini SDK
-from google import genai
-from google.genai import types
-
 # ============================================================
 # CONFIG
 # ============================================================
 load_dotenv()
-st.set_page_config(page_title="AI Manual Auditor", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="AI Textbook Auditor", layout="wide", initial_sidebar_state="expanded")
 
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-if not TOGETHER_API_KEY or not GEMINI_API_KEY:
-    st.error("Lipsesc chei în .env: TOGETHER_API_KEY și/sau GEMINI_API_KEY.")
+if not TOGETHER_API_KEY:
+    st.error("Missing TOGETHER_API_KEY in .env!")
     st.stop()
 
 TOGETHER_BASE_URL = "https://api.together.xyz/v1"
 
-# Together AI — modele text serverless accesibile cu cheia curentă
-TOGETHER_JUDGE_MODEL = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+MODEL_VISION = "Qwen/Qwen3.5-397B-A17B"
 
-# Gemini — folosit pentru TOC, fact-checking și gramatică
-DEFAULT_GEMINI_MODEL = "gemini-3-flash-preview"
-DEFAULT_SEGMENT_SIZE = 10
-
-# Delay minim între apeluri Gemini (free tier: 15 req/min)
-GEMINI_MIN_DELAY_S = 4.5
+DEFAULT_CHUNK_SIZE = 5   # pages per vision call
+PAGE_DPI           = 150  # lower DPI for multi-page uploads
 
 # ============================================================
 # SESSION STATE
 # ============================================================
-if "app_state" not in st.session_state:
-    st.session_state.app_state = {
-        "stage": "upload",
-        "pdf_bytes": None,
-        "doc_len": 0,
-        "structure_data": [],
-        "chapters": [],
-        "final_report": [],
-        "fact_report": [],
-        "grammar_report": [],
-        "gemini_cache": {},
-        "debug_log": [],
-        "fact_debug_log": [],
-        "grammar_debug_log": [],
-        "audit_ran": False,
-        "_last_gemini_call": 0.0,
-    }
+_EMPTY_STATE: Dict[str, Any] = {
+    "stage": "upload",
+    "pdf_bytes": None,
+    "doc_len": 0,
+    "fact_report": [],
+    "grammar_report": [],
+    "fact_debug_log": [],
+    "grammar_debug_log": [],
+    "audit_ran": False,
+    "api_calls_log": [],
+}
 
-for _k, _v in [
-    ("fact_report", []),
-    ("grammar_report", []),
-    ("fact_debug_log", []),
-    ("grammar_debug_log", []),
-    ("debug_log", []),
-    ("audit_ran", False),
-    ("_last_gemini_call", 0.0),
-]:
+if "app_state" not in st.session_state:
+    st.session_state.app_state = dict(_EMPTY_STATE)
+
+for _k, _v in _EMPTY_STATE.items():
     if _k not in st.session_state.app_state:
         st.session_state.app_state[_k] = _v
 
 
 # ============================================================
-# HELPERS
+# JSON HELPERS
 # ============================================================
-def normalize_text_minimal(s: str) -> str:
-    if not isinstance(s, str):
-        return ""
-    return unicodedata.normalize("NFC", s)
-
-
 def strip_thinking_blocks(text: str) -> str:
     if not isinstance(text, str):
         return text
     return re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
 
 
+def _fix_json_trailing_commas(s: str) -> str:
+    return re.sub(r",\s*([}\]])", r"\1", s)
+
+
+def _fix_json_invalid_escapes(s: str) -> str:
+    """Fix \z, \a, etc. — invalid JSON escape sequences LLMs sometimes emit."""
+    return re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', s)
+
+
 def _extract_balanced_block(s: str, open_ch: str, close_ch: str) -> Optional[str]:
     start = s.find(open_ch)
     if start == -1:
         return None
-    depth = 0
-    in_string = False
-    esc = False
+    depth, in_string, esc = 0, False, False
     for i in range(start, len(s)):
         ch = s[i]
         if in_string:
-            if esc:
-                esc = False
-            elif ch == "\\":
-                esc = True
-            elif ch == '"':
-                in_string = False
+            if esc:              esc = False
+            elif ch == "\\":    esc = True
+            elif ch == '"':     in_string = False
             continue
-        if ch == '"':
-            in_string = True
-            continue
-        if ch == open_ch:
-            depth += 1
+        if ch == '"':           in_string = True; continue
+        if ch == open_ch:       depth += 1
         elif ch == close_ch:
             depth -= 1
-            if depth == 0:
-                return s[start:i + 1]
+            if depth == 0:      return s[start:i + 1]
     return None
 
 
@@ -129,318 +101,451 @@ def safe_extract_json(text: str) -> Optional[Any]:
         return None
     text = strip_thinking_blocks(text)
     t = text.strip()
-    try:
-        return json.loads(t)
-    except Exception:
-        pass
+    if t.startswith("```json"): t = t[7:]
+    elif t.startswith("```"):   t = t[3:]
+    if t.endswith("```"):       t = t[:-3]
+    t = t.strip()
+
+    variants = [
+        t,
+        _fix_json_trailing_commas(t),
+        _fix_json_invalid_escapes(t),
+        _fix_json_invalid_escapes(_fix_json_trailing_commas(t)),
+    ]
+    for v in variants:
+        try: return json.loads(v)
+        except Exception: pass
+
     for open_ch, close_ch in [("{", "}"), ("[", "]")]:
         block = _extract_balanced_block(t, open_ch, close_ch)
         if block:
-            try:
-                return json.loads(block)
-            except Exception:
-                pass
+            for fix in [
+                block,
+                _fix_json_trailing_commas(block),
+                _fix_json_invalid_escapes(block),
+                _fix_json_invalid_escapes(_fix_json_trailing_commas(block)),
+            ]:
+                try: return json.loads(fix)
+                except Exception: pass
     return None
 
 
-def _coerce_items_from_json(data: Any, key: str) -> List[Dict[str, Any]]:
+def _coerce_items(data: Any, key: str) -> List[Dict[str, Any]]:
     if isinstance(data, dict) and isinstance(data.get(key), list):
         return [x for x in data[key] if isinstance(x, dict)]
     if isinstance(data, dict):
-        for value in data.values():
-            if isinstance(value, list):
-                return [x for x in value if isinstance(x, dict)]
+        for v in data.values():
+            if isinstance(v, list):
+                return [x for x in v if isinstance(x, dict)]
     if isinstance(data, list):
         return [x for x in data if isinstance(x, dict)]
     return []
 
 
-def _dedup_fact_rows(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _dedup_rows(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     seen: set = set()
     out: List[Dict[str, Any]] = []
     for item in items:
-        page = str(item.get("pagina", ""))
-        text = " ".join(str(item.get("text", "")).lower().split())[:120]
-        sugestie = " ".join(str(item.get("sugestie", "")).lower().split())[:120]
-        key = (page, text, sugestie)
+        text    = " ".join(str(item.get("text", "")).lower().split())[:120]
+        suggest = " ".join(str(item.get("sugestie", "")).lower().split())[:120]
+        key = (str(item.get("pagina", "")), text, suggest)
         if text and key not in seen:
             seen.add(key)
             out.append(item)
     return out
 
 
-# ============================================================
-# GEMINI RATE LIMITER
-# ============================================================
-def _gemini_throttle() -> None:
-    """Ensures at least GEMINI_MIN_DELAY_S between consecutive Gemini calls."""
-    last = st.session_state.app_state.get("_last_gemini_call", 0.0)
-    elapsed = time.time() - last
-    if elapsed < GEMINI_MIN_DELAY_S:
-        time.sleep(GEMINI_MIN_DELAY_S - elapsed)
-    st.session_state.app_state["_last_gemini_call"] = time.time()
-
-
-def _gemini_generate(model: str, contents: list, max_retries: int = 4) -> Tuple[Optional[str], Optional[str]]:
-    """
-    Calls Gemini with throttling and retry on 429.
-    Returns (text, error_message).
-    """
-    client = genai.Client(api_key=GEMINI_API_KEY)
-    last_err: Optional[str] = None
-    for attempt in range(max_retries):
-        _gemini_throttle()
-        try:
-            resp = client.models.generate_content(model=model, contents=contents)
-            return resp.text or "", None
-        except Exception as e:
-            last_err = str(e)
-            err_str = str(e)
-            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower():
-                m = re.search(r"retryDelay.*?'(\d+)s'", err_str)
-                wait = int(m.group(1)) + 3 if m else 65
-                time.sleep(wait)
-            else:
-                time.sleep(2.0 * (attempt + 1))
-    return None, last_err
+def _append_api_log(entry: Dict[str, Any]) -> None:
+    st.session_state.app_state.setdefault("api_calls_log", []).append(entry)
 
 
 # ============================================================
-# TOGETHER AI — TEXT ONLY (JUDGE)
+# TOGETHER AI — VISION 
 # ============================================================
-def together_chat_json(
-    model: str,
-    system_prompt: str,
-    user_text: str,
-    timeout: int = 90,
-    max_retries: int = 3,
+def together_vision_multi_json(
+    prompt: str,
+    base64_images: List[str],
+    timeout: int = 2000,
 ) -> Any:
-    headers = {"Authorization": f"Bearer {TOGETHER_API_KEY}", "Content-Type": "application/json"}
-    payload = {
-        "model": model,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_text},
-        ],
-        "temperature": 0,
-        "top_p": 1,
-        "response_format": {"type": "json_object"},
-    }
-    last_err = None
-    last_raw = None
-    for attempt in range(max_retries):
-        try:
-            r = requests.post(
-                f"{TOGETHER_BASE_URL}/chat/completions",
-                headers=headers,
-                json=payload,
-                timeout=timeout,
-            )
-            data = r.json()
-            if r.status_code != 200:
-                last_err = data.get("error") or data
-                time.sleep(0.8 * (attempt + 1))
-                continue
-            content = data["choices"][0]["message"]["content"]
-            last_raw = content
-            parsed = safe_extract_json(content)
-            if parsed is not None:
-                return parsed
-            # Retry without response_format
-            payload2 = {k: v for k, v in payload.items() if k != "response_format"}
-            r2 = requests.post(
-                f"{TOGETHER_BASE_URL}/chat/completions",
-                headers=headers,
-                json=payload2,
-                timeout=timeout,
-            )
-            data2 = r2.json()
-            if r2.status_code != 200:
-                last_err = data2.get("error") or data2
-                time.sleep(0.8 * (attempt + 1))
-                continue
-            content2 = data2["choices"][0]["message"]["content"]
-            last_raw = content2
-            parsed2 = safe_extract_json(content2)
-            if parsed2 is not None:
-                return parsed2
-            last_err = {"message": "Nu s-a putut parsa JSON", "raw_preview": (content2 or "")[:800]}
-            time.sleep(0.8 * (attempt + 1))
-        except Exception as e:
-            last_err = str(e)
-            time.sleep(0.8 * (attempt + 1))
-    return {"_error": last_err, "_raw": (last_raw or "")[:1200]}
-
-
-# ============================================================
-# PDF UTILS
-# ============================================================
-def chapter_title_for_page(chapters: List[Dict[str, Any]], page_1based: int) -> str:
-    for cap in chapters:
-        try:
-            start = int(cap.get("start", 0))
-            end = int(cap.get("end", 0))
-        except Exception:
-            continue
-        if start <= page_1based <= end:
-            return str(cap.get("titlu", "")).strip()
-    return ""
-
-
-def extract_chapter_text(pdf_bytes: bytes, structure: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    total = len(doc)
-    structure = sorted(structure, key=lambda x: int(x.get("start", 0) or 0))
-    for i in range(len(structure)):
-        if int(structure[i].get("end", 0) or 0) == 0:
-            if i < len(structure) - 1:
-                structure[i]["end"] = int(structure[i + 1]["start"]) - 1
-            else:
-                structure[i]["end"] = total
-    chapters = []
-    for it in structure:
-        start = max(1, int(it.get("start", 1)))
-        end = min(total, int(it.get("end", total)))
-        text = ""
-        for p in range(start - 1, end):
-            text += f"\n\n[[PAGINA {p + 1}]]\n{normalize_text_minimal(doc[p].get_text())}"
-        chapters.append({
-            "titlu": normalize_text_minimal(it.get("titlu", "Capitol")),
-            "interval": f"{start}-{end}",
-            "start": start,
-            "end": end,
-            "text": text,
+    """Send multiple page images + a prompt to Qwen Vision, return parsed JSON."""
+    content: List[Dict[str, Any]] = [{"type": "text", "text": prompt}]
+    for b64 in base64_images:
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/jpeg;base64,{b64}"},
         })
-    return chapters
 
+    payload = {
+        "model": MODEL_VISION,
+        "messages": [{"role": "user", "content": content}],
+        "response_format": {"type": "json_object"},
+        "max_tokens": 200000,
+        "reasoning_effort":"low",
+        "reasoning":{"enabled": True}
+    }
 
-# ============================================================
-# TOC EXTRACTION VIA GEMINI
-# ============================================================
-def _norm_title_key(t: str) -> str:
-    t = normalize_text_minimal(str(t or "")).strip()
-    t = " ".join(t.split()).rstrip(".")
-    return t.lower()
+    log_entry: Dict[str, Any] = {
+        "call_type": "vision",
+        "model": MODEL_VISION,
+        "timestamp": time.strftime("%H:%M:%S"),
+        "system_prompt": "(vision — no separate system prompt)",
+        "user_text_preview": prompt[:600],
+        "user_text_full": prompt,
+        "num_images": len(base64_images),
+        "attempts": [],
+        "final_parsed": None,
+        "error": None,
+        "ok": False,
+    }
+    attempt_log: Dict[str, Any] = {
+        "attempt": 1,
+        "http_status": None,
+        "raw_model_output": None,
+        "http_response_envelope": None,
+        "parsed_ok": False,
+        "error": None,
+    }
 
+    headers = {
+        "Authorization": f"Bearer {TOGETHER_API_KEY}",
+        "Content-Type": "application/json",
+    }
 
-def merge_dedup_sort_toc_items(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    best: Dict[str, Any] = {}
-    for it in items:
-        if not isinstance(it, dict):
-            continue
-        title = str(it.get("titlu", "")).strip()
+    try:
+        r = requests.post(
+            f"{TOGETHER_BASE_URL}/chat/completions",
+            headers=headers,
+            json=payload,
+            timeout=timeout,
+        )
+        attempt_log["http_status"] = r.status_code
         try:
-            start = int(it.get("start", 0))
+            envelope = r.json()
+            attempt_log["http_response_envelope"] = json.dumps(envelope, ensure_ascii=False, indent=2)
         except Exception:
-            continue
-        if not title or start <= 0:
-            continue
-        key = _norm_title_key(title)
-        if key not in best:
-            best[key] = {"titlu": normalize_text_minimal(title), "start": start}
-        else:
-            if start < best[key]["start"]:
-                best[key]["start"] = start
-            if len(title) > len(best[key]["titlu"]):
-                best[key]["titlu"] = normalize_text_minimal(title)
-    merged = list(best.values())
-    merged.sort(key=lambda x: int(x.get("start", 10**9)))
-    return merged
+            attempt_log["http_response_envelope"] = r.text[:4000]
+
+        r.raise_for_status()
+        msg = envelope["choices"][0]["message"]
+        raw = (msg.get("content") or "").strip()
+        reasoning_tokens = envelope.get("usage", {}).get("reasoning_tokens", 0)
+        attempt_log["raw_model_output"] = raw
+        attempt_log["reasoning_tokens"] = reasoning_tokens
+
+        if not raw:
+            raise ValueError(
+                f"Model returned empty content. "
+                f"reasoning_tokens={reasoning_tokens}, "
+                f"completion_tokens={envelope.get('usage',{}).get('completion_tokens',0)}. "
+                f"The thinking phase consumed all available tokens — raise max_tokens."
+            )
+
+        parsed = safe_extract_json(raw)
+        if parsed is None:
+            raise ValueError(f"JSON parse failed after all strategies. First 300 chars: {raw[:300]}")
+
+        attempt_log["parsed_ok"] = True
+        log_entry["final_parsed"] = parsed
+        log_entry["ok"] = True
+
+    except Exception as e:
+        attempt_log["error"] = str(e)
+        log_entry["error"] = str(e)
+
+    log_entry["attempts"].append(attempt_log)
+    _append_api_log(log_entry)
+
+    if log_entry["ok"]:
+        return log_entry["final_parsed"]
+    return {"_error": log_entry["error"]}
 
 
-def gemini_extract_toc(
+# ============================================================
+# PDF → IMAGES
+# ============================================================
+def pages_to_base64(pdf_bytes: bytes, start_1based: int, end_1based: int, dpi: int = PAGE_DPI) -> List[str]:
+    """Render a range of PDF pages to base64 JPEGs."""
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    images = []
+    for idx in range(start_1based - 1, min(end_1based, len(doc))):
+        pix  = doc[idx].get_pixmap(dpi=dpi)
+        data = pix.tobytes("jpeg")
+        images.append(base64.b64encode(data).decode("utf-8"))
+    return images
+
+
+# ============================================================
+# FACT-CHECKING  
+# ============================================================
+_FACT_PROMPT_TEMPLATE = """Ești auditor tehnic pentru un manual școlar românesc de informatică.
+Analizează imaginile paginilor {start}–{end} de mai jos.
+
+Caută EXCLUSIV erori tehnice din categoriile:
+1. COD — operatori C/C++ greșiți (cout>>, cin<<), sintaxă imposibilă (Typedef, int:var), bucle for cu variabile inconsistente, literal în condiție (for(i=1;1<n;i++)), void main() / #include<iostream.h> fără avertisment;
+2. PSEUDOCOD — cifra 0 înlocuită cu litera o, inconsistențe logice;
+3. CONCEPT — stivă descrisă ca FIFO, coadă ca LIFO, definiție fundamental greșită;
+4. COMPLEXITATE — complexitate algoritmică evident greșită (O(n) pentru bubble sort etc.);
+5. STANDARD — standard C++ greșit prezentat fără contextualizare.
+
+NU raporta: gramatică, diacritice, indentare, stil, using namespace std, bits/stdc++.h, variabile scurte/globale, int main() fără return 0.
+Fii conservator — dacă nu ești sigur, nu raporta.
+
+Returnează STRICT JSON (fără text în afara JSON-ului):
+{{
+  "erori": [
+    {{
+      "pagina": <numărul paginii din manual>,
+      "categorie": "COD|PSEUDOCOD|CONCEPT|COMPLEXITATE|STANDARD",
+      "fragment": "<text exact din manual>",
+      "corect": "<varianta corectă>",
+      "explicatie": "<de ce e greșit>",
+      "incredere": <0.0–1.0>
+    }}
+  ]
+}}
+Dacă nu găsești erori clare, returnează {{"erori": []}}.
+"""
+
+
+def fact_check_chunk(
     pdf_bytes: bytes,
-    toc_start: int,
-    toc_end: int,
-    model: str,
-) -> Tuple[List[Dict[str, Any]], Optional[str]]:
-    """
-    Sends PDF to Gemini and extracts the table of contents from pages toc_start–toc_end.
-    Returns (items, error_message).
-    """
-    prompt = f"""Look at pages {toc_start} to {toc_end} of this PDF.
-These pages contain the Table of Contents (Cuprins) of a Romanian textbook.
+    start_page: int,
+    end_page: int,
+) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    debug: Dict[str, Any] = {
+        "pages": f"{start_page}-{end_page}",
+        "model": MODEL_VISION,
+        "error": None,
+        "items_found": 0,
+    }
 
-Extract every chapter/section title together with its starting page number.
-Do NOT invent entries. Only extract what is explicitly listed in the table of contents.
-Ignore page headers, footers, and decorative elements.
+    images = pages_to_base64(pdf_bytes, start_page, end_page)
+    if not images:
+        debug["error"] = "Nu s-au putut randa paginile"
+        return [], debug
 
-Return STRICT JSON:
-{{"items": [{{"titlu": "Chapter Title", "start": 5}}]}}"""
+    prompt = _FACT_PROMPT_TEMPLATE.format(start=start_page, end=end_page)
+    res = together_vision_multi_json(prompt, images)
 
-    txt, err = _gemini_generate(
-        model,
-        [types.Part.from_bytes(data=pdf_bytes, mime_type="application/pdf"), prompt],
-    )
-    if err:
-        return [], err
-    parsed = safe_extract_json(txt or "")
-    if isinstance(parsed, dict) and isinstance(parsed.get("items"), list):
-        items = [x for x in parsed["items"] if isinstance(x, dict)]
-        return merge_dedup_sort_toc_items(items), None
-    return [], f"Could not parse TOC JSON. Raw: {(txt or '')[:400]}"
+    if "_error" in res:
+        debug["error"] = res["_error"]
+        return [], debug
+
+    items = _coerce_items(res, "erori")
+    rows: List[Dict[str, Any]] = []
+    for item in items:
+        fragment = str(item.get("fragment", "")).strip()
+        if not fragment:
+            continue
+        rows.append({
+            "validat":   True,
+            "pagina":    item.get("pagina", start_page),
+            "categorie": str(item.get("categorie", "")).strip(),
+            "text":      fragment,
+            "sugestie":  str(item.get("corect", "")).strip(),
+            "explicatie":str(item.get("explicatie", "")).strip(),
+            "incredere": float(item.get("incredere", 0.9) or 0.9),
+        })
+
+    debug["items_found"] = len(rows)
+    return rows, debug
+
+
+def fact_check_run_all(
+    pdf_bytes: bytes,
+    page_start: int,
+    page_end: int,
+    chunk_size: int,
+    status_ref=None,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    all_rows:  List[Dict[str, Any]] = []
+    all_debug: List[Dict[str, Any]] = []
+
+    for bs in range(page_start, page_end + 1, chunk_size):
+        be = min(page_end, bs + chunk_size - 1)
+        if status_ref:
+            status_ref.write(f"Fact-checking (vision): pages **{bs}–{be}**...")
+
+        rows, dbg = fact_check_chunk(pdf_bytes, bs, be)
+        if dbg.get("error") and status_ref:
+            status_ref.write(f"Eroare fact-check ({bs}-{be}): {dbg['error']}")
+        all_debug.append(dbg)
+        all_rows.extend(rows)
+
+    return _dedup_rows(all_rows), all_debug
+
+
+# ============================================================
+# GRAMMAR  
+# ============================================================
+_GRAMMAR_PROMPT_TEMPLATE = """Rol: Ești filolog român senior, specialist în normele DOOM3 (2021).
+Analizează imaginile paginilor {start}–{end} de mai jos.
+
+Identifică erori de limbă română din categoriile:
+- O (Ortografie): scriere incorectă, diacritice lipsă sau greșite;
+- M (Morfologie): forme flexionare incorecte;
+- S (Sintaxă): acord greșit, topică defectuoasă;
+- P (Punctuație): virgulă, punct, liniuță incorect folosite;
+- D3 (DOOM3 Specific): forme care contravin explicit DOOM3 (2021).
+
+Raportează NUMAI erori clare și localizabile. Ignoră codul-sursă și pseudocodul.
+Returnează STRICT JSON cu cel mult {max_errors} elemente:
+{{
+  "erori": [
+    {{
+      "pagina": <numărul paginii din manual>,
+      "tip": "O|M|S|P|D3",
+      "fragment": "<text exact din manual, cu diacriticele corecte>",
+      "corect": "<forma corectă>",
+      "explicatie": "<justificare scurtă>"
+    }}
+  ]
+}}
+Dacă nu găsești erori clare, returnează {{"erori": []}}.
+"""
+
+_TIP_MAP = {
+    "o": "O", "orthography": "O", "ortografie": "O",
+    "m": "M", "morphology": "M", "morfologie": "M",
+    "s": "S", "syntax": "S", "sintaxă": "S", "sintaxa": "S",
+    "p": "P", "punctuation": "P", "punctuație": "P", "punctuatie": "P",
+    "d3": "D3", "doom3": "D3", "doom3 specific": "D3",
+}
+
+
+def grammar_chunk(
+    pdf_bytes: bytes,
+    start_page: int,
+    end_page: int,
+    max_errors: int,
+) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    debug: Dict[str, Any] = {
+        "pages": f"{start_page}-{end_page}",
+        "model": MODEL_VISION,
+        "error": None,
+        "items_found": 0,
+    }
+
+    images = pages_to_base64(pdf_bytes, start_page, end_page)
+    if not images:
+        debug["error"] = "Nu s-au putut randa paginile"
+        return [], debug
+
+    prompt = _GRAMMAR_PROMPT_TEMPLATE.format(start=start_page, end=end_page, max_errors=max_errors)
+    res = together_vision_multi_json(prompt, images)
+
+    if "_error" in res:
+        debug["error"] = res["_error"]
+        return [], debug
+
+    items = _coerce_items(res, "erori")
+    rows: List[Dict[str, Any]] = []
+    for item in items:
+        frag = str(item.get("fragment", "")).strip()
+        if not frag:
+            continue
+        raw_tip = (
+            str(item.get("tip", "")).strip()
+            or str(item.get("type", "")).strip()
+        )
+        code = _TIP_MAP.get(raw_tip.lower(), "")
+        if not code:
+            rl = raw_tip.lower()
+            if "ortograf" in rl:                   code = "O"
+            elif "morfolog" in rl:                 code = "M"
+            elif "sintax" in rl or "syntax" in rl: code = "S"
+            elif "punct" in rl:                    code = "P"
+            elif "doom" in rl:                     code = "D3"
+        rows.append({
+            "tip":       f"Grammar ({code})" if code else "Grammar",
+            "pagina":    item.get("pagina", start_page),
+            "text":      frag,
+            "sugestie":  str(item.get("corect", "")).strip(),
+            "explicatie":str(item.get("explicatie", "")).strip(),
+        })
+
+    debug["items_found"] = len(rows)
+    return rows, debug
+
+
+def grammar_run_all(
+    pdf_bytes: bytes,
+    page_start: int,
+    page_end: int,
+    chunk_size: int,
+    max_errors_per_chunk: int,
+    status_ref=None,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    all_rows:  List[Dict[str, Any]] = []
+    all_debug: List[Dict[str, Any]] = []
+
+    for bs in range(page_start, page_end + 1, chunk_size):
+        be = min(page_end, bs + chunk_size - 1)
+        if status_ref:
+            status_ref.write(f"Grammar: pages **{bs}–{be}**...")
+
+        rows, dbg = grammar_chunk(pdf_bytes, bs, be, max_errors_per_chunk)
+        if dbg.get("error") and status_ref:
+            status_ref.write(f"Eroare grammar ({bs}-{be}): {dbg['error']}")
+        all_debug.append(dbg)
+        all_rows.extend(rows)
+
+    return all_rows, all_debug
 
 
 # ============================================================
 # EXCEL EXPORT
 # ============================================================
-def _safe_cell_text(v: Any) -> str:
-    if v is None:
-        return ""
-    if isinstance(v, bool):
-        return "TRUE" if v else "FALSE"
+def _safe_cell(v: Any) -> str:
+    if v is None:   return ""
+    if isinstance(v, bool): return "TRUE" if v else "FALSE"
     return str(v)
 
 
-def dataframe_to_pretty_excel_bytes(df: pd.DataFrame, sheet_name: str = "Raport") -> bytes:
+def df_to_excel(df: pd.DataFrame, sheet_name: str = "Report") -> bytes:
     wb = Workbook()
     ws = wb.active
     ws.title = sheet_name[:31]
     ws.freeze_panes = "A2"
 
-    header_fill = PatternFill("solid", fgColor="1F4E78")
-    header_font = Font(color="FFFFFF", bold=True)
-    thin = Side(style="thin", color="D9D9D9")
-    border = Border(left=thin, right=thin, top=thin, bottom=thin)
+    hfill   = PatternFill("solid", fgColor="1F4E78")
+    hfont   = Font(color="FFFFFF", bold=True)
+    thin    = Side(style="thin", color="D9D9D9")
+    border  = Border(left=thin, right=thin, top=thin, bottom=thin)
 
-    columns = list(df.columns)
-    ws.append(columns)
-    for c_idx, col_name in enumerate(columns, start=1):
-        cell = ws.cell(row=1, column=c_idx)
-        cell.fill = header_fill
-        cell.font = header_font
-        cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-        cell.border = border
+    cols = list(df.columns)
+    ws.append(cols)
+    for ci, col in enumerate(cols, 1):
+        c = ws.cell(row=1, column=ci)
+        c.fill = hfill; c.font = hfont
+        c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        c.border = border
 
     for _, row in df.iterrows():
-        ws.append([row.get(col, "") for col in columns])
+        ws.append([row.get(c, "") for c in cols])
 
-    preferred_widths = {"validat": 10, "tip": 24, "capitol": 28, "text": 70, "sugestie": 70, "explicatie": 70}
-    for c_idx, col_name in enumerate(columns, start=1):
-        letter = get_column_letter(c_idx)
-        max_line_len = len(str(col_name))
-        for r_idx in range(2, ws.max_row + 1):
-            cell = ws.cell(row=r_idx, column=c_idx)
+    pref = {"validat": 10, "tip": 24, "pagina": 8, "text": 70, "sugestie": 70, "explicatie": 70}
+    for ci, col in enumerate(cols, 1):
+        letter = get_column_letter(ci)
+        maxw = len(col)
+        for ri in range(2, ws.max_row + 1):
+            cell = ws.cell(row=ri, column=ci)
             cell.alignment = Alignment(vertical="top", wrap_text=True)
             cell.border = border
-            txt = _safe_cell_text(cell.value)
-            lines = txt.splitlines() or [txt]
-            longest = max((len(line) for line in lines), default=0)
-            max_line_len = max(max_line_len, min(longest, 120))
-        width = preferred_widths.get(col_name.lower()) or min(max(max_line_len + 2, 12), 80)
-        ws.column_dimensions[letter].width = width
+            txt = _safe_cell(cell.value)
+            maxw = max(maxw, min(max((len(ln) for ln in (txt.splitlines() or [txt])), default=0), 120))
+        ws.column_dimensions[letter].width = pref.get(col.lower()) or min(max(maxw + 2, 12), 80)
 
-    for r_idx in range(2, ws.max_row + 1):
-        max_lines = 1
-        for c_idx in range(1, ws.max_column + 1):
-            col_letter = get_column_letter(c_idx)
-            width = ws.column_dimensions[col_letter].width or 15
-            txt = _safe_cell_text(ws.cell(row=r_idx, column=c_idx).value)
-            logical_lines = txt.splitlines() or [txt]
-            usable = max(int(width) - 2, 8)
-            estimated = sum(max(1, (len(ln) // usable) + (1 if len(ln) % usable else 0)) for ln in logical_lines)
-            max_lines = max(max_lines, estimated)
-        ws.row_dimensions[r_idx].height = min(max(20 * max_lines, 20), 180)
+    for ri in range(2, ws.max_row + 1):
+        ml = 1
+        for ci in range(1, ws.max_column + 1):
+            ltr = get_column_letter(ci)
+            w   = ws.column_dimensions[ltr].width or 15
+            txt = _safe_cell(ws.cell(row=ri, column=ci).value)
+            lns = txt.splitlines() or [txt]
+            u   = max(int(w) - 2, 8)
+            ml  = max(ml, sum(max(1, len(ln)//u + (1 if len(ln) % u else 0)) for ln in lns))
+        ws.row_dimensions[ri].height = min(max(20 * ml, 20), 180)
     ws.row_dimensions[1].height = 28
 
     out = BytesIO()
@@ -450,764 +555,479 @@ def dataframe_to_pretty_excel_bytes(df: pd.DataFrame, sheet_name: str = "Raport"
 
 
 # ============================================================
-# FACT-CHECKING: GEMINI DETECTORS + TOGETHER JUDGE
+# DEBUG PANEL
 # ============================================================
+def _full_debug_text(api_log: List[Dict[str, Any]]) -> str:
+    lines, sep = [], "=" * 80
+    for i, e in enumerate(api_log, 1):
+        lines += [
+            sep,
+            f"CALL #{i}  [{e.get('timestamp','')}]  {e.get('call_type','').upper()}"
+            f"  ok={e.get('ok')}  model={e.get('model','')}  images={e.get('num_images',0)}",
+            sep,
+            "── PROMPT ──",
+            e.get("user_text_full", ""),
+            "",
+        ]
+        for att in e.get("attempts", []):
+            lines += [
+                f"── ATTEMPT {att.get('attempt')}  HTTP {att.get('http_status')} ──",
+                "RAW MODEL OUTPUT:",
+                att.get("raw_model_output") or "(none)",
+            ]
+            if att.get("error"):
+                lines.append(f"ERROR: {att['error']}")
+            if att.get("http_response_envelope"):
+                lines += ["HTTP ENVELOPE:", att["http_response_envelope"]]
+            lines.append("")
+        if e.get("final_parsed") is not None:
+            lines += ["── PARSED ──", json.dumps(e["final_parsed"], ensure_ascii=False, indent=2)]
+        if e.get("error"):
+            lines += [f"── FINAL ERROR ──", e["error"]]
+        lines.append("")
+    return "\n".join(lines)
 
-_DETECTOR_A_SYSTEM = """Ești Detector A — auditor tehnic specializat pe cod și sintaxă.
 
-Analizează paginile indicate din manualul PDF românesc de informatică.
+def render_debug_downloads(key_suffix: str = "") -> None:
+    """Show just the download buttons for the full debug log."""
+    api_log = st.session_state.app_state.get("api_calls_log", [])
+    if not api_log:
+        return
+    errors = [e for e in api_log if not e.get("ok")]
+    st.caption(f"{len(api_log)} API calls — {len(errors)} failure(s)")
+    c1, c2 = st.columns(2)
+    with c1:
+        st.download_button(
+            "Download debug log (.txt)",
+            _full_debug_text(api_log).encode("utf-8"),
+            "api_debug_log.txt", "text/plain",
+            key=f"dl_txt_{key_suffix}",
+        )
+    with c2:
+        st.download_button(
+            "Download debug log (.json)",
+            json.dumps(api_log, ensure_ascii=False, indent=2).encode("utf-8"),
+            "api_debug_log.json", "application/json",
+            key=f"dl_json_{key_suffix}",
+        )
 
-Caută EXCLUSIV erori de cod și sintaxă:
-- operatori C/C++ greșiți: cout >> în loc de cout <<, cin << în loc de cin >>;
-- sintaxă C/C++ imposibilă (Typedef, int:var, lipsă punct și virgulă obligatoriu);
-- bucle for/while cu variabila de inițializare diferită de cea din condiție sau increment;
-- literal în condiție în loc de variabilă: for(i=1; 1<n; i++);
-- pseudocod cu cifra 0 înlocuită cu litera o în expresii numerice;
-- cod care produce alt rezultat decât cel afirmat explicit în text;
-- void main() sau #include <iostream.h> prezentate ca standard modern fără nicio mențiune că sunt vechi.
 
-Nu raporta: gramatică, diacritice, layout, indentare, stil, lipsă comentarii,
-using namespace std, bits/stdc++.h, nume scurte de variabile, variabile globale,
-indexare 0-based/1-based dacă nu contrazice explicit textul, recomandări de modernizare.
-
-Dacă nu ești sigur, nu raporta. Fii conservator."""
-
-_DETECTOR_B_SYSTEM = """Ești Detector B — auditor conceptual independent.
-
-Analizează paginile indicate din manualul PDF românesc de informatică.
-
-Caută EXCLUSIV erori conceptuale și de definiții:
-- stivă descrisă ca FIFO (corect: LIFO);
-- coadă descrisă ca LIFO (corect: FIFO);
-- complexitate algoritmică evident greșită (ex: O(n) pentru un algoritm O(n²));
-- definiție fundamental greșită a unei structuri de date sau algoritm;
-- contradicție clară între explicația din text și pseudocodul/codul prezentat;
-- afirmație falsă verificabilă despre comportamentul C/C++ (indexare, pointeri, conversii).
-
-Nu raporta: gramatică, stil de cod, recomandări, modernizări opționale,
-lucruri neclare sau care depind de context lipsă, probleme acceptabile la nivel de liceu.
-
-Dacă nu ești sigur, nu raporta. Fii conservator."""
-
-_DETECTOR_RESPONSE_FORMAT = """
-Returnează STRICT JSON (fără text în afara JSON-ului):
-{
-  "erori": [
-    {
-      "pagina": 12,
-      "categorie": "COD|PSEUDOCOD|ALGORITM|CONCEPT|DEFINITIE|STANDARD|COMPLEXITATE",
-      "fragment": "fragment exact din manual",
-      "corect": "varianta corectă sau regula corectă",
-      "explicatie": "de ce este greșit",
-      "incredere": 0.85
-    }
-  ]
+# ============================================================
+# HTML REPORT GENERATION
+# ============================================================
+_REPORT_CAT_META = {
+    # Grammar
+    "Grammar (O)":  {"label": "Orthography",  "color": "#2563eb"},
+    "Grammar (M)":  {"label": "Morphology",   "color": "#2563eb"},
+    "Grammar (S)":  {"label": "Syntax",       "color": "#2563eb"},
+    "Grammar (P)":  {"label": "Punctuation",  "color": "#2563eb"},
+    "Grammar (D3)": {"label": "DOOM3",        "color": "#2563eb"},
+    "Grammar":      {"label": "Grammar",      "color": "#2563eb"},
+    # Fact-checking
+    "COD":          {"label": "Code Error",   "color": "#dc2626"},
+    "PSEUDOCOD":    {"label": "Pseudocode",   "color": "#dc2626"},
+    "CONCEPT":      {"label": "Concept",      "color": "#b45309"},
+    "COMPLEXITATE": {"label": "Complexity",   "color": "#b45309"},
+    "STANDARD":     {"label": "Standard",     "color": "#7c3aed"},
+    "DEFINITIE":    {"label": "Definition",   "color": "#b45309"},
+    "ALGORITM":     {"label": "Algorithm",    "color": "#b45309"},
 }
-Dacă nu găsești erori clare, returnează {"erori": []}.
-"""
-
-_JUDGE_SYSTEM = """Ești validator expert pentru un manual școlar de informatică.
-
-Primești o listă de candidați de erori detectați de doi agenți independenți.
-Sarcina ta:
-1. Elimină duplicatele — dacă același fragment e raportat de ambii, păstrează o singură intrare.
-2. Elimină fals pozitivele evidente.
-3. Păstrează doar erorile tehnice reale, concrete și localizabile.
-
-RESPINGE întotdeauna:
-- gramatică, diacritice, fonturi, layout, indentare, stil de cod;
-- recomandări și modernizări opționale;
-- fragmente vagi sau prea generale (sub 10 caractere semnificative);
-- candidați cu câmpul "fragment" gol sau identic cu "corect";
-- cod de competiție acceptabil: bits/stdc++.h, using namespace std, variabile scurte, globale, scanf/printf;
-- int main() fără return 0 (valid în C++11+);
-- probleme acceptabile pedagogic la nivel de liceu.
-
-CONFIRMĂ întotdeauna:
-- cout >> sau cin << (operatori inversați în C++);
-- Typedef cu majusculă (C++ este case-sensitive);
-- int:var sau unsigned:var (sintaxă imposibilă);
-- for(l=0; i<n; i++) — variabilă diferită între inițializare și condiție;
-- for(i=1; 1<n; i++) — literal în loc de variabilă în condiție;
-- stivă descrisă ca FIFO sau coadă ca LIFO;
-- complexitate evidentă greșită (O(n) pentru bubble sort etc.);
-- void main() / #include <iostream.h> fără nicio contextualizare.
-
-Returnează STRICT JSON:
-{
-  "erori_validate": [
-    {
-      "pagina": 12,
-      "categorie": "COD|PSEUDOCOD|ALGORITM|CONCEPT|DEFINITIE|STANDARD|COMPLEXITATE",
-      "fragment": "fragment exact",
-      "corect": "varianta corectă",
-      "explicatie": "explicație scurtă",
-      "incredere": 0.9
-    }
-  ]
-}"""
 
 
-def gemini_detector_range(
-    pdf_bytes: bytes,
-    start_page: int,
-    end_page: int,
-    model: str,
-    max_errors: int,
-    detector_label: str,
-    system_prompt: str,
-) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-    debug: Dict[str, Any] = {
-        "agent": detector_label,
-        "pages": f"{start_page}-{end_page}",
-        "model": model,
-        "error": None,
-        "items_found": 0,
-    }
-    prompt = (
-        f"{system_prompt}\n\n"
-        f"Analizează DOAR paginile {start_page}–{end_page} din PDF-ul atașat.\n"
-        f"Raportează cel mult {max_errors} erori.\n"
-        f"{_DETECTOR_RESPONSE_FORMAT}"
-    )
-    txt, err = _gemini_generate(
-        model,
-        [types.Part.from_bytes(data=pdf_bytes, mime_type="application/pdf"), prompt],
-    )
-    if err:
-        debug["error"] = err
-        return [], debug
-
-    parsed = safe_extract_json(txt or "")
-    items = _coerce_items_from_json(parsed, "erori")[:max_errors]
-    rows: List[Dict[str, Any]] = []
-    for item in items:
-        fragment = str(item.get("fragment", "")).strip()
-        if not fragment:
-            continue
-        try:
-            confidence = float(item.get("incredere", 0.0) or 0.0)
-        except Exception:
-            confidence = 0.0
-        rows.append({
-            "pagina": item.get("pagina", start_page),
-            "categorie": str(item.get("categorie", "")).strip(),
-            "fragment": fragment,
-            "corect": str(item.get("corect", "")).strip(),
-            "explicatie": str(item.get("explicatie", "")).strip(),
-            "incredere": confidence,
-            "_source": detector_label,
+def generate_html_report(
+    fact_report: List[Dict[str, Any]],
+    grammar_report: List[Dict[str, Any]],
+    textbook_name: str,
+) -> str:
+    issues: List[Dict[str, Any]] = []
+    for item in fact_report:
+        issues.append({
+            "validat":   bool(item.get("validat", True)),
+            "tip":       str(item.get("categorie", "")).strip() or "Technical",
+            "capitol":   f"Page {item.get('pagina', '')}",
+            "text":      str(item.get("text", "")),
+            "sugestie":  str(item.get("sugestie", "")),
+            "explicatie":str(item.get("explicatie", "")),
         })
-    debug["items_found"] = len(rows)
-    return rows, debug
-
-
-def judge_text_batch(
-    candidates: List[Dict[str, Any]],
-    start_page: int,
-    end_page: int,
-) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-    debug: Dict[str, Any] = {
-        "agent": "judge",
-        "pages": f"{start_page}-{end_page}",
-        "model": TOGETHER_JUDGE_MODEL,
-        "error": None,
-        "candidates_in": len(candidates),
-        "confirmed": 0,
-        "skipped": False,
-    }
-    if not candidates:
-        debug["skipped"] = True
-        return [], debug
-
-    candidates_text = json.dumps(candidates, ensure_ascii=False, indent=2)
-    user_text = (
-        f"Evaluează și validează următorii {len(candidates)} candidați de erori "
-        f"(pagini {start_page}–{end_page}):\n\n{candidates_text}"
-    )
-    res = together_chat_json(TOGETHER_JUDGE_MODEL, _JUDGE_SYSTEM, user_text, timeout=120)
-
-    if isinstance(res, dict) and res.get("_error"):
-        debug["error"] = res.get("_error")
-        return [], debug
-
-    validated = _coerce_items_from_json(res, "erori_validate")
-    rows: List[Dict[str, Any]] = []
-    for item in validated:
-        fragment = str(item.get("fragment", "")).strip()
-        if not fragment:
-            continue
-        try:
-            confidence = float(item.get("incredere", 0.0) or 0.0)
-        except Exception:
-            confidence = 0.0
-        rows.append({
-            "validat": True,
-            "pagina": item.get("pagina", start_page),
-            "categorie": str(item.get("categorie", "")).strip(),
-            "text": fragment,
-            "sugestie": str(item.get("corect", "")).strip(),
-            "explicatie": str(item.get("explicatie", "")).strip(),
-            "incredere": confidence,
-        })
-    debug["confirmed"] = len(rows)
-    return rows, debug
-
-
-def fact_check_run_all(
-    pdf_bytes: bytes,
-    doc_len: int,
-    chapters: List[Dict[str, Any]],
-    page_start: int,
-    page_end: int,
-    pages_per_batch: int,
-    max_errors_per_detector: int,
-    gem_model: str,
-) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-    fact_rows: List[Dict[str, Any]] = []
-    fact_debug: List[Dict[str, Any]] = []
-
-    for bs in range(page_start, page_end + 1, pages_per_batch):
-        be = min(page_end, bs + pages_per_batch - 1)
-
-        a_rows, a_debug = gemini_detector_range(
-            pdf_bytes, bs, be, gem_model, max_errors_per_detector,
-            "detector_a", _DETECTOR_A_SYSTEM,
-        )
-        fact_debug.append(a_debug)
-
-        b_rows, b_debug = gemini_detector_range(
-            pdf_bytes, bs, be, gem_model, max_errors_per_detector,
-            "detector_b", _DETECTOR_B_SYSTEM,
-        )
-        fact_debug.append(b_debug)
-
-        candidates = a_rows + b_rows
-        validated, j_debug = judge_text_batch(candidates, bs, be)
-        fact_debug.append(j_debug)
-
-        for row in validated:
-            page = int(row.get("pagina", bs))
-            row["capitol"] = chapter_title_for_page(chapters, page) or f"Pagina {page}"
-        fact_rows.extend(validated)
-
-    return _dedup_fact_rows(fact_rows), fact_debug
-
-
-# ============================================================
-# GRAMMAR VIA GEMINI
-# ============================================================
-def gemini_grammar_range(
-    pdf_bytes: bytes,
-    start_page: int,
-    end_page: int,
-    model: str,
-    max_errors: int,
-) -> Dict[str, Any]:
-    prompt = f"""Role: You are a Senior Romanian Philologist specializing in DOOM3 (2021) norms.
-Objective: Analyze ONLY pages {start_page}–{end_page} of the PDF and identify linguistic errors.
-Categories: Orthography (O), Morphology (M), Syntax (S), Punctuation (P), DOOM3 Specific (D3).
-Report only concrete, localizable errors. Do NOT give generic rewriting advice.
-Return STRICT JSON with at most {max_errors} items:
-{{
-  "erori": [
-    {{"fragment": "<exact text>", "tip": "O|M|S|P|D3", "corect": "<corrected>", "explicatie": "<brief justification>"}}
-  ]
-}}"""
-
-    txt, err = _gemini_generate(
-        model,
-        [types.Part.from_bytes(data=pdf_bytes, mime_type="application/pdf"), prompt],
-    )
-    if err:
-        return {"erori": [], "_error": err}
-    parsed = safe_extract_json(txt or "")
-    if isinstance(parsed, dict) and isinstance(parsed.get("erori"), list):
-        return parsed
-    return {"erori": [], "_raw": (txt or "")[:1200]}
-
-
-def grammar_run_all(
-    pdf_bytes: bytes,
-    doc_len: int,
-    model: str,
-    pages_per_chunk: int,
-    max_errors_per_chunk: int,
-) -> List[Dict[str, Any]]:
-    out: List[Dict[str, Any]] = []
-    grammar_debug: List[Dict[str, Any]] = []
-    cache = st.session_state.app_state["gemini_cache"]
-
-    tip_mapping = {
-        "o": "O", "orthography": "O", "ortografie": "O",
-        "m": "M", "morphology": "M", "morfologie": "M",
-        "s": "S", "syntax": "S", "sintaxa": "S", "sintaxă": "S",
-        "p": "P", "punctuation": "P", "punctuatie": "P", "punctuație": "P",
-        "d3": "D3", "doom3": "D3", "doom3 specific": "D3",
-    }
-
-    for start in range(1, doc_len + 1, pages_per_chunk):
-        end = min(doc_len, start + pages_per_chunk - 1)
-        key = (start, end, model, max_errors_per_chunk)
-
-        if key in cache:
-            parsed = cache[key]
-            from_cache = True
-        else:
-            parsed = gemini_grammar_range(pdf_bytes, start, end, model, max_errors_per_chunk)
-            cache[key] = parsed
-            from_cache = False
-
-        erori_count = len(parsed.get("erori", [])) if isinstance(parsed.get("erori"), list) else 0
-        grammar_debug.append({
-            "pages": f"{start}-{end}",
-            "from_cache": from_cache,
-            "error": parsed.get("_error"),
-            "raw_preview": parsed.get("_raw", "")[:400] if "_raw" in parsed else "",
-            "erori_gasite": erori_count,
+    for item in grammar_report:
+        issues.append({
+            "validat":   bool(item.get("validat", False)),
+            "tip":       str(item.get("tip", "")).strip() or "Grammar",
+            "capitol":   f"Page {item.get('pagina', '')}",
+            "text":      str(item.get("text", "")),
+            "sugestie":  str(item.get("sugestie", "")),
+            "explicatie":str(item.get("explicatie", "")),
         })
 
-        for e in (parsed.get("erori") or []):
-            if not isinstance(e, dict):
-                continue
-            frag = str(e.get("fragment", "")).strip() or str(e.get("text", "")).strip()
-            raw_tip = (
-                str(e.get("tip", "")).strip()
-                or str(e.get("type", "")).strip()
-                or str(e.get("categorie", "")).strip()
-            )
-            code = tip_mapping.get(raw_tip.lower(), "")
-            if not code:
-                rl = raw_tip.lower()
-                if "ortograf" in rl: code = "O"
-                elif "morfolog" in rl: code = "M"
-                elif "sintax" in rl or "syntax" in rl: code = "S"
-                elif "punct" in rl: code = "P"
-                elif "doom" in rl: code = "D3"
+    data    = {textbook_name: {"filename": textbook_name, "issues": issues}}
+    payload = json.dumps(data, ensure_ascii=False)
+    cat_json = json.dumps(_REPORT_CAT_META, ensure_ascii=False)
 
-            out.append({
-                "tip": f"Gramatica ({code})" if code else "Gramatica",
-                "capitol": f"Pagini {start}-{end}",
-                "text": frag,
-                "sugestie": str(e.get("corect", "")).strip(),
-                "explicatie": str(e.get("explicatie", "")).strip(),
-            })
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{textbook_name} — Validation Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+:root {{
+  --bg:#f8fafc; --surface:#ffffff; --border:#e2e8f0;
+  --text-primary:#1e293b; --text-secondary:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --radius:8px;
+}}
+body {{ font-family:'Inter',sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.5; }}
+.header {{ background:var(--surface); padding:32px; border-bottom:1px solid var(--border); }}
+.header h1 {{ font-size:24px; font-weight:600; margin-bottom:4px; }}
+.header p {{ color:var(--text-secondary); font-size:14px; }}
+.stats {{ display:flex; gap:16px; padding:24px 32px; flex-wrap:wrap; }}
+.stat-card {{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; min-width:160px; flex:1; cursor:pointer; transition:border .15s; }}
+.stat-card:hover {{ border-color:var(--accent); }}
+.stat-card .val {{ font-size:24px; font-weight:600; color:var(--accent); }}
+.stat-card .lbl {{ font-size:11px; color:var(--text-secondary); text-transform:uppercase; font-weight:600; letter-spacing:.05em; }}
+.controls {{ display:flex; gap:12px; padding:16px 32px; flex-wrap:wrap; align-items:center; position:sticky; top:0; z-index:10; background:var(--bg); border-bottom:1px solid var(--border); }}
+.search-box {{ flex:1; min-width:240px; padding:10px 16px; border-radius:var(--radius); border:1px solid var(--border); background:var(--surface); color:var(--text-primary); font-size:14px; outline:none; }}
+.search-box:focus {{ border-color:var(--accent); }}
+select {{ padding:10px 16px; border-radius:var(--radius); border:1px solid var(--border); background:var(--surface); color:var(--text-primary); font-size:14px; cursor:pointer; outline:none; }}
+.issue-list {{ padding:24px 32px; display:flex; flex-direction:column; gap:12px; max-width:1200px; margin:0 auto; }}
+.issue-card {{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); cursor:pointer; transition:border .15s; }}
+.issue-card:hover {{ border-color:var(--accent); }}
+.issue-header {{ display:flex; align-items:center; gap:16px; padding:16px 20px; }}
+.issue-badge {{ font-size:12px; font-weight:600; color:var(--accent); background:var(--accent-soft); padding:2px 8px; border-radius:4px; white-space:nowrap; }}
+.issue-chapter {{ font-size:12px; color:var(--text-secondary); min-width:80px; }}
+.issue-text {{ flex:1; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }}
+.issue-arrow {{ color:var(--text-secondary); font-size:12px; transition:transform .2s; }}
+.issue-card.open .issue-arrow {{ transform:rotate(90deg); }}
+.issue-detail {{ display:none; padding:0 20px 20px; border-top:1px solid var(--border); background:#fafafa; }}
+.issue-card.open .issue-detail {{ display:block; }}
+.detail-grid {{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:16px; }}
+.detail-label {{ font-size:11px; font-weight:600; text-transform:uppercase; color:var(--text-secondary); margin-bottom:6px; }}
+.detail-content {{ font-size:14px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:4px; white-space:pre-wrap; }}
+.detail-full {{ grid-column:1/span 2; background:#f1f5f9; }}
+.empty {{ text-align:center; padding:80px 20px; color:var(--text-secondary); font-size:15px; }}
+@media(max-width:800px){{
+  .detail-grid {{ grid-template-columns:1fr; }}
+  .detail-full {{ grid-column:1; }}
+  .stats,.controls {{ padding-left:16px; padding-right:16px; }}
+}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>{textbook_name} — Validation Report</h1>
+  <p>AI Textbook Auditor &bull; <span id="totalShown"></span></p>
+</div>
+<div class="stats" id="statsBar"></div>
+<div class="controls">
+  <input class="search-box" id="search" type="text" placeholder="Search issues...">
+  <select id="filterType"><option value="">All Types</option></select>
+  <select id="filterPage"><option value="">All Pages</option></select>
+</div>
+<div class="issue-list" id="issueList"></div>
+<script>
+const DATA = {payload};
+const CAT  = {cat_json};
+const issues = DATA[Object.keys(DATA)[0]].issues;
 
-    st.session_state.app_state["grammar_debug_log"] = grammar_debug
-    return out
+function label(tip) {{ return (CAT[tip]||{{}}).label || tip; }}
+
+function renderStats() {{
+  const counts = {{}};
+  issues.forEach(i => counts[i.tip] = (counts[i.tip]||0)+1);
+  document.getElementById("statsBar").innerHTML = Object.entries(counts)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([tip,cnt])=>`<div class="stat-card" onclick="setType('${{tip}}')">
+      <div class="val">${{cnt}}</div><div class="lbl">${{label(tip)}}</div></div>`).join("");
+}}
+
+function renderFilters() {{
+  const types = [...new Set(issues.map(i=>i.tip))].sort();
+  const pages = [...new Set(issues.map(i=>i.capitol))].sort((a,b)=>{{
+    const na=parseInt(a.replace(/\D/g,"")), nb=parseInt(b.replace(/\D/g,""));
+    return na-nb;
+  }});
+  document.getElementById("filterType").innerHTML =
+    '<option value="">All Types</option>' + types.map(t=>`<option value="${{t}}">${{label(t)}}</option>`).join("");
+  document.getElementById("filterPage").innerHTML =
+    '<option value="">All Pages</option>' + pages.map(p=>`<option value="${{p}}">${{p}}</option>`).join("");
+}}
+
+function renderIssues() {{
+  const q  = document.getElementById("search").value.toLowerCase();
+  const ft = document.getElementById("filterType").value;
+  const fp = document.getElementById("filterPage").value;
+  const filtered = issues.filter(i => {{
+    if (ft && i.tip !== ft) return false;
+    if (fp && i.capitol !== fp) return false;
+    if (q && !(i.text+i.sugestie+i.explicatie).toLowerCase().includes(q)) return false;
+    return true;
+  }});
+  document.getElementById("totalShown").textContent = filtered.length + " / " + issues.length + " issues";
+  const list = document.getElementById("issueList");
+  if (!filtered.length) {{ list.innerHTML='<div class="empty">No results.</div>'; return; }}
+  list.innerHTML = filtered.map(i => `
+    <div class="issue-card" onclick="this.classList.toggle('open')">
+      <div class="issue-header">
+        <span class="issue-badge">${{esc(label(i.tip))}}</span>
+        <span class="issue-chapter">${{esc(i.capitol)}}</span>
+        <span class="issue-text">${{esc(i.text)}}</span>
+        <span class="issue-arrow">›</span>
+      </div>
+      <div class="issue-detail">
+        <div class="detail-grid">
+          <div><div class="detail-label">Original Text</div><div class="detail-content">${{esc(i.text)||"—"}}</div></div>
+          <div><div class="detail-label">Suggestion</div><div class="detail-content">${{esc(i.sugestie)||"—"}}</div></div>
+          <div class="detail-full"><div class="detail-label">Explanation</div><div class="detail-content">${{esc(i.explicatie)||"—"}}</div></div>
+        </div>
+      </div>
+    </div>`).join("");
+}}
+
+function esc(s) {{ const d=document.createElement("div"); d.textContent=s||""; return d.innerHTML; }}
+function setType(t) {{ const el=document.getElementById("filterType"); el.value=el.value===t?"":t; renderIssues(); }}
+
+document.getElementById("search").addEventListener("input", renderIssues);
+document.getElementById("filterType").addEventListener("change", renderIssues);
+document.getElementById("filterPage").addEventListener("change", renderIssues);
+renderStats(); renderFilters(); renderIssues();
+</script>
+</body>
+</html>"""
 
 
 # ============================================================
 # UI
 # ============================================================
-st.title("AI Manual Auditor (Gemini fact-checking + gramatică · Together judge)")
-st.caption(
-    "TOC și fact-checking vizual prin Gemini (PDF direct) · "
-    "Judge fals-pozitive prin Together AI Llama-3.3-70B · "
-    "Gramatică DOOM3 prin Gemini."
-)
+st.title("AI Textbook Auditor")
+st.caption(f"All analysis via Qwen Vision: `{MODEL_VISION}`")
 
 with st.sidebar:
-    st.header("Ce rulez?")
+    st.header("What to run?")
     analysis_mode = st.radio(
-        "Selectează analiza",
-        ["Ambele", "Fact-checking tehnic", "Gramatica"],
+        "Select analysis",
+        ["Both", "Technical fact-checking", "Grammar"],
         index=0,
     )
 
     st.divider()
-    st.header("Modele AI")
-    gem_model = st.text_input("Model Gemini (TOC + fact-checking + gramatică)", value=DEFAULT_GEMINI_MODEL)
-    st.caption(f"Judge fals-pozitive: `{TOGETHER_JUDGE_MODEL}` (Together AI)")
+    st.header("Chunking")
+    chunk_size     = st.slider("Pages per vision call", 2, 10, DEFAULT_CHUNK_SIZE)
+    render_dpi     = st.slider("Render DPI (higher = sharper, slower)", 72, 200, PAGE_DPI)
 
     st.divider()
-    st.header("Fact-checking tehnic")
-    pages_per_batch = st.slider("Pagini per batch (Detector A + B)", 5, 25, 15)
-    max_errors_per_detector = st.slider("Max erori / detector / batch", 2, 10, 4)
-    st.caption(
-        "**Gemini free:** 15 req/min. "
-        f"Fiecare batch = 2 apeluri Gemini. "
-        f"Delay automat ≥{GEMINI_MIN_DELAY_S}s între apeluri."
-    )
+    st.header("Grammar")
+    max_gram_errors = st.slider("Max grammar errors / chunk", 5, 60, 20)
 
     st.divider()
-    st.header("Gramatică (Gemini)")
-    pages_per_chunk = st.slider("Pagini per chunk gramatică", 5, 60, 20)
-    max_err_chunk = st.slider("Max erori / chunk gramatică", 5, 80, 40)
+    show_api_debug = st.checkbox("Show API debug log", value=True)
 
     st.divider()
-    debug_mode = st.checkbox("Mod debug agenți", value=False)
+    st.markdown(f"**Model:** `{MODEL_VISION}`")
 
 
-# ─── 1) UPLOAD + TOC ───────────────────────────────────────
+# 1) UPLOAD 
 if st.session_state.app_state["stage"] == "upload":
     with st.container(border=True):
-        st.subheader("1) Încărcare PDF + Cuprins")
-        uploaded = st.file_uploader("Selectează fișier PDF", type="pdf")
+        st.subheader("1) Upload PDF")
+        uploaded = st.file_uploader("Select a PDF file", type="pdf")
 
         if uploaded:
             pdf_bytes = uploaded.getvalue()
             st.session_state.app_state["pdf_bytes"] = pdf_bytes
-            doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+            doc     = fitz.open(stream=pdf_bytes, filetype="pdf")
             doc_len = len(doc)
             st.session_state.app_state["doc_len"] = doc_len
-            st.info(f"Document încărcat. Total pagini: {doc_len}")
+            st.success(f"Loaded: **{uploaded.name}** — {doc_len} pages")
 
             c1, c2 = st.columns(2)
             with c1:
-                toc_start = st.number_input("Cuprins: pagina START", min_value=1, max_value=doc_len, value=min(3, doc_len))
+                page_start = st.number_input("Start page", min_value=1, max_value=doc_len, value=1)
             with c2:
-                toc_end = st.number_input("Cuprins: pagina END", min_value=1, max_value=doc_len, value=min(4, doc_len))
+                page_end = st.number_input("End page", min_value=1, max_value=doc_len, value=doc_len)
 
-            if st.button("Extrage cuprinsul (Gemini)", type="primary"):
-                a, b = min(int(toc_start), int(toc_end)), max(int(toc_start), int(toc_end))
-                with st.spinner(f"Extrag cuprinsul din paginile {a}–{b} cu Gemini..."):
-                    items, toc_err = gemini_extract_toc(pdf_bytes, a, b, gem_model)
-                if toc_err:
-                    st.error(f"Eroare extragere cuprins: {toc_err}")
-                elif not items:
-                    st.warning("Gemini nu a detectat capitole. Verifică intervalul de pagini sau adaugă manual.")
-                else:
-                    st.session_state.app_state["structure_data"] = items
-                    st.success(f"Capitole detectate: {len(items)}")
-
-            if st.session_state.app_state["structure_data"]:
-                if st.button("➡️ Mergi la Validare Structură"):
-                    st.session_state.app_state["stage"] = "approve"
-                    st.rerun()
-
-            st.divider()
-            if st.button("Omite cuprins (segmentare automată 10 pag)"):
-                st.session_state.app_state["structure_data"] = [
-                    {"titlu": f"Segment {i // DEFAULT_SEGMENT_SIZE + 1}", "start": i + 1}
-                    for i in range(0, doc_len, DEFAULT_SEGMENT_SIZE)
-                ]
-                st.session_state.app_state["stage"] = "approve"
-                st.rerun()
-
-
-# ─── 2) APPROVE STRUCTURE ──────────────────────────────────
-elif st.session_state.app_state["stage"] == "approve":
-    with st.container(border=True):
-        st.subheader("2) Validare Structură")
-        df = pd.DataFrame(st.session_state.app_state["structure_data"])
-        for col, default in [("titlu", "Capitol"), ("start", 1), ("end", 0)]:
-            if col not in df.columns:
-                df[col] = default
-
-        edited_df = st.data_editor(
-            df,
-            column_config={
-                "titlu": "Titlu Capitol",
-                "start": st.column_config.NumberColumn("Start", format="%d"),
-                "end": st.column_config.NumberColumn("Final", format="%d"),
-            },
-            width="stretch",
-            num_rows="dynamic",
-        )
-
-        c1, c2 = st.columns(2)
-        with c1:
-            if st.button("Confirmă și Analizează", type="primary"):
-                structure = edited_df.to_dict("records")
-                st.session_state.app_state["chapters"] = extract_chapter_text(
-                    st.session_state.app_state["pdf_bytes"], structure
-                )
-                for k in ["final_report", "fact_report", "grammar_report", "debug_log",
-                          "fact_debug_log", "grammar_debug_log"]:
+            if st.button("Start Audit", type="primary"):
+                for k in ["fact_report", "grammar_report", "fact_debug_log",
+                          "grammar_debug_log", "api_calls_log"]:
                     st.session_state.app_state[k] = []
-                st.session_state.app_state["gemini_cache"] = {}
-                st.session_state.app_state["audit_ran"] = False
-                st.session_state.app_state["stage"] = "analyze"
-                st.rerun()
-        with c2:
-            if st.button("Resetează"):
-                st.session_state.app_state = {
-                    "stage": "upload", "pdf_bytes": None, "doc_len": 0,
-                    "structure_data": [], "chapters": [],
-                    "final_report": [], "fact_report": [], "grammar_report": [],
-                    "gemini_cache": {}, "debug_log": [], "fact_debug_log": [],
-                    "grammar_debug_log": [], "audit_ran": False, "_last_gemini_call": 0.0,
-                }
+                st.session_state.app_state["audit_ran"]    = False
+                st.session_state.app_state["page_start"]   = int(page_start)
+                st.session_state.app_state["page_end"]     = int(page_end)
+                st.session_state.app_state["pdf_name"]     = uploaded.name
+                st.session_state.app_state["stage"]        = "analyze"
                 st.rerun()
 
 
-# ─── 3) ANALYZE + REPORT ───────────────────────────────────
+# 2) ANALYZE + REPORT
 elif st.session_state.app_state["stage"] == "analyze":
-    chapters = st.session_state.app_state["chapters"]
-    pdf_bytes = st.session_state.app_state["pdf_bytes"]
-    doc_len = st.session_state.app_state["doc_len"]
-    audit_ran = st.session_state.app_state.get("audit_ran", False)
+    pdf_bytes  = st.session_state.app_state["pdf_bytes"]
+    doc_len    = st.session_state.app_state["doc_len"]
+    audit_ran  = st.session_state.app_state.get("audit_ran", False)
+    page_start = st.session_state.app_state.get("page_start", 1)
+    page_end   = st.session_state.app_state.get("page_end", doc_len)
 
-    st.subheader(f"3) Analiză ({len(chapters)} capitole)")
-
-    if analysis_mode in ("Ambele", "Fact-checking tehnic"):
-        c_s, c_e = st.columns(2)
-        with c_s:
-            fact_page_start = st.number_input("Fact-checking: pagina START", min_value=1, max_value=doc_len, value=1)
-        with c_e:
-            fact_page_end = st.number_input("Fact-checking: pagina END", min_value=1, max_value=doc_len, value=doc_len)
-    else:
-        fact_page_start, fact_page_end = 1, doc_len
+    st.subheader(f"Analysis — pages {page_start}–{page_end}")
 
     if not audit_ran:
-        if st.button("Start Audit", type="primary"):
-            fact_rows: List[Dict[str, Any]] = []
-            grammar_rows: List[Dict[str, Any]] = []
-            fact_debug: List[Dict[str, Any]] = []
-            status = st.status("Rulez auditul...", expanded=True)
+        status = st.status("Running audit...", expanded=True)
+        st.session_state.app_state["api_calls_log"] = []
 
-            if analysis_mode in ("Ambele", "Fact-checking tehnic"):
-                ps = min(int(fact_page_start), int(fact_page_end))
-                pe = max(int(fact_page_start), int(fact_page_end))
-                n_batches = max(1, (pe - ps + 1 + pages_per_batch - 1) // pages_per_batch)
-                status.write(
-                    f"Fact-checking: {pe - ps + 1} pagini · {n_batches} batch-uri · "
-                    f"Detector A + B (Gemini) + Judge (Llama-3.3-70B)"
-                )
-                progress = st.progress(0.0)
-                batch_idx = 0
-                for bs in range(ps, pe + 1, pages_per_batch):
-                    be = min(pe, bs + pages_per_batch - 1)
-                    batch_idx += 1
-                    status.write(f"Batch {batch_idx}/{n_batches}: pagini **{bs}–{be}**")
+        fact_rows:    List[Dict[str, Any]] = []
+        grammar_rows: List[Dict[str, Any]] = []
+        fact_debug:   List[Dict[str, Any]] = []
+        grammar_debug:List[Dict[str, Any]] = []
 
-                    a_rows, a_debug = gemini_detector_range(
-                        pdf_bytes, bs, be, gem_model, max_errors_per_detector,
-                        "detector_a", _DETECTOR_A_SYSTEM,
-                    )
-                    fact_debug.append(a_debug)
-
-                    b_rows, b_debug = gemini_detector_range(
-                        pdf_bytes, bs, be, gem_model, max_errors_per_detector,
-                        "detector_b", _DETECTOR_B_SYSTEM,
-                    )
-                    fact_debug.append(b_debug)
-
-                    validated, j_debug = judge_text_batch(a_rows + b_rows, bs, be)
-                    fact_debug.append(j_debug)
-
-                    for row in validated:
-                        page = int(row.get("pagina", bs))
-                        row["capitol"] = chapter_title_for_page(chapters, page) or f"Pagina {page}"
-                    fact_rows.extend(validated)
-                    progress.progress(batch_idx / n_batches)
-
-                fact_rows = _dedup_fact_rows(fact_rows)
-
-            if analysis_mode in ("Ambele", "Gramatica"):
-                status.write("Gramatică (Gemini pe PDF, chunked)...")
-                grammar_rows = grammar_run_all(pdf_bytes, doc_len, gem_model, pages_per_chunk, max_err_chunk)
-
-            st.session_state.app_state["fact_report"] = fact_rows
-            st.session_state.app_state["grammar_report"] = grammar_rows
-            st.session_state.app_state["final_report"] = fact_rows + grammar_rows
-            st.session_state.app_state["fact_debug_log"] = fact_debug
-            st.session_state.app_state["debug_log"] = fact_debug
-            st.session_state.app_state["audit_ran"] = True
-            status.update(label="Analiză completă!", state="complete", expanded=False)
-            st.rerun()
-
-    if audit_ran:
-        fact_report = st.session_state.app_state.get("fact_report", [])
-        grammar_report = st.session_state.app_state.get("grammar_report", [])
-
-        if not fact_report and not grammar_report:
-            st.warning(
-                "Auditul a rulat dar nu s-au găsit erori. "
-                "Activează 'Mod debug agenți' și rulează din nou pentru detalii API."
+        if analysis_mode in ("Both", "Technical fact-checking"):
+            status.write(f"Fact-checking pages **{page_start}–{page_end}** via vision...")
+            fact_rows, fact_debug = fact_check_run_all(
+                pdf_bytes, page_start, page_end, chunk_size,
+                status_ref=status,
             )
 
-        # ── Fact-checking table ──────────────────────────────
-        if analysis_mode in ("Ambele", "Fact-checking tehnic"):
-            st.markdown("### Fact-checking tehnic")
-            if not fact_report:
-                st.info("Nu au fost validate erori tehnice/factuale.")
-            else:
-                st.success(f"Erori tehnice/factuale validate: {len(fact_report)}")
-                df_fact = pd.DataFrame(fact_report)
-                for col in ["validat", "pagina", "categorie", "capitol", "text", "sugestie", "explicatie", "incredere"]:
-                    if col not in df_fact.columns:
-                        df_fact[col] = "" if col != "validat" else True
-                df_fact = df_fact[["validat", "pagina", "categorie", "capitol", "text", "sugestie", "explicatie", "incredere"]]
+        if analysis_mode in ("Both", "Grammar"):
+            status.write(f"Grammar check pages **{page_start}–{page_end}**...")
+            grammar_rows, grammar_debug = grammar_run_all(
+                pdf_bytes, page_start, page_end, chunk_size, max_gram_errors,
+                status_ref=status,
+            )
 
-                counts = df_fact["categorie"].replace("", "Necategorizat").value_counts()
-                cols = st.columns(min(len(counts), 5))
-                for i, (tip, cnt) in enumerate(counts.items()):
-                    with cols[i % len(cols)]:
-                        st.metric(str(tip), int(cnt))
+        st.session_state.app_state["fact_report"]     = fact_rows
+        st.session_state.app_state["grammar_report"]  = grammar_rows
+        st.session_state.app_state["fact_debug_log"]  = fact_debug
+        st.session_state.app_state["grammar_debug_log"] = grammar_debug
+        st.session_state.app_state["audit_ran"]       = True
+        status.update(label="Analysis complete!", state="complete", expanded=False)
+        st.rerun()
 
-                val_fact_df = st.data_editor(
-                    df_fact,
-                    column_config={
-                        "validat": st.column_config.CheckboxColumn("Valid?", default=True),
-                        "pagina": st.column_config.NumberColumn("Pagina", format="%d"),
-                        "categorie": "Categorie",
-                        "capitol": "Capitol",
-                        "text": "Fragment problematic",
-                        "sugestie": "Corectare / regulă corectă",
-                        "explicatie": "Explicație",
-                        "incredere": st.column_config.NumberColumn("Încredere", format="%.2f"),
-                    },
-                    width="stretch",
-                    height=420,
-                    key="fact_editor",
-                )
-                valid_fact = val_fact_df[val_fact_df["validat"] == True].copy()
-                c1, c2 = st.columns([1.2, 1.6])
-                with c1:
-                    if not valid_fact.empty:
-                        st.download_button(
-                            "Descarcă CSV fact-checking",
-                            valid_fact.to_csv(index=False).encode("utf-8"),
-                            "raport_fact_checking.csv", "text/csv",
-                        )
-                with c2:
-                    if not valid_fact.empty:
-                        st.download_button(
-                            "Descarcă Excel fact-checking",
-                            dataframe_to_pretty_excel_bytes(valid_fact, "Fact checking"),
-                            "raport_fact_checking.xlsx",
-                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        )
+    # Results
+    fact_report    = st.session_state.app_state.get("fact_report", [])
+    grammar_report = st.session_state.app_state.get("grammar_report", [])
 
-        if analysis_mode == "Ambele":
-            st.divider()
+    if not fact_report and not grammar_report:
+        st.warning("Audit ran but no issues found. Check the API Debug Log below.")
 
-        # ── Grammar table ────────────────────────────────────
-        if analysis_mode in ("Ambele", "Gramatica"):
-            st.markdown("### Gramatică Gemini")
-            if not grammar_report:
-                st.info("Nu au fost găsite erori gramaticale.")
-            else:
-                st.success(f"Erori gramaticale găsite: {len(grammar_report)}")
-                df_grammar = pd.DataFrame(grammar_report)
-                for col in ["validat", "tip", "capitol", "text", "sugestie", "explicatie"]:
-                    if col not in df_grammar.columns:
-                        df_grammar[col] = False if col == "validat" else ""
-                df_grammar = df_grammar[["validat", "tip", "capitol", "text", "sugestie", "explicatie"]]
+    # Fact-checking table
+    if analysis_mode in ("Both", "Technical fact-checking"):
+        st.markdown("### Technical Fact-checking")
+        if not fact_report:
+            st.info("No technical errors found.")
+        else:
+            st.success(f"{len(fact_report)} technical error(s) found")
+            df_f = pd.DataFrame(fact_report)
+            for col, default in [
+                ("validat", True), ("pagina", ""), ("categorie", ""),
+                ("text", ""), ("sugestie", ""), ("explicatie", ""), ("incredere", 0.0)
+            ]:
+                if col not in df_f.columns:
+                    df_f[col] = default
+            df_f = df_f[["validat", "pagina", "categorie", "text", "sugestie", "explicatie", "incredere"]]
 
-                counts_g = df_grammar["tip"].value_counts()
-                cols_g = st.columns(min(len(counts_g), 5))
-                for i, (tip, cnt) in enumerate(counts_g.items()):
-                    with cols_g[i % len(cols_g)]:
-                        st.metric(str(tip), int(cnt))
+            counts = df_f["categorie"].replace("", "Necategorizat").value_counts()
+            st.caption("By category: " + ", ".join(f"{tip}: {cnt}" for tip, cnt in counts.items()))
 
-                val_grammar_df = st.data_editor(
-                    df_grammar,
-                    column_config={
-                        "validat": st.column_config.CheckboxColumn("Valid?", default=False),
-                        "tip": "Tip",
-                        "capitol": "Pagini",
-                        "text": "Fragment problematic",
-                        "sugestie": "Corectare",
-                        "explicatie": "Explicație",
-                    },
-                    width="stretch",
-                    height=420,
-                    key="grammar_editor",
-                )
-                valid_grammar = val_grammar_df[val_grammar_df["validat"] == True].copy()
-                c1, c2 = st.columns([1.2, 1.6])
-                with c1:
-                    if not valid_grammar.empty:
-                        st.download_button(
-                            "Descarcă CSV gramatică",
-                            valid_grammar.to_csv(index=False).encode("utf-8"),
-                            "raport_gramatica.csv", "text/csv",
-                        )
-                with c2:
-                    if not valid_grammar.empty:
-                        st.download_button(
-                            "Descarcă Excel gramatică",
-                            dataframe_to_pretty_excel_bytes(valid_grammar, "Gramatica"),
-                            "raport_gramatica.xlsx",
-                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        )
+            edited_f = st.data_editor(
+                df_f,
+                column_config={
+                    "validat":   st.column_config.CheckboxColumn("Keep?", default=True),
+                    "pagina":    st.column_config.NumberColumn("Page", format="%d"),
+                    "categorie": "Category",
+                    "text":      "Fragment",
+                    "sugestie":  "Correction",
+                    "explicatie":"Explanation",
+                    "incredere": st.column_config.NumberColumn("Confidence", format="%.2f"),
+                },
+                width="stretch", height=420, key="fact_editor",
+            )
+            valid_f = edited_f[edited_f["validat"] == True].copy()
+            c1, c2 = st.columns([1.2, 1.6])
+            with c1:
+                if not valid_f.empty:
+                    st.download_button("Download CSV (fact-checking)",
+                        valid_f.to_csv(index=False).encode("utf-8"),
+                        "fact_checking.csv", "text/csv")
+            with c2:
+                if not valid_f.empty:
+                    st.download_button("Download Excel (fact-checking)",
+                        df_to_excel(valid_f, "Fact checking"),
+                        "fact_checking.xlsx",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
+    if analysis_mode == "Both":
         st.divider()
-        c3, c4 = st.columns(2)
-        with c3:
-            if st.button("Repornește analiza"):
-                for k in ["final_report", "fact_report", "grammar_report",
-                          "debug_log", "fact_debug_log", "grammar_debug_log"]:
-                    st.session_state.app_state[k] = []
-                st.session_state.app_state["gemini_cache"] = {}
-                st.session_state.app_state["audit_ran"] = False
-                st.rerun()
-        with c4:
-            if st.button("Analizează alt document"):
-                st.session_state.app_state = {
-                    "stage": "upload", "pdf_bytes": None, "doc_len": 0,
-                    "structure_data": [], "chapters": [],
-                    "final_report": [], "fact_report": [], "grammar_report": [],
-                    "gemini_cache": {}, "debug_log": [], "fact_debug_log": [],
-                    "grammar_debug_log": [], "audit_ran": False, "_last_gemini_call": 0.0,
-                }
-                st.rerun()
 
-        # ── Debug panels ─────────────────────────────────────
-        if debug_mode:
-            grammar_debug_log = st.session_state.app_state.get("grammar_debug_log", [])
-            if grammar_debug_log:
-                gem_errors = [e for e in grammar_debug_log if e.get("error")]
-                with st.expander(
-                    f"Debug Gramatică Gemini ({len(grammar_debug_log)} chunk-uri · {len(gem_errors)} erori API)",
-                    expanded=bool(gem_errors),
-                ):
-                    summary = [
-                        {
-                            "Pagini": e.get("pages", ""),
-                            "Cache": e.get("from_cache", False),
-                            "Erori găsite": e.get("erori_gasite", 0),
-                            "Eroare API": str(e.get("error") or ""),
-                        }
-                        for e in grammar_debug_log
-                    ]
-                    st.dataframe(pd.DataFrame(summary), use_container_width=True)
+    # Grammar table 
+    if analysis_mode in ("Both", "Grammar"):
+        st.markdown("### Grammar")
+        if not grammar_report:
+            st.info("No grammar errors found.")
+        else:
+            st.success(f"{len(grammar_report)} grammar issue(s) found")
+            df_g = pd.DataFrame(grammar_report)
+            for col, default in [
+                ("validat", False), ("tip", ""), ("pagina", ""),
+                ("text", ""), ("sugestie", ""), ("explicatie", "")
+            ]:
+                if col not in df_g.columns:
+                    df_g[col] = default
+            df_g = df_g[["validat", "tip", "pagina", "text", "sugestie", "explicatie"]]
 
-            fact_debug_log = st.session_state.app_state.get("fact_debug_log", [])
-            if fact_debug_log:
-                fact_errors = [e for e in fact_debug_log if e.get("error")]
-                with st.expander(
-                    f"Debug Fact-checking ({len(fact_debug_log)} apeluri · {len(fact_errors)} erori API)",
-                    expanded=bool(fact_errors),
-                ):
-                    batch_rows = []
-                    i = 0
-                    while i < len(fact_debug_log):
-                        entry = fact_debug_log[i]
-                        if entry.get("agent") == "detector_a":
-                            row: Dict[str, Any] = {
-                                "Pagini": entry.get("pages", ""),
-                                "Candidați A": entry.get("items_found", 0),
-                                "Eroare A": str(entry.get("error") or ""),
-                                "Candidați B": "",
-                                "Eroare B": "",
-                                "Judge": "",
-                                "Validate": "",
-                                "Eroare Judge": "",
-                            }
-                            if i + 1 < len(fact_debug_log) and fact_debug_log[i + 1].get("agent") == "detector_b":
-                                b = fact_debug_log[i + 1]
-                                row["Candidați B"] = b.get("items_found", 0)
-                                row["Eroare B"] = str(b.get("error") or "")
-                                i += 1
-                            if i + 1 < len(fact_debug_log) and fact_debug_log[i + 1].get("agent") == "judge":
-                                j = fact_debug_log[i + 1]
-                                row["Judge"] = "Sărit (0 candidați)" if j.get("skipped") else "Rulat"
-                                row["Validate"] = j.get("confirmed", 0)
-                                row["Eroare Judge"] = str(j.get("error") or "")
-                                i += 1
-                            batch_rows.append(row)
-                        i += 1
+            counts_g = df_g["tip"].value_counts()
+            st.caption("By type: " + ", ".join(f"{tip}: {cnt}" for tip, cnt in counts_g.items()))
 
-                    if batch_rows:
-                        st.dataframe(pd.DataFrame(batch_rows), use_container_width=True)
-                    if fact_errors:
-                        st.markdown("#### Erori API detaliate")
-                        for e in fact_errors:
-                            st.error(
-                                f"**{e.get('agent')}** · pagini {e.get('pages', '?')} · "
-                                f"model {e.get('model', '?')}\n\n{e.get('error')}"
-                            )
+            edited_g = st.data_editor(
+                df_g,
+                column_config={
+                    "validat":   st.column_config.CheckboxColumn("Keep?", default=False),
+                    "tip":       "Type",
+                    "pagina":    st.column_config.NumberColumn("Page", format="%d"),
+                    "text":      "Fragment",
+                    "sugestie":  "Correction",
+                    "explicatie":"Explanation",
+                },
+                width="stretch", height=420, key="grammar_editor",
+            )
+            valid_g = edited_g[edited_g["validat"] == True].copy()
+            c1, c2 = st.columns([1.2, 1.6])
+            with c1:
+                if not valid_g.empty:
+                    st.download_button("Download CSV (grammar)",
+                        valid_g.to_csv(index=False).encode("utf-8"),
+                        "grammar.csv", "text/csv")
+            with c2:
+                if not valid_g.empty:
+                    st.download_button("Download Excel (grammar)",
+                        df_to_excel(valid_g, "Grammar"),
+                        "grammar.xlsx",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+    st.divider()
+
+    # HTML Report 
+    if fact_report or grammar_report:
+        pdf_name = st.session_state.app_state.get("pdf_name", "textbook")
+        report_name = re.sub(r"\.[^.]+$", "", pdf_name)
+        html_bytes = generate_html_report(fact_report, grammar_report, report_name).encode("utf-8")
+        st.download_button(
+            "Generate & Download HTML Report",
+            html_bytes,
+            f"{report_name}_report.html",
+            "text/html",
+        )
+
+    st.divider()
+    c1, c2 = st.columns(2)
+    with c1:
+        if st.button("Re-run analysis"):
+            for k in ["fact_report", "grammar_report", "fact_debug_log",
+                      "grammar_debug_log", "api_calls_log"]:
+                st.session_state.app_state[k] = []
+            st.session_state.app_state["audit_ran"] = False
+            st.rerun()
+    with c2:
+        if st.button("Upload a different document"):
+            st.session_state.app_state = dict(_EMPTY_STATE)
+            st.rerun()
+
+    if show_api_debug:
+        render_debug_downloads("analyze")
