@@ -179,7 +179,7 @@ def together_vision_multi_json(
         "model": MODEL_VISION,
         "messages": [{"role": "user", "content": content}],
         "response_format": {"type": "json_object"},
-        "max_tokens": 200000,
+        "max_tokens": 300000,
         "reasoning_effort":"low",
         "reasoning":{"enabled": True}
     }
@@ -277,28 +277,35 @@ def pages_to_base64(pdf_bytes: bytes, start_1based: int, end_1based: int, dpi: i
 # ============================================================
 # FACT-CHECKING  
 # ============================================================
-_FACT_PROMPT_TEMPLATE = """Ești auditor tehnic pentru un manual școlar românesc de informatică.
+_FACT_PROMPT_TEMPLATE = """Ești auditor expert pentru manuale școlare românești de orice disciplină și nivel.
 Analizează imaginile paginilor {start}–{end} de mai jos.
 
-Caută EXCLUSIV erori tehnice din categoriile:
-1. COD — operatori C/C++ greșiți (cout>>, cin<<), sintaxă imposibilă (Typedef, int:var), bucle for cu variabile inconsistente, literal în condiție (for(i=1;1<n;i++)), void main() / #include<iostream.h> fără avertisment;
-2. PSEUDOCOD — cifra 0 înlocuită cu litera o, inconsistențe logice;
-3. CONCEPT — stivă descrisă ca FIFO, coadă ca LIFO, definiție fundamental greșită;
-4. COMPLEXITATE — complexitate algoritmică evident greșită (O(n) pentru bubble sort etc.);
-5. STANDARD — standard C++ greșit prezentat fără contextualizare.
+Caută EXCLUSIV erori factuale, științifice și conceptuale care sunt clare, verificabile și incontestabile. Acestea pot include, dar nu se limitează la:
+- Erori factuale: date istorice, nume proprii, locuri, evenimente, atribuiri prezentate greșit;
+- Erori matematice: calcule incorecte, formule greșite, demonstrații cu pași eronați, unități de măsură greșite;
+- Erori științifice: legi, principii, definiții, constante, formule chimice/fizice prezentate greșit;
+- Erori conceptuale: definiție fundamental greșită a unui termen sau a unei noțiuni;
+- Contradicții interne: text care contrazice o schemă, un tabel, un exemplu, o figură sau alt pasaj;
+- Erori de cod / algoritmică (dacă paginile conțin cod sau pseudocod): operatori greșiți, sintaxă imposibilă, complexitate evident greșită, cod care produce alt rezultat decât cel afirmat în text;
+- Afirmații false verificabile despre fapte ale lumii reale sau despre cunoștințe din domeniul respectiv.
 
-NU raporta: gramatică, diacritice, indentare, stil, using namespace std, bits/stdc++.h, variabile scurte/globale, int main() fără return 0.
-Fii conservator — dacă nu ești sigur, nu raporta.
+NU raporta:
+- gramatică, ortografie, diacritice, punctuație, topică, stil de scriere;
+- formulări neclare care necesită context suplimentar pentru a fi judecate;
+- preferințe stilistice, modernizări opționale, recomandări de îmbunătățire;
+- chestiuni acceptabile pedagogic la nivelul respectiv (de ex. simplificări intenționate).
+
+Fii conservator — dacă există vreo îndoială, NU raporta.
 
 Returnează STRICT JSON (fără text în afara JSON-ului):
 {{
   "erori": [
     {{
       "pagina": <numărul paginii din manual>,
-      "categorie": "COD|PSEUDOCOD|CONCEPT|COMPLEXITATE|STANDARD",
+      "categorie": "<tip scurt al erorii, ex: FACTUAL, MATEMATIC, ȘTIINȚIFIC, CONCEPT, COD, CONTRADICTIE>",
       "fragment": "<text exact din manual>",
       "corect": "<varianta corectă>",
-      "explicatie": "<de ce e greșit>",
+      "explicatie": "<de ce este greșit, cu referință la sursa corectă dacă posibil>",
       "incredere": <0.0–1.0>
     }}
   ]
@@ -311,6 +318,7 @@ def fact_check_chunk(
     pdf_bytes: bytes,
     start_page: int,
     end_page: int,
+    prompt_template: Optional[str] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     debug: Dict[str, Any] = {
         "pages": f"{start_page}-{end_page}",
@@ -324,7 +332,12 @@ def fact_check_chunk(
         debug["error"] = "Nu s-au putut randa paginile"
         return [], debug
 
-    prompt = _FACT_PROMPT_TEMPLATE.format(start=start_page, end=end_page)
+    template = prompt_template or _FACT_PROMPT_TEMPLATE
+    try:
+        prompt = template.format(start=start_page, end=end_page)
+    except (KeyError, IndexError):
+        # custom prompt may not include placeholders — use as-is with a page hint appended
+        prompt = f"{template}\n\n(Paginile analizate: {start_page}–{end_page})"
     res = together_vision_multi_json(prompt, images)
 
     if "_error" in res:
@@ -356,6 +369,7 @@ def fact_check_run_all(
     page_start: int,
     page_end: int,
     chunk_size: int,
+    prompt_template: Optional[str] = None,
     status_ref=None,
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     all_rows:  List[Dict[str, Any]] = []
@@ -366,7 +380,7 @@ def fact_check_run_all(
         if status_ref:
             status_ref.write(f"Fact-checking (vision): pages **{bs}–{be}**...")
 
-        rows, dbg = fact_check_chunk(pdf_bytes, bs, be)
+        rows, dbg = fact_check_chunk(pdf_bytes, bs, be, prompt_template=prompt_template)
         if dbg.get("error") and status_ref:
             status_ref.write(f"Eroare fact-check ({bs}-{be}): {dbg['error']}")
         all_debug.append(dbg)
@@ -847,6 +861,27 @@ if st.session_state.app_state["stage"] == "upload":
             with c2:
                 page_end = st.number_input("End page", min_value=1, max_value=doc_len, value=doc_len)
 
+            st.markdown("**Fact-checking prompt**")
+            prompt_mode = st.radio(
+                "Choose the prompt for fact-checking",
+                ["Generic (default, works on any discipline)", "Custom"],
+                index=0,
+                horizontal=False,
+                label_visibility="collapsed",
+            )
+
+            if prompt_mode.startswith("Custom"):
+                custom_prompt = st.text_area(
+                    "Custom prompt (use {start} and {end} as placeholders for the page range)",
+                    value=_FACT_PROMPT_TEMPLATE,
+                    height=400,
+                    help="The model is required to return a JSON object with an 'erori' array. Keep that part of the prompt if you want the existing UI to display results.",
+                )
+            else:
+                custom_prompt = None
+                with st.expander("Show generic prompt"):
+                    st.code(_FACT_PROMPT_TEMPLATE, language="text")
+
             if st.button("Start Audit", type="primary"):
                 for k in ["fact_report", "grammar_report", "fact_debug_log",
                           "grammar_debug_log", "api_calls_log"]:
@@ -855,6 +890,7 @@ if st.session_state.app_state["stage"] == "upload":
                 st.session_state.app_state["page_start"]   = int(page_start)
                 st.session_state.app_state["page_end"]     = int(page_end)
                 st.session_state.app_state["pdf_name"]     = uploaded.name
+                st.session_state.app_state["fact_prompt"]  = custom_prompt  # None = use default
                 st.session_state.app_state["stage"]        = "analyze"
                 st.rerun()
 
@@ -882,6 +918,7 @@ elif st.session_state.app_state["stage"] == "analyze":
             status.write(f"Fact-checking pages **{page_start}–{page_end}** via vision...")
             fact_rows, fact_debug = fact_check_run_all(
                 pdf_bytes, page_start, page_end, chunk_size,
+                prompt_template=st.session_state.app_state.get("fact_prompt"),
                 status_ref=status,
             )
 
