@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manual Matematica Booklet clasa a V-a — raport audit</title>
+<title>Manual Romana Corint clasa a V-a — Fact-checking</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@ body::before {
 .wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
 
 /* masthead */
-.masthead { padding:60px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
 .eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
   letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
 h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
@@ -99,6 +99,9 @@ select { cursor:pointer; }
   letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
   font-weight:500; }
 .empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
 
 @media (max-width:760px) {
   .wrap { padding:0 16px 60px; }
@@ -118,16 +121,17 @@ select { cursor:pointer; }
 <body>
 <div class="wrap">
 
+  <a class="back" href="fact-checking.html">&larr; Fact-checking</a>
   <div class="masthead">
-    <div class="eyebrow">Audit manual școlar</div>
-    <h1>Manual Matematica Booklet clasa a V-a</h1>
+    <div class="eyebrow">Fact-checking</div>
+    <h1>Manual Romana Corint clasa a V-a</h1>
     <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
     manual alături de forma corectă.</p>
     <div class="meta">
-      <span class="chip"><b>5</b> rezultate</span>
+      <span class="chip"><b>3</b> rezultate</span>
       
       <span class="chip"><b>2</b> categorii</span>
-      <span class="chip">pagini <b>66</b>–<b>191</b></span>
+      <span class="chip">pagini <b>3</b>–<b>111</b></span>
     </div>
   </div>
 
@@ -136,8 +140,8 @@ select { cursor:pointer; }
   <div class="controls">
     <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
     
-    <select id="fCat"><option value="">Toate categoriile</option><option value="CALCUL">Calcul</option><option value="NOTATIE">Notație</option></select>
-    <select id="fPage"><option value="">Toate paginile</option><option value="66">p. 66</option><option value="108">p. 108</option><option value="139">p. 139</option><option value="191">p. 191</option></select>
+    <select id="fCat"><option value="">Toate categoriile</option><option value="CITAT">Citat</option><option value="CRONOLOGIE">Cronologie</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="3">p. 3</option><option value="46">p. 46</option><option value="111">p. 111</option></select>
     <span class="count" id="count"></span>
   </div>
 
@@ -145,7 +149,7 @@ select { cursor:pointer; }
 </div>
 
 <script>
-const DATA = [{"manual": "Manual Matematica Booklet clasa a V-a", "pagina": "66", "categorie": "CALCUL", "text": "247 : 7 = 33, rest 2", "sugestie": "247 : 7 = 35, rest 2", "explicatie": "7 · 33 + 2 = 233, nu 247, iar câtul împărțirii lui 247 la 7 este 35, deoarece 7 · 35 + 2 = 247.", "sursa": "Claude web"}, {"manual": "Manual Matematica Booklet clasa a V-a", "pagina": "108", "categorie": "NOTATIE", "text": "c) Aproximarea prin lipsă la zecimi a fracției ordinare 23,459 este:", "sugestie": "c) Aproximarea prin lipsă la zecimi a fracției zecimale 23,459 este:", "explicatie": "Numărul 23,459 este scris cu virgulă, deci este o fracție zecimală, nu o fracție ordinară, conform definiției date chiar în manual la pagina 102.", "sursa": "Claude web"}, {"manual": "Manual Matematica Booklet clasa a V-a", "pagina": "139", "categorie": "NOTATIE", "text": "Segmentul: Fie A și B două puncte distincte pe dreapta a. Porțiunea din dreapta d situată între punctele A și B se numește segment.", "sugestie": "Segmentul: Fie A și B două puncte distincte pe dreapta a. Porțiunea din dreapta a situată între punctele A și B se numește segment.", "explicatie": "Dreapta este introdusă în aceeași frază cu numele a, iar în figura 10 este notată tot cu a, deci notația d din a doua propoziție desemnează o dreaptă inexistentă.", "sursa": "Claude web"}, {"manual": "Manual Matematica Booklet clasa a V-a", "pagina": "191", "categorie": "CALCUL", "text": "7. A_teren = 1 368 hm². 11 tractoare ară într-o zi 99 hm², deci cele 11 tractoare ară terenul în 14 zile.", "sugestie": "A_teren = 1 386 hm²", "explicatie": "Terenul are 420 dam = 42 hm și 3,3 km = 33 hm, deci aria este 42 · 33 = 1 386 hm², valoare confirmată și de rezultatul 1 386 : 99 = 14 zile.", "sursa": "Claude web"}, {"manual": "Manual Matematica Booklet clasa a V-a", "pagina": "191", "categorie": "CALCUL", "text": "8. Dacă l este lățimea dreptunghiului, atunci lungimea acestuia este 2 · l și A = 2 · l · l = 2 · l². Deci l = 5, L = 10 și P = 30 m.", "sugestie": "Deci l = 5 cm, L = 10 cm și P = 30 cm.", "explicatie": "Enunțul exercițiului dă aria egală cu 50 cm², deci laturile sunt exprimate în centimetri, iar perimetrul este 30 cm, nu 30 m.", "sursa": "Claude web"}];
+const DATA = [{"kind": "fact", "manual": "Manual Romana Corint clasa a V-a", "pagina": "3", "categorie": "CITAT", "text": "Deviza-i libertatea și scopul ei preasfânt.", "sugestie": "Deviza-i libertate și scopul ei preasfânt.", "explicatie": "În textul canonic al poeziei lui Andrei Mureșanu și în forma oficială a imnului de stat, substantivul este nearticulat („libertate”), utilizarea formei articulate alterând textul de referință și metrica versului.", "sursa": "Claude web"}, {"kind": "fact", "manual": "Manual Romana Corint clasa a V-a", "pagina": "46", "categorie": "CRONOLOGIE", "text": "Johanna Spyri (1846–1908)", "sugestie": "Johanna Spyri (1827–1901)", "explicatie": "Scriitoarea elvețiană Johanna Spyri a trăit între anii 1827 și 1901, anii 1846–1908 indicați în manual aparținând scriitorului Edmondo De Amicis.", "sursa": "Claude web"}, {"kind": "fact", "manual": "Manual Romana Corint clasa a V-a", "pagina": "111", "categorie": "CRONOLOGIE", "text": "1922 – apare primul Dicționar universal al limbii române, de Lazăr Șăineanu", "sugestie": "1896 – apare primul Dicționar universal al limbii române, de Lazăr Șăineanu", "explicatie": "Prima ediție a lucrării „Dicționar universal al limbii române” de Lazăr Șăineanu a fost publicată în anul 1896, în anul 1922 apărând abia ediția a patra a acesteia.", "sursa": "Claude web"}];
 const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
 const lbl  = c => LBL[c] || c;
 const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
