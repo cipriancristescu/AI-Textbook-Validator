@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Matematica Corint clasa a V-a — raport audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:60px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="eyebrow">Audit manual școlar</div>
+    <h1>Manual Matematica Corint clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>17</b> rezultate</span>
+      
+      <span class="chip"><b>3</b> categorii</span>
+      <span class="chip">pagini <b>55</b>–<b>189</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="CALCUL">Calcul</option><option value="CONTRADICTIE">Contradicție</option><option value="NOTATIE">Notație</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="55">p. 55</option><option value="58">p. 58</option><option value="100">p. 100</option><option value="125">p. 125</option><option value="126">p. 126</option><option value="147">p. 147</option><option value="157">p. 157</option><option value="171">p. 171</option><option value="182">p. 182</option><option value="188">p. 188</option><option value="189">p. 189</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"manual": "Manual Matematica Corint clasa a V-a", "pagina": "55", "categorie": "CALCUL", "text": "0, 18, 36, 54, 72, 90, 108, 136, …, 18k, …", "sugestie": "0, 18, 36, 54, 72, 90, 108, 126, …, 18k, …", "explicatie": "136 nu este multiplu al lui 18, iar termenul care urmează lui 108 în șirul multiplilor lui 18 este 126.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "58", "categorie": "CALCUL", "text": "9 | 1x2 dacă 1 + x + 2 = 3 + x se divide cu 9 și obținem x = 5, adică numărul 152", "sugestie": "9 | 1x2 dacă 1 + x + 2 = 3 + x se divide cu 9 și obținem x = 6, adică numărul 162", "explicatie": "Pentru x = 5 suma cifrelor este 8, care nu se divide cu 9, singura cifră potrivită fiind 6.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "100", "categorie": "CONTRADICTIE", "text": "fiind date fracțiile 5,63; 3,6; 5,62; 4,28; 3,57; 2,99; 8,1 ordinea crescătoare a acestora este 2,99 < 3,57 < 3,6 < 4,58 < 5,62 < 5,63 < 8,1", "sugestie": "fiind date fracțiile 5,63; 3,6; 5,62; 4,28; 3,57; 2,99; 8,1 ordinea crescătoare a acestora este 2,99 < 3,57 < 3,6 < 4,28 < 5,62 < 5,63 < 8,1", "explicatie": "Fracția 4,58 din șirul ordonat nu figurează printre cele șapte fracții date, unde apare 4,28.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "125", "categorie": "CONTRADICTIE", "text": "„mama spune că pentru camera mea a cumpărat 3,5 cutii de parchet și 5 plinte și a plătit 342,77 lei, iar pentru camera ta a plătit 366,03 lei pentru 4 cutii de parchet și 5 plinte”", "sugestie": "„...a cumpărat 3,5 cutii de parchet și 5 plinte și a plătit 505,59 lei, iar pentru camera ta a plătit 552,11 lei pentru 4 cutii de parchet și 5 plinte”", "explicatie": "Sumele din enunț contrazic datele folosite imediat în rezolvare (505,59 lei și 552,11 lei), din care rezultă prețurile obținute de 93,04 lei cutia și 35,99 lei plinta, precum și restul de 427,30 lei.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "126", "categorie": "NOTATIE", "text": "LITRUL (m)", "sugestie": "LITRUL (l)", "explicatie": "Simbolul unității de măsură pentru capacitate este l, nu m, care este simbolul metrului.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "147", "categorie": "CONTRADICTIE", "text": "15. Punctele A, B și C sunt astfel încât AB = 4,5 cm, BC = 5,3 cm și BC = 9,8 cm.", "sugestie": "15. Punctele A, B și C sunt astfel încât AB = 4,5 cm, BC = 5,3 cm și AC = 9,8 cm.", "explicatie": "Segmentul BC nu poate avea simultan două lungimi diferite, iar relația cerută de problemă este AB + BC = AC, adică 4,5 + 5,3 = 9,8.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "157", "categorie": "CALCUL", "text": "85°35' : 5 = 17°5'", "sugestie": "85°35' : 5 = 17°7'", "explicatie": "Explicația alăturată arată că 85° : 5 = 17° și 35' : 5 = 7', deci rezultatul este 17°7'.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "171", "categorie": "CALCUL", "text": "11,07 dam³ = 11070 hm³", "sugestie": "11,07 dam³ = 11070 m³", "explicatie": "Un decametru cub conține 1000 de metri cubi, deci rezultatul transformării se exprimă în m³, nu în hm³.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "182", "categorie": "CALCUL", "text": "numărul A se divide cu 3 și cu 53, deci cu 153", "sugestie": "numărul A se divide cu 3 și cu 53, deci cu 159", "explicatie": "Rândul de calcul dă A = 3ⁿ · 51, iar 3 · 53 = 159, nu 153.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "188", "categorie": "CALCUL", "text": "35° 25° 60° 10° 105° 50° 65°", "sugestie": "35° 25° 60° 10° 105° 50° 55°", "explicatie": "3 · 35° − 2 · 25° = 105° − 50° = 55°, valoare contrazisă chiar de celulele 105° și 50° din același rând.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "188", "categorie": "CALCUL", "text": "11. 3360 m³", "sugestie": "3360 cm³", "explicatie": "Dimensiunile paralelipipedului sunt date în centimetri (14, 15, 16), deci volumul este 3360 cm³.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "188", "categorie": "CALCUL", "text": "12. 11,6 m și 8,41 m²", "sugestie": "11,6 cm și 8,41 cm²", "explicatie": "Latura pătratului este media aritmetică a numerelor 1,52 și 4,28, adică 2,9 cm, deci perimetrul și aria se exprimă în cm și cm².", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "188", "categorie": "CALCUL", "text": "18. 64; 8; 16; 24; 16", "sugestie": "64; 8; 24; 24; 8", "explicatie": "Într-un cub cu latura de 4 cm tăiat în cuburi de 1 cm există 24 de cuburi cu două fețe vopsite și 8 cuburi fără nicio față vopsită.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "188", "categorie": "CALCUL", "text": "23. 192 cm²", "sugestie": "192 m²", "explicatie": "Perimetrul dat este de 56 m, laturile sunt 16 m și 12 m, deci aria este 192 m².", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "188", "categorie": "CONTRADICTIE", "text": "1. a) 13,27 dm", "sugestie": "1327 dm", "explicatie": "1,327 hm = 1327 dm, valoare dată chiar de rezolvarea completă de la pagina 192.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "188", "categorie": "CONTRADICTIE", "text": "b) 0,102 dm³", "sugestie": "0,102 dam³", "explicatie": "102 m³ = 0,102 dam³, valoare dată chiar de rezolvarea completă de la pagina 192.", "sursa": "Claude web"}, {"manual": "Manual Matematica Corint clasa a V-a", "pagina": "189", "categorie": "CALCUL", "text": "1230 1200 1000 1340 1300 2000 1240 1200 1000", "sugestie": "1230 1200 1000 1240 1300 2000 1240 1200 1000", "explicatie": "Aproximarea prin adaos la zeci a numărului 1235 este 1240, valoare confirmată de coloana rotunjirii din același tabel.", "sursa": "Claude web"}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>

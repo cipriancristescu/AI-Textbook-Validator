@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit manuale școlare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --gild:#a8873f; --gild-soft:#c9ab6b;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); mix-blend-mode:soft-light; opacity:.52; }
+.wrap { position:relative; z-index:1; max-width:840px; margin:0 auto; padding:0 28px 96px; }
+.masthead { padding:76px 0 30px; border-bottom:1px solid var(--mist); margin-bottom:34px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:20px; }
+h1 { font-size:52px; font-weight:400; letter-spacing:-.02em; line-height:1.03; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:20px; margin-top:14px;
+  max-width:40rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:24px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+.section { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin-bottom:14px; }
+.card-link { display:flex; align-items:center; gap:20px; text-decoration:none;
+  background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:22px 24px; margin-bottom:12px; color:inherit;
+  transition:border-color .15s var(--ease), box-shadow .15s var(--ease); }
+.card-link:hover { border-color:var(--gild-soft); box-shadow:0 1px 3px rgba(23,27,20,.05); }
+.card-main { flex:1; min-width:0; }
+.card-title { font-size:23px; letter-spacing:-.01em; }
+.card-sub { font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-top:7px; }
+.card-num { text-align:right; white-space:nowrap; }
+.card-num .n { font-size:30px; color:var(--laurel); line-height:1; }
+.card-num .p { font-family:var(--mono); font-size:10px; color:var(--ink-faint); margin-top:6px; }
+.card-arrow { color:var(--gild-soft); font-size:19px; }
+.foot { margin-top:44px; padding-top:20px; border-top:1px solid var(--mist);
+  font-family:var(--mono); font-size:11px; color:var(--ink-faint); line-height:1.9; }
+@media (max-width:620px) {
+  .wrap { padding:0 16px 60px; } h1 { font-size:34px; }
+  .card-link { gap:14px; padding:18px; } .card-title { font-size:19px; }
+  .card-arrow { display:none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="eyebrow">Audit manuale școlare</div>
+    <h1>Rapoarte de verificare</h1>
+    <p class="lede">Greșeli factuale identificate în manuale de clasa a V-a, verificate
+    manual pe paginile originale.</p>
+    <div class="meta">
+      <span class="chip"><b>22</b> rezultate</span>
+      <span class="chip"><b>2</b> manuale</span>
+      <span class="chip"><b>3</b> categorii</span>
+    </div>
+  </div>
+
+  <div class="section">Manuale</div>
+  
+      <a class="card-link" href="Matematica%20Booklet%20clasa%20a%20V-a.html">
+        <div class="card-main">
+          <div class="card-title">Matematica Booklet clasa a V-a</div>
+          <div class="card-sub">Calcul 3 &middot; Notație 2</div>
+        </div>
+        <div class="card-num">
+          <div class="n">5</div>
+          <div class="p">p. 66–191</div>
+        </div>
+        <span class="card-arrow">&rarr;</span>
+      </a>
+      <a class="card-link" href="Matematica%20Corint%20clasa%20a%20V-a.html">
+        <div class="card-main">
+          <div class="card-title">Matematica Corint clasa a V-a</div>
+          <div class="card-sub">Calcul 11 &middot; Contradicție 5 &middot; Notație 1</div>
+        </div>
+        <div class="card-num">
+          <div class="n">17</div>
+          <div class="p">p. 55–189</div>
+        </div>
+        <span class="card-arrow">&rarr;</span>
+      </a>
+
+  <div class="foot">
+    Fiecare raport arată textul din manual alături de forma corectă și motivul.<br>
+    Generat cu <code>generate_csv_report.py</code>.
+  </div>
+</div>
+</body>
+</html>
