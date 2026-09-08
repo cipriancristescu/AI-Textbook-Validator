@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Matematica Intuitext clasa a V-a — Fact-checking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="fact-checking.html">&larr; Fact-checking</a>
+  <div class="masthead">
+    <div class="eyebrow">Fact-checking</div>
+    <h1>Manual Matematica Intuitext clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>17</b> rezultate</span>
+      
+      <span class="chip"><b>4</b> categorii</span>
+      <span class="chip">pagini <b>14</b>–<b>172</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="CALCUL">Calcul</option><option value="CONDITII">Condiții</option><option value="CONTRADICTION">CONTRADICTION</option><option value="NOTATIE">Notație</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="14">p. 14</option><option value="19">p. 19</option><option value="22">p. 22</option><option value="26">p. 26</option><option value="49">p. 49</option><option value="51">p. 51</option><option value="82">p. 82</option><option value="83">p. 83</option><option value="134">p. 134</option><option value="135">p. 135</option><option value="136">p. 136</option><option value="153">p. 153</option><option value="171">p. 171</option><option value="172">p. 172</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "14", "categorie": "CONTRADICTION", "text": "Vârsta Universului este estimată la 13 700 000 000 de miliarde de ani.", "sugestie": "Vârsta Universului este estimată la 13 700 000 000 de ani (adică 13,7 miliarde de ani).", "explicatie": "Unitatea de măsură este greșită: „13 700 000 000 de miliarde de ani” ar însemna 13,7 × 10^18 ani, de un miliard de ori mai mult decât valoarea reală. Vârsta Universului este de aproximativ 13,7 miliarde de ani, adică 13 700 000 000 de ani.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "14", "categorie": "CONTRADICTION", "text": "Vârsta Galaxiei noastre este estimată la 13 600 000 000 de miliarde de ani.", "sugestie": "Vârsta Galaxiei noastre este estimată la 13 600 000 000 de ani (adică 13,6 miliarde de ani).", "explicatie": "Aceeași eroare de unitate: „13 600 000 000 de miliarde de ani” ar însemna 13,6 × 10^18 ani. Valoarea corectă este 13 600 000 000 de ani, adică 13,6 miliarde de ani.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "22", "categorie": "CONTRADICTION", "text": "Cea mai mare distanță de la Soare la o planetă se numește semiaxa mare.", "sugestie": "Semiaxa mare este jumătate din axa mare a elipsei (distanța de la centrul elipsei la un vârf al orbitei); cea mai mare distanță de la Soare la o planetă este distanța la afeliu, egală cu a + c (Soarele fiind într-un focar al elipsei, nu în centru).", "explicatie": "Pe o orbită eliptică, Soarele se află într-un focar, nu în centrul elipsei. Distanța de la Soare la planetă variază între a − c (periheliu) și a + c (afeliu), deci distanța maximă este a + c, strict mai mare decât semiaxa mare a. Afirmația contrazice chiar datele din tabelul de mai jos, unde valorile (Mercur 57 909 068 km, Terra 149 597 887 km etc.) sunt valorile reale ale semiaxelor mari, nu distanțele maxime Soare–planetă.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "19", "categorie": "CONTRADICTION", "text": "De exemplu, sumerienii, care foloseau numerația zecimală, aplicau și sistemul pozițional, la exprimarea grafică a numerelor.", "sugestie": "Sumerienii foloseau numerația în baza 60 (sistemul sexagesimal), nu numerația zecimală.", "explicatie": "Sistemul de numerație sumerian (moștenit apoi de babilonieni) era un sistem pozițional în baza 60 — de acolo provin diviziunea orei în 60 de minute și a minutului în 60 de secunde. Afirmația că sumerienii foloseau numerația zecimală este falsă; sistemul pozițional zecimal este atribuit civilizației indiene, mult ulterioară.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "26", "categorie": "CALCUL", "text": "28 000 – 21 000 = 49 000", "sugestie": "28 000 + 21 000 = 49 000", "explicatie": "În modelul de la exercițiul 11 se estimează suma 28 463 + 21 549 prin aproximare la mii prin lipsă: 28 000 și 21 000. Operația corectă este adunarea, nu scăderea: 28 000 + 21 000 = 49 000, în timp ce 28 000 − 21 000 = 7 000 ≠ 49 000. Semnul „–” tipărit contrazice atât rezultatul afișat, cât și scopul estimării unei sume (linia de jos a aceluiași model folosește corect „+”: 29 000 + 22 000 = 51 000).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "49", "categorie": "CONTRADICTION", "text": "Cum 25 > 21 rezultă 11 001(2) > 1 011(2)", "sugestie": "Cum 25 > 11 rezultă 11 001(2) > 1 011(2)", "explicatie": "În rezolvarea de mai sus, manualul calculează corect 1 011(2) = 1·2³ + 1·2 + 1 = 8 + 2 + 1 = 11(10). Prin urmare, comparația trebuie făcută între 25 și 11, nu între 25 și 21. Valoarea 21 nu apare nicăieri în calcul; concluzia finală (11 001(2) > 1 011(2)) este corectă, dar justificarea tipărită „25 > 21\" contrazice rezultatul obținut (11).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "51", "categorie": "NOTATIE", "text": "corpul uman este format din 37 trilioane de celule, iar numărul bacteriilor din corp se ridică la 39 de trilioane", "sugestie": "corpul uman este format din 37 de bilioane de celule, iar numărul bacteriilor din corp se ridică la 39 de bilioane", "explicatie": "În sistemul de denumire a numerelor mari folosit în România (scara lungă), 1 trilion = 10^18, iar 1 bilion = 10^12. Estimarea citată este de circa 3,7·10^13 celule și 3,9·10^13 bacterii, adică 37/39 de bilioane în denumirea românească. „37 trilioane\" ar însemna 3,7·10^19, cu șase ordine de mărime mai mult decât valoarea reală — confuzie provenită dintr-o traducere literală a lui „trillion\" englezesc.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "82", "categorie": "CONDITII", "text": "Un număr natural a este divizibil (se divide) cu un număr natural b dacă există un număr natural c, astfel încât a = b · c.", "sugestie": "Un număr natural a este divizibil (se divide) cu un număr natural nenul b dacă există un număr natural c, astfel încât a = b · c.", "explicatie": "Definiția omite condiția b ≠ 0. Aplicată literalmente pentru b = 0, rezultă că 0 ar fi divizibil cu 0 (0 = 0 · c pentru orice c), ceea ce este imposibil, întrucât împărțirea la 0 nu este definită. Manualele standard enunță relația de divizibilitate doar pentru divizori nenuli.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "83", "categorie": "CONDITII", "text": "Numărul 0 se divide cu orice număr natural. 0 ∶ a (sau a | 0).", "sugestie": "Numărul 0 se divide cu orice număr natural nenul. 0 ∶ a (sau a | 0), pentru a ≠ 0.", "explicatie": "Afirmația include și cazul a = 0, dar 0 : 0 nu este definit; scrierea 0 ∶ 0 (sau 0 | 0) este lipsită de sens. Forma corectă restricționează afirmația la numere naturale nenule.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "134", "categorie": "CALCUL", "text": "Suprafață parchet: 1,52 m²", "sugestie": "Suprafață parchet: 1,48 m²", "explicatie": "O placă are 1 285 × 192 mm, adică 1,285 m × 0,192 m = 0,24672 m². Un pachet conține 6 bucăți, deci 6 × 0,24672 = 1,48032 m² ≈ 1,48 m², nu 1,52 m². Confirmare internă: eticheta indică 59,2 m²/palet la 40 de pachete, iar 59,2 : 40 = 1,48 m²/pachet.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "134", "categorie": "CONTRADICTION", "text": "Împachetare: 6 bucăți/palet", "sugestie": "Împachetare: 6 bucăți/pachet", "explicatie": "Aceeași etichetă precizează „Paletizare: 240 bucăți, 40 pachete”. Dacă un palet ar avea 6 bucăți, nu ar putea conține 240 de bucăți; corect este 240 : 40 = 6 bucăți/pachet.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "135", "categorie": "CALCUL", "text": "Suprafață parchet: 2,53 m²", "sugestie": "Suprafață parchet: 2,47 m²", "explicatie": "Placa are 1,285 m × 0,192 m = 0,24672 m², iar pachetul conține 10 bucăți: 10 × 0,24672 = 2,4672 m² ≈ 2,47 m², nu 2,53 m². Confirmare internă: 98,8 m²/palet : 40 pachete = 2,47 m²/pachet.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "135", "categorie": "CONTRADICTION", "text": "Împachetare: 10 bucăți/palet", "sugestie": "Împachetare: 10 bucăți/pachet", "explicatie": "Eticheta precizează „Paletizare: 400 bucăți, 40 pachete”, deci un pachet conține 400 : 40 = 10 bucăți. Un palet conține 400 de bucăți, nu 10.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "136", "categorie": "CONTRADICTION", "text": "4,50", "sugestie": "4,550", "explicatie": "Pe axa verticală a graficului cursului leu–euro valorile trebuie să descrească cu câte 0,002: 4,552; 4,550; 4,548; 4,546; 4,544. Eticheta „4,50” (= 4,500) este mai mică decât 4,544 și rupe monotonia axei; forma corectă este 4,550.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "153", "categorie": "CONTRADICTION", "text": "b) de câte ori este mai mare numărul 0,001 decât 8.", "sugestie": "b) de câte ori este mai mare numărul 8 decât 0,001.", "explicatie": "Enunțul presupune că 0,001 este mai mare decât 8, ceea ce este fals: 0,001 < 8. În contextul lecției (împărțirea la 0,001), întrebarea intenționată este 8 : 0,001 = 8000, deci numărul mai mare este 8, nu 0,001. Alternativ, se putea formula „de câte ori este mai mic numărul 0,001 decât 8”.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "171", "categorie": "CONTRADICTION", "text": "Într-o școală sunt 50 elevi de clasa a V-a care au susținut lucrarea scrisă la matematică.", "sugestie": "Într-o școală sunt 60 de elevi de clasa a V-a care au susținut lucrarea scrisă la matematică.", "explicatie": "Enunțul spune că au susținut lucrarea 50 de elevi, dar suma valorilor din rândul „Număr elevi” al tabelului este 1 + 3 + 7 + 8 + 12 + 10 + 13 + 6 = 60, nu 50. Mai mult, frecvențele procentuale din rândul al treilea sunt calculate raportând la 60 (de ex. 12/60 = 20%, 6/60 = 10%, 3/60 = 5%, 8/60 ≈ 13,3%), ceea ce confirmă că totalul real este 60, nu 50.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Intuitext clasa a V-a", "pagina": "172", "categorie": "CONTRADICTION", "text": "33% dintre colegi au afirmat că, într-o zi obișnuită de școală, petrec peste 3-4 ore pe dispozitivele mobile", "sugestie": "33% dintre colegi au afirmat că, într-o zi obișnuită de școală, petrec aproximativ 3-4 ore pe dispozitivele mobile", "explicatie": "În diagrama de mai sus, procentul de 33% corespunde categoriei „Aproximativ 3-4 ore”, nu categoriei „peste 3-4 ore”. Dacă ar fi fost vorba de „peste 3-4 ore”, ar fi trebuit incluse și cei 23% din categoria „Peste 6 ore”, adică 56%. Concluzia deformează datele prezentate în grafic.", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Matematica Booklet clasa a V-a — Gramatică</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="gramatica.html">&larr; Gramatică</a>
+  <div class="masthead">
+    <div class="eyebrow">Gramatică</div>
+    <h1>Manual Matematica Booklet clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>29</b> rezultate</span>
+      
+      <span class="chip"><b>4</b> categorii</span>
+      <span class="chip">pagini <b>9</b>–<b>191</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="M">Morfologie</option><option value="O">Ortografie</option><option value="P">Punctuație</option><option value="S">Sintaxă</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="9">p. 9</option><option value="22">p. 22</option><option value="31">p. 31</option><option value="33">p. 33</option><option value="38">p. 38</option><option value="52">p. 52</option><option value="93">p. 93</option><option value="105">p. 105</option><option value="117">p. 117</option><option value="120">p. 120</option><option value="123">p. 123</option><option value="129">p. 129</option><option value="131">p. 131</option><option value="133">p. 133</option><option value="135">p. 135</option><option value="138">p. 138</option><option value="139">p. 139</option><option value="150">p. 150</option><option value="152">p. 152</option><option value="158">p. 158</option><option value="159">p. 159</option><option value="164">p. 164</option><option value="168">p. 168</option><option value="176">p. 176</option><option value="179">p. 179</option><option value="181">p. 181</option><option value="191">p. 191</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "9", "categorie": "P", "text": "A. 2; B. 5; C. 1; D 3.", "sugestie": "A. 2; B. 5; C. 1; D. 3.", "explicatie": "Lipsește punctul după litera „D” din enumerarea variantelor de răspuns (celelalte litere A, B, C sunt urmate de punct).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "22", "categorie": "P", "text": "(1777-1855)", "sugestie": "(1777–1855)", "explicatie": "Pentru intervalul de ani se folosește liniuța (–), nu cratima (-).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "31", "categorie": "S", "text": "În manuscrisul indian Bakhshali, ce datează din secolul al XII-lea, simbolul folosit pentru împărțire este „← →“.", "sugestie": "În manuscrisul indian Bakhshali, care datează din secolul al XII-lea, simbolul folosit pentru împărțire este „← →“.", "explicatie": "Pronumele relativ „ce” cu funcție de subiect este popular/registru familiar; în limba standard se folosește „care”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "33", "categorie": "P", "text": "Pentru a calcula 12 345 : 283 procedăm astfel:", "sugestie": "Pentru a calcula 12 345 : 283, procedăm astfel:", "explicatie": "Lipsește virgula care desparte subordonata de scop (pentru a + infinitiv) de propoziția principală; aceeași construcție de la p. 31 este punctuată corect cu virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "38", "categorie": "S", "text": "care a extins noțiunea de putere pentru exponenți mai mari decât 2, dar numere naturale", "sugestie": "care a extins noțiunea de putere pentru exponenți numere naturale mai mari decât 2", "explicatie": "Construcție sintactică defectuoasă: segmentul „dar numere naturale” este agățat fără legătură clară cu restul frazei; sensul intenționat este că exponenții sunt numere naturale mai mari decât 2.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "52", "categorie": "P", "text": "Vom efectua operații inverse celor indicate de text, în ordinea inversă ordinii din text, 4 · 6 = 24; 24 + 24 = 48; 48 : 2 = 24; 24 – 10 = 14 (figura 2).", "sugestie": "Vom efectua operații inverse celor indicate de text, în ordinea inversă ordinii din text: 4 · 6 = 24; 24 + 24 = 48; 48 : 2 = 24; 24 – 10 = 14 (figura 2).", "explicatie": "Înainte de enumerarea calculelor care detaliază afirmația precedentă se impune două puncte, nu virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "93", "categorie": "P", "text": "Când înmulțim două fracții putem simplifica printr-un număr natural nenul", "sugestie": "Când înmulțim două fracții, putem simplifica printr-un număr natural nenul", "explicatie": "Propoziția subordonată circumstanțială de timp („Când înmulțim două fracții”), aflată înaintea regentei, trebuie despărțită prin virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "105", "categorie": "O", "text": "Foccacia", "sugestie": "Focaccia", "explicatie": "Scriere incorectă a cuvântului de origine italiană; forma corectă este „focaccia” (cu un singur „c” după „fo-”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "117", "categorie": "O", "text": "Doamna profesoară îl poate asculta o singura dată.", "sugestie": "Doamna profesoară îl poate asculta o singură dată.", "explicatie": "Lipsește diacriticul: forma corectă este „singură” (substantivul „singură” cu ă), pagina având în rest diacritice.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "120", "categorie": "P", "text": "presupune un cost mai mic și/ sau un timp mai scurt", "sugestie": "presupune un cost mai mic și/sau un timp mai scurt", "explicatie": "Bara oblică în construcția „și/sau” se scrie lipită, fără spațiu după ea.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "123", "categorie": "S", "text": "iar Alina citește 25% numărul de pagini ale cărții", "sugestie": "iar Alina citește 25% din numărul de pagini ale cărții", "explicatie": "Lipsește prepoziția „din”, necesară în construcția partitivă (paralel cu „1/4 din numărul de pagini” și „0,25 din numărul de pagini” din aceeași frază).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "129", "categorie": "P", "text": "grafice cu bare și/ sau cu linii", "sugestie": "grafice cu bare și/sau cu linii", "explicatie": "Bara oblică se scrie lipită de cuvintele pe care le leagă, fără spații: „și/sau”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "131", "categorie": "P", "text": "În tabelul de mai jos, este reprezentat numărul de elevi", "sugestie": "În tabelul de mai jos este reprezentat numărul de elevi", "explicatie": "Virgula desparte în mod nejustificat complementul circumstanțial de predicat; în română nu se pune virgulă după un astfel de circumstanțial antepus.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "131", "categorie": "M", "text": "temperatura unui pacient pe parcursul a 72 ore", "sugestie": "temperatura unui pacient pe parcursul a 72 de ore", "explicatie": "După numeralele cardinale mai mari de 19, substantivul se construiește cu prepoziția „de”: „72 de ore”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "133", "categorie": "S", "text": "cinci mii o sută unu sutimi", "sugestie": "cinci mii o sută unu de sutimi", "explicatie": "Numeralul 5101 (>19) cere prepoziția „de” înainte de numele fracției: „cinci mii o sută unu de sutimi”, la fel ca în celelalte subpuncte („douăzeci și patru de sutimi”, „șaptezeci și patru de miimi”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "135", "categorie": "P", "text": "Dacă o carte și un caiet costă 22,5 lei. Atunci prețul cărții este ... lei.", "sugestie": "Dacă o carte și un caiet costă 22,5 lei, atunci prețul cărții este ... lei.", "explicatie": "În construcția condițională „dacă..., atunci...” subordonata se desparte de regentă prin virgulă, nu prin punct.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "135", "categorie": "P", "text": "sub formă de fracție zecimală și/ sau fracție ordinară", "sugestie": "sub formă de fracție zecimală și/sau fracție ordinară", "explicatie": "Conectorul „și/sau” se scrie fără spații în jurul liniei oblice.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "138", "categorie": "S", "text": "Pozițiile relative a două drepte", "sugestie": "Pozițiile relative ale două drepte", "explicatie": "Substantivul articulat „pozițiile” cere genitivul cu „ale” înaintea numeralului: „pozițiile relative ale două drepte”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "139", "categorie": "S", "text": "Pozițiile relative a două drepte", "sugestie": "Pozițiile relative ale două drepte", "explicatie": "Acord greșit: pentru genitivul plural feminin se folosește „ale”, nu „a” (forma de singular); corect este „ale două drepte”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "150", "categorie": "P", "text": "a cărui măsură este de 70°(figura 9)", "sugestie": "a cărui măsură este de 70° (figura 9)", "explicatie": "Lipsește spațiul dintre valoarea măsurii și paranteza cu trimiterea la figură.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "152", "categorie": "O", "text": "iii) nghiul OMN este unghi ... .", "sugestie": "iii) Unghiul OMN este unghi ... .", "explicatie": "Lipsă literă: „nghiul” în loc de „unghiul”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "158", "categorie": "O", "text": "POST PRIM AJUTOR", "sugestie": "POST PRIM-AJUTOR", "explicatie": "Conform DOOM3, substantivul compus „prim-ajutor” se scrie cu cratimă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "159", "categorie": "M", "text": "Construiește paralela prin punctul A la dreapta d și noteaz-o cu g.", "sugestie": "Construiește paralela prin punctul A la dreapta d și notează-o cu g.", "explicatie": "Forma de imperativ a verbului „a nota” este „notează”; cu pronumele enclitic se scrie „notează-o”. Forma „noteaz-o” este incorectă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "164", "categorie": "M", "text": "metrul a fost definit ca a zecea milioană parte din lungimea meridianului terestru", "sugestie": "metrul a fost definit ca a zecea milionime parte din lungimea meridianului terestru", "explicatie": "Forma fracționară corectă este „milionime” (a zecea milionime parte = 1/10 000 000); „milioană” este substantiv și nu poate funcționa ca numeral fracționar ordinal.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "168", "categorie": "M", "text": "așezate în 5 de rânduri a câte 84 de plăci fiecare", "sugestie": "așezate în 5 rânduri a câte 84 de plăci fiecare", "explicatie": "Numeralul cardinal nu se construiește cu prepoziția „de“ înaintea substantivului (cf. „5 rânduri“, forma folosită corect chiar în rezolvarea de mai jos: „Deoarece sunt 5 rânduri...“); „de“ este corect doar după „a câte“.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "176", "categorie": "P", "text": "Apartamentul A , care are prețul de vânzare", "sugestie": "Apartamentul A, care are prețul de vânzare", "explicatie": "Spațiu greșit înainte de virgulă; virgula se lipește de cuvântul anterior.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "179", "categorie": "P", "text": "un pachet costă 42 de lei ? Câte plăci de faianță rămân nefolosite?", "sugestie": "un pachet costă 42 de lei? Câte plăci de faianță rămân nefolosite?", "explicatie": "Spațiu nepermis înainte de semnul întrebării; în limba română semnele de punctuație finale se lipesc de cuvântul anterior.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "181", "categorie": "P", "text": "1 324, 10 284 , 52, 182 923", "sugestie": "1 324, 10 284, 52, 182 923", "explicatie": "Spațiu nepermis înainte de virgulă; virgula se lipește de cuvântul/numărul anterior.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Booklet clasa a V-a", "pagina": "191", "categorie": "P", "text": "iar pentru pereții laterali cu lungimea de 15 m sunt necesare 840 de plăci. c) Se cumpără 412 pachete", "sugestie": "iar pentru pereții laterali cu lungimea de 15 m sunt necesare 840 de plăci). c) Se cumpără 412 pachete", "explicatie": "Paranteza deschisă la punctul b) înainte de „pentru baza bazinului...” nu este închisă; lipsește paranteza rotundă de închidere după „840 de plăci”.", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>
