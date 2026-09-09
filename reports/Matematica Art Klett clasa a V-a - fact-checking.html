@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Matematica Art Klett clasa a V-a — Fact-checking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="fact-checking.html">&larr; Fact-checking</a>
+  <div class="masthead">
+    <div class="eyebrow">Fact-checking</div>
+    <h1>Manual Matematica Art Klett clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>32</b> rezultate</span>
+      
+      <span class="chip"><b>5</b> categorii</span>
+      <span class="chip">pagini <b>39</b>–<b>240</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="CALCUL">Calcul</option><option value="CONDITII">Condiții</option><option value="CONTRADICTION">CONTRADICTION</option><option value="DEMONSTRATIE">Demonstrație</option><option value="TEOREMA">Teoremă</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="39">p. 39</option><option value="44">p. 44</option><option value="48">p. 48</option><option value="55">p. 55</option><option value="56">p. 56</option><option value="79">p. 79</option><option value="83">p. 83</option><option value="90">p. 90</option><option value="95">p. 95</option><option value="119">p. 119</option><option value="146">p. 146</option><option value="149">p. 149</option><option value="153">p. 153</option><option value="154">p. 154</option><option value="155">p. 155</option><option value="164">p. 164</option><option value="181">p. 181</option><option value="189">p. 189</option><option value="220">p. 220</option><option value="229">p. 229</option><option value="230">p. 230</option><option value="231">p. 231</option><option value="232">p. 232</option><option value="233">p. 233</option><option value="236">p. 236</option><option value="240">p. 240</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "39", "categorie": "DEMONSTRATIE", "text": "deoarece 15 · 4 = 60 < 65 < 75, nu există niciun număr natural care înmulțit cu 15 să dea 65. Acest fapt ne arată că 65 nu se împarte exact la 4.", "sugestie": "Acest fapt ne arată că 65 nu se împarte exact la 15.", "explicatie": "Argumentul prezentat (15 · 4 = 60 < 65 < 75 = 15 · 5, deci nu există niciun număr natural c cu 15 · c = 65) demonstrează că 65 nu se împarte exact la 15, nu la 4. Concluzia tipărită „la 4” nu decurge din pașii dați; conform definiției din aceeași pagină (a se împarte exact la b dacă există c cu a = b · c), faptul demonstrat este neîmpărțirea lui 65 la 15.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "39", "categorie": "TEOREMA", "text": "Numerele care se împart se numesc factori; a se numește deîmpărțit, b se numește împărțitor, iar rezultatul împărțirii, adică c, se numește cât.", "sugestie": "Numerele care se înmulțesc se numesc factori; numerele care se împart se numesc deîmpărțit și împărțitor.", "explicatie": "Termenul „factori” desemnează numerele care se înmulțesc, nu cele care se împart. Afirmația este și o contradicție internă: aceeași frază numește corect pe a „deîmpărțit” și pe b „împărțitor”, deci numerele care se împart nu pot fi numite tot „factori”.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "44", "categorie": "CALCUL", "text": "Deoarece 3 058 : 9 = 339, rest 7, cel mai mic număr natural cu suma cifrelor 3 058 este 799…9. (cu acolada „399 de 9”)", "sugestie": "339 de 9", "explicatie": "Manualul însuși calculează 3 058 : 9 = 339, rest 7, deci numărul minim este cifra 7 urmată de 339 de cifre de 9 (suma cifrelor: 7 + 9·339 = 7 + 3 051 = 3 058). Acolada tipărită „399 de 9” ar da suma cifrelor 7 + 9·399 = 3 598 ≠ 3 058, în contradicție cu calculul din aceeași frază.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "48", "categorie": "CONTRADICTION", "text": "Atunci ultima cifră a lui a este ultima cifră a sumei 8 + 7 + 4 + 3, adică este 2.", "sugestie": "Atunci ultima cifră a lui a este ultima cifră a sumei 8 + 7 + 3 + 2, adică este 0.", "explicatie": "În pașii anteriori manualul calculează corect u(192²⁰³) = 8, u(703²⁰³) = 7, u(457²⁰³) = 3 și u(368²⁰³) = 2. Suma corectă este 8 + 7 + 3 + 2 = 20, deci ultima cifră a lui a este 0, nu 2. Suma tipărită „8 + 7 + 4 + 3” nu corespunde valorilor calculate în rezolvare, iar concluzia „este 2” este greșită.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "55", "categorie": "CALCUL", "text": "1 petaoctet (Po) = 2⁴⁰ To = 2⁵⁰ octeți", "sugestie": "1 petaoctet (Po) = 2¹⁰ To = 2⁵⁰ octeți", "explicatie": "Conform tiparului din același tabel, fiecare unitate este de 2¹⁰ ori mai mare decât precedenta (1 ko = 2¹⁰ octeți, 1 Mo = 2¹⁰ ko, 1 Go = 2¹⁰ Mo, 1 To = 2¹⁰ Go). Prin urmare 1 Po = 2¹⁰ To = 2¹⁰ · 2⁴⁰ octeți = 2⁵⁰ octeți. Valoarea „2⁴⁰ To” ar corespunde la 2⁸⁰ octeți, nu la 2⁵⁰ octeți, deci contrazice chiar coloana a treia a tabelului.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "56", "categorie": "CONTRADICTION", "text": "68₍₁₀₎ = 64 + 4 = 1 · 2⁶ + 0 · 2⁵ + 0 · 2⁴ + 0 · 2³ + 1 · 2² + 0 · 2¹ + 0 = 10 001 100₍₂₎", "sugestie": "68₍₁₀₎ = 64 + 4 = 1 · 2⁶ + 0 · 2⁵ + 0 · 2⁴ + 0 · 2³ + 1 · 2² + 0 · 2¹ + 0 = 1 000 100₍₂₎", "explicatie": "Din descompunerea scrisă rezultă cifrele binare 1, 0, 0, 0, 1, 0, 0, adică 1000100₂ (= 64 + 4 = 68). Scrierea tipărită „10 001 100” are 8 cifre și reprezintă 10001100₂ = 128 + 8 + 4 = 140₁₀, care nu este egal cu 68. Rezultatul final contrazice propria descompunere.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "79", "categorie": "CONTRADICTION", "text": "În B s-au obținut 54 l după ce s-a adăugat o parte din A, adică 18 ℓ.", "sugestie": "În B s-au obținut 54 ℓ după ce s-a adăugat o parte din A, adică 9 ℓ.", "explicatie": "La două rânduri mai sus, textul stabilește că în A cei 18 ℓ reprezintă două părți, deci o parte este 9 ℓ. În B s-a adăugat o parte din A, adică 9 ℓ, nu 18 ℓ — fapt confirmat de calculul imediat următor: 54 ℓ − 9 ℓ = 45 ℓ. Afirmația „o parte din A, adică 18 ℓ” contrazice atât raționamentul, cât și calculul propriu.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "83", "categorie": "CALCUL", "text": "numărul elevilor ce ocupă cele 10 de bănci – 6 bănci = 4 bănci este egal cu 5 · 4 = 20", "sugestie": "numărul elevilor ce ocupă cele 10 de bănci – 4 bănci = 6 bănci este egal cu 5 · 6 = 30", "explicatie": "Dacă rămân 4 bănci libere din cele 10 presupuse, atunci sunt ocupate 10 − 4 = 6 bănci, iar elevii așezați câte 5 pe bancă sunt 5 · 6 = 30, nu 5 · 4 = 20. Textul a inversat numerele 4 și 6.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "83", "categorie": "CALCUL", "text": "Deoarece există o nepotrivire cu 58 de elevi – 20 de elevi = 28 de elevi", "sugestie": "Deoarece există o nepotrivire cu 58 de elevi – 30 de elevi = 28 de elevi", "explicatie": "58 − 20 = 38, nu 28. Nepotrivirea corectă de 28 de elevi rezultă din 58 − 30 = 28 (cu cei 30 de elevi ocupați pe 6 bănci în a doua situație). Valoarea 28 este folosită corect în continuare (28 : 1 = 28), deci termenul scăderii trebuia să fie 30, nu 20.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "90", "categorie": "DEMONSTRATIE", "text": "Întrucât 135 : 21 = 6, rest 9 și 215 : 21 = 10, rest 5, rezultă 7 ≤ k ≤ 10", "sugestie": "Întrucât 135 : 21 = 6, rest 9 și 219 : 21 = 10, rest 9, rezultă 7 ≤ k ≤ 10", "explicatie": "În pasul anterior s-a stabilit corect că 135 ≤ 21k ≤ 219, deci pentru a determina marginea superioară a lui k trebuie împărțit 219 la 21 (219 : 21 = 10, rest 9), nu 215. Împărțirea lui 215 (marginea pentru n, nu pentru n + 4) nu justifică limita lui k. Rezultatul final (k ≤ 10 și soluțiile 143, 164, 185, 206) este întâmplător corect, deoarece 219 : 21 dă același cât 10, dar pasul de justificare tipărit este greșit.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "95", "categorie": "CONTRADICTION", "text": "Să analizăm ce se întâmplă cu 2 745 de obiecte, respectiv cu 3 965 de obiecte:", "sugestie": "Să analizăm ce se întâmplă cu 2 748 de obiecte, respectiv cu 3 965 de obiecte:", "explicatie": "Exemplul lucrat imediat după acest enunț folosește numărul 2 748 (descompunerea 2 · 1 000 + 7 · 100 + 4 · 10 + 8, suma cifrelor 2 + 7 + 4 + 8 = 21) și concluzionează că 2 748 este divizibil cu 3, dar nu se divide cu 9. Numărul din enunț, 2 745, are suma cifrelor 18, deci ar fi divizibil și cu 9, ceea ce ar contrazice concluzia exemplului. Enunțul trebuia să conțină 2 748, nu 2 745.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "119", "categorie": "CONDITII", "text": "\\frac{a}{n} - \\frac{b}{n} = \\frac{a-b}{n} pentru orice numere naturale a, b, n, cu n ≥ 1.", "sugestie": "\\frac{a}{n} - \\frac{b}{n} = \\frac{a-b}{n} pentru orice numere naturale a, b, n, cu a ≥ b și n ≥ 1.", "explicatie": "Regula este enunțată pentru numere naturale, dar dacă a < b, diferența a − b nu este număr natural, deci fracția rezultată nu mai este o fracție cu numărător natural (contextul în care se lucrează în această lecție). Condiția a ≥ b este necesară pentru ca enunțul să fie valid în mulțimea numerelor naturale.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "146", "categorie": "CALCUL", "text": "0,28 = 20 zecimi și 8 sutimi, 0,69 = 60 zecimi și 9 sutimi", "sugestie": "0,28 = 2 zecimi și 8 sutimi, 0,69 = 6 zecimi și 9 sutimi (echivalent: 0,28 = 20 de sutimi și 8 sutimi, 0,69 = 60 de sutimi și 9 sutimi)", "explicatie": "20 zecimi = 2 unități, deci „20 zecimi și 8 sutimi\" ar însemna 2,08 ≠ 0,28; analog, „60 zecimi și 9 sutimi\" = 6,09 ≠ 0,69. Descompunerea corectă a lui 0,28 este 2 zecimi și 8 sutimi (sau 28 de sutimi = 20 de sutimi și 8 sutimi), iar a lui 0,69 este 6 zecimi și 9 sutimi.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "146", "categorie": "CONTRADICTION", "text": "obținem 90 zecimi și 7 sutimi, adică 0,97", "sugestie": "obținem 9 zecimi și 7 sutimi, adică 0,97 (sau: 90 de sutimi și 7 sutimi, adică 0,97)", "explicatie": "90 zecimi = 9 unități, deci „90 zecimi și 7 sutimi\" = 9,07, ceea ce contrazice rezultatul corect afirmat, 0,97. Suma 0,28 + 0,69 = 0,97 corespunde la 9 zecimi și 7 sutimi (97 de sutimi). Aceeași confuzie zecimi/sutimi apare și în fraza „17 sutimi, adică 10 zecimi și 7 sutimi\" (10 zecimi și 7 sutimi = 1,07 ≠ 0,17; corect: 1 zece și 7 sutimi sau 10 sutimi și 7 sutimi).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "149", "categorie": "CALCUL", "text": "Similar, a înmulți pe 3,7 cu 4 revine la a înmulți 37 de zecimi cu 4. Obținem 148 de zecimi, deci 3,7 · 3 = 14,8.", "sugestie": "deci 3,7 · 4 = 14,8", "explicatie": "Textul descrie înmulțirea lui 3,7 cu 4 (37 de zecimi × 4 = 148 de zecimi = 14,8), dar egalitatea finală tipărită este „3,7 · 3 = 14,8”, care este falsă: 3,7 · 3 = 11,1. Factorul corect este 4, nu 3.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "153", "categorie": "CONTRADICTION", "text": "Scriem: 51/11 = 0,(63).", "sugestie": "Scriem: 51/11 = 4,(63).", "explicatie": "În aceeași coloană se arată că 51/11 = 51 : 11 = 4,63636363… și că fracția se notează 4,(63) („patru virgulă periodă 63”). Egalitatea finală „51/11 = 0,(63)” contrazice calculul: 0,(63) = 7/11 ≈ 0,6363…, iar 51/11 ≈ 4,6363….", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "154", "categorie": "CALCUL", "text": "Media aritmetică a numerelor 4, 5, 11 și 13 este m_a = (4+5+11+13)/3 = 33:4 = 8,25.", "sugestie": "m_a = (4+5+11+13)/4 = 33:4 = 8,25", "explicatie": "Numitorul fracției tipărite este 3, dar se împart 4 numere; așa cum e scris, (4+5+11+13)/3 = 33/3 = 11, ceea ce contrazice rezultatul corect 33:4 = 8,25. Numitorul corect este 4.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "155", "categorie": "CONTRADICTION", "text": "b n = 50: 9/(4+50) = 0,1(6);", "sugestie": "Pentru fracție zecimală periodică simplă se poate lua, de exemplu, n = 23: 9/(4+23) = 9/27 = 1/3 = 0,(3).", "explicatie": "Cerința punctului b este o fracție zecimală periodică simplă, dar 9/54 = 1/6 = 0,1(6) este fracție zecimală periodică mixtă (are o zecimală neperiodică, 1, înaintea perioadei 6). Exemplul dat nu corespunde cerinței.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "155", "categorie": "CONTRADICTION", "text": "c n = 23: 9/(4+23) = 0,(3).", "sugestie": "Pentru fracție zecimală periodică mixtă se poate lua, de exemplu, n = 50: 9/(4+50) = 9/54 = 1/6 = 0,1(6).", "explicatie": "Cerința punctului c este o fracție zecimală periodică mixtă, dar 9/27 = 1/3 = 0,(3) este fracție zecimală periodică simplă (nu are parte zecimală neperiodică). Exemplele de la punctele b și c par interschimbate.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "164", "categorie": "CONTRADICTION", "text": "5 m de stofă și 6,4 m de stofă costă 55 lei · 5 + 21,50 lei · 6,4 = 275 lei + 137,60 lei =", "sugestie": "5 m de stofă și 6,4 m de pânză costă 55 lei · 5 + 21,50 lei · 6,4 = 275 lei + 137,60 lei =", "explicatie": "În verificare se spune „6,4 m de stofă\", dar cantitatea de 6,4 m se referă la pânză (conform datelor problemei: 5 m stofă și 6,4 m pânză costă 412,60 lei), iar prețul de 21,50 lei/m este prețul pânzei, nu al stofei (stofa costă 55 lei/m). Formularea contrazice datele problemei de pe aceeași pagină și schimbă sensul matematic al calculului.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "181", "categorie": "TEOREMA", "text": "Dacă un punct poate fi situat pe o dreaptă, spunem că punctul este interior dreptei.", "sugestie": "Dacă un punct este situat pe o dreaptă, spunem că punctul este interior dreptei.", "explicatie": "Formularea cu „poate fi situat” face definiția logic vidă: orice punct din plan poate fi situat pe o dreaptă (printr-un punct trece o infinitate de drepte), deci, luată ad litteram, definiția ar declara orice punct „interior” oricărei drepte. Sensul corect, confirmat și de exemplul imediat următor („Punctul M este situat pe dreapta d”), este „este situat”.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "189", "categorie": "CONTRADICTION", "text": "Pe o dreaptă, se iau punctele A, B și C, în această ordine, astfel încât AB = 5 cm și CD = 50% din 10 cm. Arătați că AB ≡ CD.", "sugestie": "Pe o dreaptă, se iau punctele A, B și C, în această ordine, astfel încât AB = 5 cm și BC = 50% din 10 cm. Arătați că AB ≡ BC.", "explicatie": "Enunțul introduce doar punctele A, B și C, dar apoi folosește segmentul CD și cere demonstrarea congruenței AB ≡ CD, deși punctul D nu este definit nicăieri în problemă. Intenția era evident BC = 50% din 10 cm = 5 cm = AB, deci AB ≡ BC. În forma tipărită, exercițiul este imposibil de rezolvat corect, deoarece face referire la un punct inexistent.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "220", "categorie": "CALCUL", "text": "125 cm² = (125 : 100) dm² = 12,5 dm² = (12,5 : 100) m² = 0,125 m²", "sugestie": "125 cm² = (125 : 100) dm² = 1,25 dm² = (1,25 : 100) m² = 0,0125 m²", "explicatie": "Împărțirea 125 : 100 dă 1,25, nu 12,5. Deoarece 1 dm² = 100 cm², rezultă 125 cm² = 1,25 dm² = 0,0125 m². Atât rezultatul intermediar (12,5 dm²), cât și rezultatul final (0,125 m²) sunt de 10 ori mai mari decât valorile corecte.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "229", "categorie": "CALCUL", "text": "11 a 187 + 27 = 213", "sugestie": "187 + 27 = 214", "explicatie": "Adunarea este greșită: 187 + 27 = 187 + 20 + 7 = 207 + 7 = 214, nu 213.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "230", "categorie": "CONTRADICTION", "text": "a = 6 · 13 + r , r < 6, a = 78, 79, 80, 81, 82, 83, 84", "sugestie": "a = 78, 79, 80, 81, 82, 83", "explicatie": "Soluția însăși impune condiția r < 6, deci a = 78 + r ≤ 83. Valoarea 84 ar corespunde lui r = 6, care nu este mai mic decât împărțitorul 6 (84 : 6 = 14 rest 0). Lista finală contrazice condiția enunțată în aceeași rezolvare.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "231", "categorie": "CALCUL", "text": "f a19b = a · 10³ + 1 · 10² + 1 · 10 + b · 10⁰", "sugestie": "a19b = a · 10³ + 1 · 10² + 9 · 10 + b · 10⁰", "explicatie": "În numărul a19b cifra zecilor este 9, nu 1; descompunerea corectă în baza 10 este a·10³ + 1·10² + 9·10 + b·10⁰ (la fel ca la punctul e, unde a7b = a·10² + 7·10 + b·10⁰).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "232", "categorie": "CALCUL", "text": "g 1, 2, 3, 6, 12, 14, 21, 42", "sugestie": "1, 2, 3, 6, 7, 14, 21, 42", "explicatie": "Lista corespunde divizorilor lui 42 (în secvența a–j numerele sunt 5, 16, 23, 27, 28, 33, 42, 63, 64, 80). 12 nu este divizor al lui 42 (42 : 12 = 3 rest 6), iar divizorul 7 lipsește (42 = 6 · 7).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "232", "categorie": "CALCUL", "text": "b 21, 28, 35, 49, 56, 63, 70, 77, 84, 91", "sugestie": "21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91", "explicatie": "Lista este o listă de multipli consecutivi ai lui 7 (ca și celelalte două subliste, cu pașii 15 și 29), dar între 35 și 49 diferența este 14: multiplul 42 = 7 · 6 a fost omis.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "233", "categorie": "CALCUL", "text": "b Divizorii lui 98 sunt 1, 2, 7, 14, 49, 90.", "sugestie": "Divizorii lui 98 sunt 1, 2, 7, 14, 49, 98.", "explicatie": "90 nu este divizor al lui 98 (98 : 90 = 1 rest 8). Ultimul divizor al lui 98 este 98 însuși (98 = 2 · 49 = 2 · 7²).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "233", "categorie": "CONTRADICTION", "text": "10 minute = 600 secunde; cum 600 : 35 = 17 rest 5, proiectoarele vor clipi simultan de 35 de ori.", "sugestie": "proiectoarele vor clipi simultan de 17 ori", "explicatie": "Din împărțirea 600 : 35 = 17 rest 5 rezultă că proiectoarele clipesc simultan de 17 ori (la secundele 35, 70, ..., 595), nu de 35 de ori. Concluzia contrazice calculul efectuat în aceeași rezolvare.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "236", "categorie": "CONTRADICTION", "text": "17 a + b + c = 132, b = a + 18, c = 2 · a, d = a + 9; obținem a = 21, b = 39, c = 42, d = 30.", "sugestie": "a + b + c + d = 132", "explicatie": "Condiția tipărită a + b + c = 132 contrazice soluția dată: 21 + 39 + 42 = 102 ≠ 132. Cu relațiile b = a + 18, c = 2a, d = a + 9, condiția a + b + c = 132 ar da 4a + 18 = 132, adică a = 28,5, nu a = 21. În schimb, valorile tipărite verifică a + b + c + d = 21 + 39 + 42 + 30 = 132 (5a + 27 = 132 ⇒ a = 21), deci condiția corectă trebuia să includă și pe d.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "240", "categorie": "CALCUL", "text": "549 m : 3 = 183 m = 1 830 dm > 1 820 m", "sugestie": "549 m : 3 = 183 m = 1 830 dm > 1 820 dm", "explicatie": "Inegalitatea așa cum este tipărită este falsă: 1 830 dm = 183 m, iar 183 m nu este mai mare decât 1 820 m. Unitatea de măsură din membrul drept este greșită: comparația corectă este 1 830 dm > 1 820 dm (echivalent, 183 m > 182 m).", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>

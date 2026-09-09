@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Matematica Art Klett clasa a V-a — Gramatică</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="gramatica.html">&larr; Gramatică</a>
+  <div class="masthead">
+    <div class="eyebrow">Gramatică</div>
+    <h1>Manual Matematica Art Klett clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>79</b> rezultate</span>
+      
+      <span class="chip"><b>5</b> categorii</span>
+      <span class="chip">pagini <b>11</b>–<b>240</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="D3">DOOM3</option><option value="M">Morfologie</option><option value="O">Ortografie</option><option value="P">Punctuație</option><option value="S">Sintaxă</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="11">p. 11</option><option value="12">p. 12</option><option value="28">p. 28</option><option value="41">p. 41</option><option value="42">p. 42</option><option value="43">p. 43</option><option value="44">p. 44</option><option value="48">p. 48</option><option value="66">p. 66</option><option value="67">p. 67</option><option value="71">p. 71</option><option value="75">p. 75</option><option value="78">p. 78</option><option value="82">p. 82</option><option value="84">p. 84</option><option value="85">p. 85</option><option value="88">p. 88</option><option value="91">p. 91</option><option value="92">p. 92</option><option value="98">p. 98</option><option value="106">p. 106</option><option value="116">p. 116</option><option value="118">p. 118</option><option value="121">p. 121</option><option value="125">p. 125</option><option value="130">p. 130</option><option value="132">p. 132</option><option value="133">p. 133</option><option value="149">p. 149</option><option value="150">p. 150</option><option value="153">p. 153</option><option value="166">p. 166</option><option value="167">p. 167</option><option value="173">p. 173</option><option value="176">p. 176</option><option value="178">p. 178</option><option value="179">p. 179</option><option value="183">p. 183</option><option value="188">p. 188</option><option value="189">p. 189</option><option value="194">p. 194</option><option value="195">p. 195</option><option value="200">p. 200</option><option value="204">p. 204</option><option value="205">p. 205</option><option value="206">p. 206</option><option value="207">p. 207</option><option value="208">p. 208</option><option value="219">p. 219</option><option value="220">p. 220</option><option value="227">p. 227</option><option value="228">p. 228</option><option value="231">p. 231</option><option value="232">p. 232</option><option value="233">p. 233</option><option value="239">p. 239</option><option value="240">p. 240</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "11", "categorie": "O", "text": "două zeci și trei de miliarde", "sugestie": "douăzeci și trei de miliarde", "explicatie": "Conform DOOM3, numeralele compuse cu „-zeci” se scriu într-un singur cuvânt: „douăzeci”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "11", "categorie": "O", "text": "patru sute șapte zeci și două de milioane", "sugestie": "patru sute șaptezeci și două de milioane", "explicatie": "Conform DOOM3, numeralul „șaptezeci” se scrie legat, într-un singur cuvânt.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "12", "categorie": "P", "text": "Pentru b = 0, obținem a = 11 care nu este cifră.", "sugestie": "Pentru b = 0, obținem a = 11, care nu este cifră.", "explicatie": "Subordonata atributivă explicativă (nenecesară) introdusă de „care” se desparte prin virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "28", "categorie": "P", "text": "6. Suma a două numere este 98, iar diferența lor este 82.", "sugestie": "6 Suma a două numere este 98, iar diferența lor este 82.", "explicatie": "Punct după numărul itemului, în timp ce toate celelalte numerotări de exerciții din secțiune (1, 2, 3, 4, 5, 7–12) sunt scrise fără punct; inconsecvență de punctuație.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "41", "categorie": "M", "text": "13 560 de cărți tuturor celor 113 școli din județ", "sugestie": "13 560 de cărți tuturor celor 113 de școli din județ", "explicatie": "Numeralul cardinal mai mare ca 19 impune prepoziția „de” înaintea substantivului: „cele 113 de școli” (cf. aceluiași manual: „cei 78 de elevi”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "42", "categorie": "P", "text": "Dacă înmulțim relația cu 10 obținem 35 · 3 · 10 = 1 050", "sugestie": "Dacă înmulțim relația cu 10, obținem 35 · 3 · 10 = 1 050", "explicatie": "Lipsește virgula care desparte subordonata condițională de propoziția principală (în restul manualului construcția este punctuată: „Dacă …, …”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "43", "categorie": "P", "text": "După ce servește al doilea coleg mai are în cutie 14 – 5 = 9 bomboane.", "sugestie": "După ce servește al doilea coleg, mai are în cutie 14 – 5 = 9 bomboane.", "explicatie": "Lipsește virgula după subordonata temporală „După ce servește al doilea coleg” (prima frază din același paragraf este punctuată corect: „După ce servește primul coleg, mai sunt…”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "43", "categorie": "P", "text": "După ce servește al treilea coleg mai sunt în cutie 9 – 5 = 4 bomboane.", "sugestie": "După ce servește al treilea coleg, mai sunt în cutie 9 – 5 = 4 bomboane.", "explicatie": "Lipsește virgula după subordonata temporală „După ce servește al treilea coleg”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "44", "categorie": "P", "text": "Numărul natural r poate lua valorile 0, 1, 2, 3, sau 4", "sugestie": "Numărul natural r poate lua valorile 0, 1, 2, 3 sau 4", "explicatie": "În enumerare, conjuncția „sau” nu se precede de virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "44", "categorie": "M", "text": "Pentru a obține cel mic număr natural n cu suma cifrelor 3 058", "sugestie": "Pentru a obține cel mai mic număr natural n cu suma cifrelor 3 058", "explicatie": "Superlativul relativ se formează cu „cel mai”; lipsește „mai” (a se compara cu enunțul problemei: „cel mai mic număr natural”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "48", "categorie": "S", "text": "Produsul a două sau mai multe pătrate a unor numere naturale este pătratul unui număr natural.", "sugestie": "Produsul a două sau mai multe pătrate ale unor numere naturale este pătratul unui număr natural.", "explicatie": "Substantivul „pătrate” (f.pl.) cere articolul posesiv-genitival „ale”, nu „a” (care corespunde genitivului-dativ singular).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "66", "categorie": "P", "text": "Câți muncitori, cu aceeași îndemânare, sunt necesari pentru a termina, aceeași lucrare, în 3 zile?", "sugestie": "Câți muncitori, cu aceeași îndemânare, sunt necesari pentru a termina aceeași lucrare în 3 zile?", "explicatie": "Virgulele care încadrează complementul direct „aceeași lucrare” despart greșit verbul de complementul său; circumstantialul „în 3 zile” nu este cel izolat prin virgule (cf. varianta corectă de tip „pentru a termina, în 3 zile, aceeași lucrare”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "67", "categorie": "S", "text": "Algoritmul rezolvării problemelor constă în a compara două situații diferite, eliminarea unei necunoscute și determinarea celeilalte necunoscute.", "sugestie": "Algoritmul rezolvării problemelor constă în compararea a două situații diferite, eliminarea unei necunoscute și determinarea celeilalte necunoscute.", "explicatie": "Coordonare neomogenă: primul termen al enumerării este la infinitiv („a compara”), iar ceilalți doi sunt substantive verbale („eliminarea”, „determinarea”); toți termenii trebuie să aibă aceeași formă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "71", "categorie": "P", "text": "Problemele se încadrează în acest tip, dacă în conținutul lor se afirmă că o mărime este cu...", "sugestie": "Problemele se încadrează în acest tip dacă în conținutul lor se afirmă că o mărime este cu...", "explicatie": "Subordonata condițională (introdusă prin „dacă”), aflată după propoziția regentă, nu se desparte prin virgulă de aceasta.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "75", "categorie": "P", "text": "deducem, că de fapt, al doilea factor s-a micșorat de 3 ori", "sugestie": "deducem că, de fapt, al doilea factor s-a micșorat de 3 ori", "explicatie": "Virgula este pusă greșit după „deducem”; conjuncția „că” nu se desparte de verbul regent prin virgulă. Virgulele trebuie să încadreze intercalarea „de fapt”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "78", "categorie": "P", "text": "reprezintă „cealaltă jumătate” deducem că Tudor a găsit pe masă 12 bomboane", "sugestie": "reprezintă „cealaltă jumătate”, deducem că Tudor a găsit pe masă 12 bomboane", "explicatie": "Lipsește virgula care separă construcția circumstanțială introductivă („Raționând analog sau observând că…”) de propoziția principală.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "82", "categorie": "S", "text": "știind că obținut 18 puncte", "sugestie": "știind că a obținut 18 puncte", "explicatie": "Lipsește auxiliarul „a” necesar formării perfectului compus; construcția „că obținut” este agramaticală.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "84", "categorie": "O", "text": "Câte vase a 3 ℓ fiecare sunt?", "sugestie": "Câte vase de 3 ℓ fiecare sunt?", "explicatie": "Prepoziție greșită: «a» în loc de «de» (cf. «vase de 3 litri», forma normată, folosită și în enunțul aceleiași probleme: «unele de 3 ℓ fiecare»).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "84", "categorie": "O", "text": "iar pentru fiecare problemă greșit rezolvată i se scad 2 puncte", "sugestie": "iar pentru fiecare problemă greșit rezolvată îi se scad 2 puncte", "explicatie": "Pronumele personal în dativ se scrie «îi», cu circumflex; pagina are diacritice în restul textului, deci lipsa semnului este o eroare, nu un defect de randare.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "84", "categorie": "P", "text": "monede de 2 euro și respectiv, de 5 euro", "sugestie": "monede de 2 euro și, respectiv, de 5 euro", "explicatie": "Elementul incidental «respectiv» se izolează prin virgule: «și, respectiv, de 5 euro»; virgula este pusă greșit după «respectiv», fără virgulă înainte.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "85", "categorie": "P", "text": "Determină numerele A, B, și C din tabelul de mai jos.", "sugestie": "Determină numerele A, B și C din tabelul de mai jos.", "explicatie": "În enumerare, conjuncția «și» dintre ultimele două elemente nu se precede de virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "88", "categorie": "P", "text": "iar divizorii lui 24 sunt:1, 2, 3, 4, 6, 8, 12 și 24", "sugestie": "iar divizorii lui 24 sunt: 1, 2, 3, 4, 6, 8, 12 și 24", "explicatie": "Lipsește spațiul după semnul două puncte (în aceeași frază, prima enumerare este scrisă corect: «sunt: 1, 2, 4, ...»).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "91", "categorie": "M", "text": "Determinații divizorii comuni ai numerelor 60 și 72.", "sugestie": "Determinați divizorii comuni ai numerelor 60 și 72.", "explicatie": "Forma de imperativ persoana a II-a plural a verbului „a determina” este „determinați”; „determinații” este forma greșită (i suplimentar).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "92", "categorie": "P", "text": "fiecare echipă gazdă, vinde în loc de bilete, carduri cadou", "sugestie": "fiecare echipă gazdă vinde, în loc de bilete, carduri cadou", "explicatie": "Virgula de după „gazdă” desparte greșit subiectul de predicat; construcția eliptică „în loc de bilete” se izolează corect între virgule.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "98", "categorie": "S", "text": "Exprimați următoarele numere ca suma, diferența sau produsul a două numere prime, după caz:", "sugestie": "Exprimați următoarele numere ca sumă, diferență sau produs a două numere prime, după caz:", "explicatie": "După conjuncția „ca” (cu sensul de „în calitate de”) se folosește cazul nominativ, nu acuzativul cu articol hotărât: „ca sumă, diferență sau produs”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "98", "categorie": "S", "text": "Scrieți următoarele numere ca suma, diferența sau produsul a două numere compuse, după caz:", "sugestie": "Scrieți următoarele numere ca sumă, diferență sau produs a două numere compuse, după caz:", "explicatie": "După conjuncția „ca” (cu sensul de „în calitate de”) se folosește cazul nominativ, nu acuzativul cu articol hotărât: „ca sumă, diferență sau produs”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "106", "categorie": "M", "text": "Care dintre ei a parcurs o porțiune mai mare de pistă?", "sugestie": "Care dintre ei a parcurs porțiunea cea mai mare de pistă?", "explicatie": "Compararea se face între trei concurenți (Ioana, Horia, Radu), deci este necesar superlativul relativ („cea mai mare”), nu comparativul („mai mare”), care se folosește doar pentru două elemente.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "116", "categorie": "S", "text": "Deși 0 este un multiplu comun a oricăror numere nenule a și b", "sugestie": "Deși 0 este un multiplu comun al oricăror numere nenule a și b", "explicatie": "Articulul genitival trebuie să se acorde cu „multiplu” (masculin singular): „al oricăror numere”, nu „a oricăror numere”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "118", "categorie": "P", "text": "Dintre fracțiile 2/3, 3/4 4/5 și 5/12, mai mare este fracția:", "sugestie": "Dintre fracțiile 2/3, 3/4, 4/5 și 5/12, mai mare este fracția:", "explicatie": "Lipsește virgula dintre termenii enumerării (între fracțiile 3/4 și 4/5).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "121", "categorie": "P", "text": "Efectuați calculele, și, dacă este cazul, aduceți rezultatul la forma ireductibilă", "sugestie": "Efectuați calculele și, dacă este cazul, aduceți rezultatul la forma ireductibilă", "explicatie": "Virgula dinaintea conjuncției „și” este incorectă; „și” leagă două predicate cu același subiect, iar incidența „dacă este cazul” se izolează corect doar prin virgulele de după „și” și de după „cazul”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "125", "categorie": "O", "text": "Arătați că dintr-un un balot de 18 metri de material nu se pot confecționa 4 perdele.", "sugestie": "Arătați că dintr-un balot de 18 metri de material nu se pot confecționa 4 perdele.", "explicatie": "Dublare greșită a cuvântului „un”; forma compusă „dintr-un” include deja articolul.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "130", "categorie": "P", "text": "Aplicând regulile de calcul scrieți sub forma unei singure puteri:", "sugestie": "Aplicând regulile de calcul, scrieți sub forma unei singure puteri:", "explicatie": "Construcția cu gerunziu de la începutul propoziției se desparte prin virgulă de partea principală (cf. și p. 131: „Folosind regulile de calcul, scrieți...”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "132", "categorie": "P", "text": "Soluția problemei poate fi obținută rapid efectuând calculul:", "sugestie": "Soluția problemei poate fi obținută rapid, efectuând calculul:", "explicatie": "Construcția cu gerunziu („efectuând calculul”) se izolează prin virgulă în interiorul propoziției.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "133", "categorie": "P", "text": "Soluția problemei poate fi obținută rapid efectuând calculul:", "sugestie": "Soluția problemei poate fi obținută rapid, efectuând calculul:", "explicatie": "Construcția cu gerunziu („efectuând calculul”) se izolează prin virgulă în interiorul propoziției.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "153", "categorie": "O", "text": "se citește zero virgulă periodă 3", "sugestie": "se citește zero virgulă perioadă 3", "explicatie": "Forma corectă a cuvântului este „perioadă” (cu -oa-), nu „periodă”; termenul matematic este „perioadă”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "153", "categorie": "O", "text": "se citește patru virgulă periodă 63", "sugestie": "se citește patru virgulă perioadă 63", "explicatie": "Forma corectă a cuvântului este „perioadă” (cu -oa-), nu „periodă”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "149", "categorie": "D3", "text": "se înmulțesc numerele ca și când ar fi numere naturale", "sugestie": "se înmulțesc numerele ca și cum ar fi numere naturale", "explicatie": "Conjuncția normativă este „ca și cum”; „ca și când” este o variantă neconformă normei literare.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "150", "categorie": "D3", "text": "neținând seama de virgulă, ca și când ar fi naturale", "sugestie": "neținând seama de virgulă, ca și cum ar fi naturale", "explicatie": "Conjuncția normativă este „ca și cum”; „ca și când” este o variantă neconformă normei literare.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "153", "categorie": "P", "text": "45,78 respectiv 0,075", "sugestie": "45,78, respectiv 0,075", "explicatie": "Cuvântul „respectiv” se desparte prin virgulă de partea precedentă a enunțului.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "166", "categorie": "S", "text": "8 vase a 3,5 litri și, respectiv 4 vase a 1,5 litri fiecare", "sugestie": "8 vase de 3,5 litri și, respectiv, 4 vase de 1,5 litri fiecare", "explicatie": "Prepoziția „a” cu valoare de măsură („vase a 3,5 litri”) este colocvială; în limbajul standard se folosește „de” (sau construcția „a câte”). De asemenea, adverbul „respectiv” intercalat se încadrează între virgule.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "167", "categorie": "P", "text": "Radu a cumpărat 7 kg de mere și 1,5 kg de roșii, plătind, în total 35,50 lei", "sugestie": "Radu a cumpărat 7 kg de mere și 1,5 kg de roșii, plătind, în total, 35,50 lei", "explicatie": "Lipsește virgula de închidere a incidenței „în total” (cf. propoziției paralele anterioare: „plătind, în total, 24 de lei”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "167", "categorie": "M", "text": "Pentru 7,5 metri de mușama s-au plătit 45 de lei.", "sugestie": "Pentru 7,5 metri de mușamă s-au plătit 45 de lei.", "explicatie": "Substantivul „mușamă” se articolează „mușamaua”; forma „mușama” nu există, iar contextul cere forma nearticulată.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "167", "categorie": "M", "text": "Atunci pentru 11,25 metri de mușama s-au plătit:", "sugestie": "Atunci pentru 11,25 metri de mușamă s-au plătit:", "explicatie": "Aceeași formă flexionară incorectă „mușama” în loc de „mușamă” (nearticulat).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "173", "categorie": "M", "text": "Dacă 6 cărți costă 76,50 lei, atunci 5 cărți de același fel costă:", "sugestie": "Dacă 6 cărți costă 76,50 de lei, atunci 5 cărți de același fel costă:", "explicatie": "Numeralul cardinal mai mare decât 19 (inclusiv fracțiile zecimale cu partea întreagă ≥ 20) impune prepoziția „de” înaintea substantivului (norma DOOM3): „76,50 de lei”. Același manual scrie corect „350 de lei”, „120 de lei”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "173", "categorie": "M", "text": "Trei jucării ursuleț și 4 jucării veveriță costă 258,30 euro.", "sugestie": "Trei jucării ursuleț și 4 jucării veveriță costă 258,30 de euro.", "explicatie": "Numeralul mai mare decât 19 cere prepoziția „de”: „258,30 de euro”. Inconsistență internă: în propoziția imediat următoare apare corect „549,10 de euro”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "176", "categorie": "S", "text": "Pozițiile relative a două puncte", "sugestie": "Pozițiile relative ale a două puncte", "explicatie": "Substantivul cu articol enclitic („pozițiile”) nu poate fi urmat de un atribut genitival fără particula „ale”; forma corectă este „pozițiile relative ale a două puncte” (cf. același manual: „pozițiile relative ale unui punct”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "178", "categorie": "O", "text": "Pentrul segmentul din figura 3", "sugestie": "Pentru segmentul din figura 3", "explicatie": "Greșeală de tipar: prepoziția „pentru” a fost scrisă cu un „l” în plus („Pentrul”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "178", "categorie": "O", "text": "Pentrul semidreapta din figura 5", "sugestie": "Pentru semidreapta din figura 5", "explicatie": "Greșeală de tipar: prepoziția „pentru” a fost scrisă cu un „l” în plus („Pentrul”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "179", "categorie": "O", "text": "Denumeste figurile geometrice situate în tabelul următor", "sugestie": "Denumește figurile geometrice situate în tabelul următor", "explicatie": "Lipsește diacriticul ș; forma corectă a imperativului este „denumește” (restul paginii are diacritice: „Asociați”, „hașurând”, „evidențiate”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "183", "categorie": "P", "text": "s-ar părea, că s-au format 10 · 9 = 90 de drepte", "sugestie": "s-ar părea că s-au format 10 · 9 = 90 de drepte", "explicatie": "Nu se pune virgulă înainte de conjuncția „că” care introduce subordonata completivă directă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "188", "categorie": "O", "text": "segmentului, asfel încât NL = 3 cm și UL = 1 cm", "sugestie": "segmentului, astfel încât NL = 3 cm și UL = 1 cm", "explicatie": "Scriere incorectă a conjuncției „astfel” (lipsește litera „t”); în enunțul problemei aceeași formă apare corect scrisă „astfel”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "189", "categorie": "P", "text": "până la Masa Tăcerii . Distanța", "sugestie": "până la Masa Tăcerii. Distanța", "explicatie": "Spațiu înainte de semnul de punctuație (punctul); punctul se lipește de cuvântul anterior.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "189", "categorie": "D3", "text": "BC este cu 10 m mai mare ca AB", "sugestie": "BC este cu 10 m mai mare decât AB", "explicatie": "După gradul comparativ, norma DOOM3 recomandă conjuncția „decât”; „ca” după comparativ aparține registrului familiar și nu este conform standardului.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "189", "categorie": "S", "text": "Este posibil ca AB = 80% BC?", "sugestie": "Este posibil ca AB = 80% din BC?", "explicatie": "Lipsește prepoziția „din”, necesară în construcția cu procente (cf. aceleiași pagini: „25% din 16 cm”, „50% din 10 cm”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "195", "categorie": "O", "text": "Dacă V este este mijlocul segmentului EA", "sugestie": "Dacă V este mijlocul segmentului EA", "explicatie": "Cuvântul „este” apare dublat, din eroare.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "194", "categorie": "P", "text": "astfel încât, AC = 5 cm", "sugestie": "astfel încât AC = 5 cm", "explicatie": "Virgula nu se pune după conjuncția subordonatoare „astfel încât”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "200", "categorie": "S", "text": "Unghiul CDE are deschiderea dintre laturile sale, DC și DE, mai mare decât decât deschiderea dintre laturile OA și OB ale unghiului AOB.", "sugestie": "Unghiul CDE are deschiderea dintre laturile sale, DC și DE, mai mare decât deschiderea dintre laturile OA și OB ale unghiului AOB.", "explicatie": "Dublare greșită a cuvântului „decât” în construcția comparativă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "204", "categorie": "M", "text": "Laturile DC și DE ale unghiul drept CDE sunt perpendiculare.", "sugestie": "Laturile DC și DE ale unghiului drept CDE sunt perpendiculare.", "explicatie": "Este necesar genitivul: „ale unghiului drept”, nu „ale unghiul drept”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "204", "categorie": "P", "text": "Laturile unghiului ISN sunt semidreptele SI și SN care au aceeași origine, dar sensuri opuse.", "sugestie": "Laturile unghiului ISN sunt semidreptele SI și SN, care au aceeași origine, dar sensuri opuse.", "explicatie": "Subordonata atributivă nerestrictivă introdusă de „care” se desparte prin virgulă (cf. propoziția paralelă anterioară, unde virgula există).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "205", "categorie": "P", "text": "Distingem două cazuri, reprezentate în figura 1 și, respectiv, în figura 2.", "sugestie": "Distingem două cazuri, reprezentate în figura 1 și, respectiv în figura 2.", "explicatie": "După „respectiv” nu se pune virgulă; acesta se desparte prin virgulă doar de termenul anterior.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "206", "categorie": "P", "text": "acele unui ceas mecanic indică orele 12, 2, 4, 3, respectiv, 6", "sugestie": "acele unui ceas mecanic indică orele 12, 2, 4, 3, respectiv 6", "explicatie": "Virgula de după „respectiv” este incorectă; „respectiv” nu se desparte prin virgulă de termenul următor.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "207", "categorie": "P", "text": "prin lipsă, respectiv, prin adaos", "sugestie": "prin lipsă, respectiv prin adaos", "explicatie": "După „respectiv” nu se pune virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "207", "categorie": "P", "text": "Determinați numărul natural n pentru care unghiul ⊲ABC, este succesiv:", "sugestie": "Determinați numărul natural n pentru care unghiul ⊲ABC este succesiv:", "explicatie": "Nu se pune virgulă între subiect („unghiul ABC”) și predicat („este succesiv”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "207", "categorie": "P", "text": "un unghi COL, cu măsura egală cu 63°", "sugestie": "un unghi COL cu măsura egală cu 63°", "explicatie": "Virgula desparte greșit substantivul de atributul său prepozițional („cu măsura egală cu 63°”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "208", "categorie": "P", "text": "iar AOC și COD au măsura egală cu 70° și, respectiv, cu 40°", "sugestie": "iar AOC și COD au măsura egală cu 70° și, respectiv cu 40°", "explicatie": "După „respectiv” nu se pune virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "208", "categorie": "P", "text": "Punctul E se află în interiorul unghiului, astfel încât, măsura TAE este de două ori mai mare", "sugestie": "Punctul E se află în interiorul unghiului, astfel încât măsura TAE este de două ori mai mare", "explicatie": "Nu se pune virgulă după locuțiunea conjuncțională „astfel încât”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "208", "categorie": "S", "text": "măsura TAE este de două ori mai mare ca măsura unghiului EAR", "sugestie": "măsura TAE este de două ori mai mare decât măsura unghiului EAR", "explicatie": "După gradul comparativ de superioritate („mai mare”) se folosește „decât”, nu „ca”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "208", "categorie": "P", "text": "Determinați măsura unghiului EAR, respectiv, măsura unghiului TAE.", "sugestie": "Determinați măsura unghiului EAR, respectiv măsura unghiului TAE.", "explicatie": "După „respectiv” nu se pune virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "219", "categorie": "O", "text": "iar pentru transfomarea într-o unitate de măsură imediat inferioară", "sugestie": "iar pentru transformarea într-o unitate de măsură imediat inferioară", "explicatie": "Greșeală de tipar: lipsește litera „r” din cuvântul „transformarea”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "220", "categorie": "O", "text": "Horia observă ca pe fiecare linie sunt câte 5 pătrate", "sugestie": "Horia observă că pe fiecare linie sunt câte 5 pătrate", "explicatie": "Conjuncția „că” se scrie cu diacritică; restul paginii folosește diacritice, deci este o eroare, nu o problemă de randare.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "228", "categorie": "P", "text": "Punctele A, B, și D sunt coliniare.", "sugestie": "Punctele A, B și D sunt coliniare.", "explicatie": "În limba română nu se pune virgulă înaintea conjuncției „și” într-o enumerare simplă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "228", "categorie": "M", "text": "La ce înălțimea se ridică apa, dacă în acvariu se toarnă 200 de litri?", "sugestie": "La ce înălțime se ridică apa, dacă în acvariu se toarnă 200 de litri?", "explicatie": "După cuvântul interogativ „ce”, substantivul se folosește fără articol hotărât; forma corectă este „la ce înălțime” (cf. aceeași formulare corectă la pag. 226).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "227", "categorie": "S", "text": "Pentru majoritatea dintre voi, acesta este o adevărată provocare. Accesează internetul pentru a afla câteva secrete", "sugestie": "Pentru majoritatea dintre voi, acesta este o adevărată provocare. Accesați internetul pentru a afla câteva secrete", "explicatie": "Neconcordanță de persoană: textul se adresează la plural („dintre voi”), dar imperativul este la singular („Accesează”); corect este „Accesați”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "231", "categorie": "D3", "text": "Comparând această egalitate nou obținută tot cu cea de-a doua egalitate", "sugestie": "Comparând această egalitate nou-obținută tot cu cea de-a doua egalitate", "explicatie": "DOOM3: adjectivele compuse cu primul element „nou-” se scriu cu cratimă (nou-obținut, -ă).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "232", "categorie": "S", "text": "Jumătate din 16 km este egal cu 8 km", "sugestie": "Jumătate din 16 km este egală cu 8 km", "explicatie": "Acord greșit: subiectul „jumătate” este feminin, deci predicatul trebuie să fie „egală” (corect apare la punctul b: „jumătatea distanței este egală cu 4 km”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "233", "categorie": "S", "text": "Primesc toate cele patru obiecte cadou vizitatorii cu numărul 360 și 720", "sugestie": "Primesc toate cele patru obiecte cadou vizitatorii cu numerele 360 și 720", "explicatie": "Acord greșit în număr: fiind vorba de două numere (360 și 720), forma corectă este pluralul articulat „numerele”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "233", "categorie": "P", "text": "obținem că nu se pot pune câte 4 fructe de același fel, în fiecare coș", "sugestie": "obținem că nu se pot pune câte 4 fructe de același fel în fiecare coș", "explicatie": "Virgulă nejustificată între predicat și complementul circumstanțial; în aceeași frază, structura paralelă este scrisă fără virgulă („se pot pune câte trei fructe în fiecare coș”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "239", "categorie": "S", "text": "Măsura unghiului BOM este egală 40° – 20°= 20°.", "sugestie": "Măsura unghiului BOM este egală cu 40° – 20° = 20°.", "explicatie": "Lipsește prepoziția „cu” după „este egală”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Matematica Art Klett clasa a V-a", "pagina": "240", "categorie": "S", "text": "perimetrele care lipsesc 17,2 m și 98 cm", "sugestie": "perimetrele care lipsesc sunt 17,2 m și 98 cm", "explicatie": "Propoziția rămâne fără predicat; lipsește verbul „sunt”.", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>
