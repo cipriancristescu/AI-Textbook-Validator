@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Geografie Ascendia clasa a V-a — Fact-checking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="fact-checking.html">&larr; Fact-checking</a>
+  <div class="masthead">
+    <div class="eyebrow">Fact-checking</div>
+    <h1>Manual Geografie Ascendia clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>19</b> rezultate</span>
+      
+      <span class="chip"><b>6</b> categorii</span>
+      <span class="chip">pagini <b>11</b>–<b>112</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="CONTRADICTION">CONTRADICTION</option><option value="DATE_NUMERICE">Date numerice</option><option value="HARTA">Hartă</option><option value="HIDROGRAFIE">Hidrografie</option><option value="LOCALIZARE">Localizare</option><option value="TERMEN">Termen</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="11">p. 11</option><option value="17">p. 17</option><option value="41">p. 41</option><option value="47">p. 47</option><option value="54">p. 54</option><option value="58">p. 58</option><option value="59">p. 59</option><option value="69">p. 69</option><option value="77">p. 77</option><option value="83">p. 83</option><option value="93">p. 93</option><option value="94">p. 94</option><option value="95">p. 95</option><option value="99">p. 99</option><option value="101">p. 101</option><option value="102">p. 102</option><option value="106">p. 106</option><option value="108">p. 108</option><option value="112">p. 112</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "11", "categorie": "HARTA", "text": "Scara 1:10.000 1cm = 50 m", "sugestie": "Scara 1:10.000 înseamnă că 1 cm pe plan corespunde la 100 m în realitate (sau, pentru 1 cm = 50 m, scara numerică ar fi 1:5.000)", "explicatie": "Contradicție internă între scara numerică și echivalentul grafic indicat: la scara 1:10.000, 1 cm pe hartă reprezintă 10.000 cm = 100 m în teren, nu 50 m. Echivalentul de 1 cm = 50 m corespunde scării 1:5.000.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "17", "categorie": "HARTA", "text": "SCARA: 1:850.000", "sugestie": "scară mult mai mare, de ordinul 1:10.000 (coerentă cu scara grafică 0–100–300 m tipărită pe aceeași hartă)", "explicatie": "Harta orașului Ocna Sibiului are tipărită o scară grafică de 0–100–300 m, întinsă pe câțiva centimetri, ceea ce corespunde unei scări de aproximativ 1:10.000. La scara numerică declarată de 1:850.000, 1 cm pe hartă ar însemna 8,5 km în realitate, deci segmentul de 300 m din scara grafică ar avea doar ~0,35 mm — imposibil. Scara numerică contrazice scara grafică de pe aceeași hartă și dimensiunile reale ale unui oraș (o localitate de câțiva km nu poate fi reprezentată cu străzi lizibile la 1:850.000).", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "41", "categorie": "CONTRADICTION", "text": "În exteriorul munților se situează dealurile și podișurile forme de relief mai joase decât dealurile și mai netede.", "sugestie": "În exteriorul munților se situează dealurile și podișurile, forme de relief mai joase decât munții și mai netede.", "explicatie": "Fraza este intern contradictorie: afirmă că dealurile și podișurile sunt „mai joase decât dealurile”. În treptele de relief ale României, dealurile și podișurile sunt treapta intermediară, mai joasă decât munții (Carpații) și mai înaltă decât câmpiile; sensul intenționat este „mai joase decât munții”.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "47", "categorie": "CONTRADICTION", "text": "Apa mării este sărată, motiv pentru care la adâncimi mai mari de 200 m nu mai trăiesc viețuitoare.", "sugestie": "La adâncimi mai mari de circa 200 m apa Mării Negre conține hidrogen sulfurat și nu mai are oxigen, motiv pentru care acolo nu trăiesc viețuitoare.", "explicatie": "Absența vieții sub ~200 m în Marea Neagră nu este cauzată de salinitate, ci de acumularea de hidrogen sulfurat (H2S) și lipsa oxigenului, urmare a schimbului redus de apă cu Marea Mediterană și a stratificării apei. Mai mult, salinitatea Mării Negre este chiar mai scăzută decât media oceanelor (~18‰), deci explicația cauzală din manual este greșită.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "54", "categorie": "LOCALIZARE", "text": "Ruinele Cetății Sarmizegetusa pot fi admirate în Grupa Munților Parâng.", "sugestie": "Ruinele Cetății Sarmizegetusa pot fi admirate în Munții Orăștiei (Carpații Occidentali).", "explicatie": "Cetatea Sarmizegetusa Regia este situată în Munții Orăștiei (județul Hunedoara), care aparțin Carpaților Occidentali, nu în Grupa Munților Parâng din Carpații Meridionali. Grupa Parâng (Parâng, Șureanu, Cindrel, Lotru, Căpățânii) se află mult mai la sud-est.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "58", "categorie": "LOCALIZARE", "text": "Podișul Getic, situat între Valea Dâmboviței și Dunăre;", "sugestie": "Podișul Getic, situat între Valea Oltului și Dunăre;", "explicatie": "Podișul Getic este delimitat la est de valea râului Olt, la sud de Dunăre și la nord de Subcarpații Getici. Valea Dâmboviței se află la est de Olt, în zona Câmpiei Române, deci nu poate constitui limita Podișului Getic.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "59", "categorie": "DATE_NUMERICE", "text": "Câmpia de Vest este o câmpie joasă, ajungând la altitudinea maximă de 143 m.", "sugestie": "Câmpia de Vest este o câmpie joasă, ajungând la altitudinea maximă de circa 200 m.", "explicatie": "Câmpia de Vest (partea românească a Câmpiei Panonice) are altitudini cuprinse între circa 90 m (la ieșirea Mureșului din țară) și aproximativ 200 m, la contactul cu Dealurile de Vest; valoarea de 143 m ca altitudine maximă nu corespunde datelor geografice consacrate.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "69", "categorie": "CONTRADICTION", "text": "Observă graficele ce reprezintă ultimele trei recensăminte ale localităților Alexandria și Timișoara.", "sugestie": "Graficul pentru Timișoara nu prezintă trei recensăminte: anii afișați sunt 2002, 2011 și 2015, iar în 2015 nu a avut loc niciun recensământ în România.", "explicatie": "Textul afirmă că ambele grafice prezintă „ultimele trei recensăminte”, dar graficul Timișoarei are pe axa timpului anii 2002, 2011 și 2015. Recensămintele populației din România din această perioadă au avut loc în 1992, 2002 și 2011 (cum corect apare la graficul Alexandriei); anul 2015 nu este an de recensământ, ci o estimare statistică. Graficul contrazice deci afirmația din text.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "77", "categorie": "DATE_NUMERICE", "text": "Calea ferată cu cele mai multe tuneluri (14) este cea dintre Oravița și Anina, construită în 1854.", "sugestie": "Calea ferată dintre Oravița și Anina a fost construită în 1863.", "explicatie": "Calea ferată Oravița–Anina (33,4 km, cu 14 tuneluri și 10 viaducte) a fost inaugurată în 1863. Anul 1854 corespunde liniei Oravița–Baziaș, prima cale ferată de pe teritoriul actual al României, nu liniei Oravița–Anina.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "83", "categorie": "DATE_NUMERICE", "text": "VRANCEA-VR", "sugestie": "VRANCEA-VN", "explicatie": "Indicativul auto al județului Vrancea este VN, nu VR. Toate celelalte indicativе din tabel corespund (de ex. Vâlcea-VL, Vaslui-VS), dar abrevierea oficială pentru Vrancea, folosită la plăcuțele de înmatriculare, este VN.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "93", "categorie": "DATE_NUMERICE", "text": "Aceasta reprezintă aproximativ o jumătate din teritoriul țării noastre.", "sugestie": "Aceasta reprezintă aproximativ o treime din teritoriul țării noastre.", "explicatie": "Afirmația se referă la Serbia. Suprafața Serbiei este de circa 77.474 km² fără Kosovo sau circa 88.361 km² cu Kosovo, adică aproximativ 32–37% din suprafața României de 238.391 km², deci aproape o treime, nu o jumătate.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "95", "categorie": "HIDROGRAFIE", "text": "Cel mai lung fluviu din Europa este Volga (o importantă sursă de alimentare a Mării Caspice), fiind urmat de Dunăre și Nistru.", "sugestie": "Cel mai lung fluviu din Europa este Volga, fiind urmată de Dunăre și Nipru.", "explicatie": "Al treilea fluviu ca lungime din Europa este Niprul (cca 2.200 km), nu Nistrul (cca 1.362 km). Nistrul este mult mai scurt decât Niprul și nu ocupă locul al treilea în clasamentul fluviilor europene.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "94", "categorie": "CONTRADICTION", "text": "Vf. Elbrus 5633", "sugestie": "Vf. Elbrus 5 642 m", "explicatie": "Pe harta unităților de relief (paginile 94 și 96) vârful Elbrus este trecut cu altitudinea 5633 m, în timp ce pe harta fizică a Europei de la pagina 95 același vârf este trecut cu 5 642 m — valoarea acceptată în prezent. Cele două hărți ale aceluiași manual se contrazic.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "99", "categorie": "TERMEN", "text": "Numele lor vin de la zeii Greciei și Romei Antice, în afară de cel de Terra.", "sugestie": "Numele lor vin de la zeii Greciei și Romei Antice, inclusiv cel de Terra.", "explicatie": "Terra (Terra Mater) este zeitate romană a Pământului, deci și numele Terrei provine din mitologia romană; excepția formulată este incorectă.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "101", "categorie": "TERMEN", "text": "O rotație completă durează 365 de zile, 6 ore, 9 minute, 9 secunde.", "sugestie": "O revoluție completă durează 365 de zile, 6 ore, 9 minute, 9 secunde.", "explicatie": "Durata de 365 de zile, 6 ore, 9 minute corespunde mișcării de revoluție (anul sideral), nu rotației, care durează aproximativ 24 de ore; manualul însuși definește rotația ca mișcare în jurul axei, deci termenul folosit aici este greșit.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "102", "categorie": "CONTRADICTION", "text": "Cele patru oceane care formează Oceanul planetar sunt:", "sugestie": "Cele cinci oceane care formează Oceanul planetar sunt: Pacific, Atlantic, Indian, Arctic și Antarctic.", "explicatie": "Textul enumeră doar patru oceane (Pacific, Atlantic, Indian, Arctic), dar harta de pe aceeași pagină etichetează și OCEANUL ANTARCTIC, deci harta contrazice textul.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "108", "categorie": "DATE_NUMERICE", "text": "În anul 1992, a intrat în Patrimoniul Mondial al UNESCO", "sugestie": "În anul 1991, a intrat în Patrimoniul Mondial al UNESCO", "explicatie": "Delta Dunării a fost înscrisă pe Lista Patrimoniului Mondial UNESCO în anul 1991 (statutul de Rezervație a Biosferei datează din 1990), nu în 1992.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "106", "categorie": "HARTA", "text": "HARTA FIZICĂ A ROMÂNIEI", "sugestie": "Harta rutieră (turatică) a României", "explicatie": "Titlul anunță o hartă fizică, dar harta reprodusă este o hartă rutieră/turistică: legenda vizibilă conține autostrăzi, drumuri naționale, drumuri europene și simboluri de localități după numărul de locuitori, nu elemente de relief (hipsome­trie, unități de relief) specifice unei hărți fizice. Titlul nu corespunde conținutului hărții.", "sursa": ""}, {"kind": "fact", "manual": "Manual Geografie Ascendia clasa a V-a", "pagina": "112", "categorie": "HARTA", "text": "IUGOSLAVIA", "sugestie": "SERBIA și MUNTENEGRU (state independente)", "explicatie": "Pe harta administrativă a Europei, teritoriul dintre Croația, Bosnia și Herțegovina, Ungaria, România, Bulgaria, Macedonia și Albania este etichetat „IUGOSLAVIA”, cu capitala Belgrad. Iugoslavia (RF Iugoslavia, formată din Serbia și Muntenegru) a fost redenumită „Serbia și Muntenegru” în 2003, iar din 2006 cele două state sunt independente. Harta este deci învechită: denumirea oficială corectă este Serbia (cu capitala Belgrad) și Muntenegru (cu capitala Podgorița).", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3", "TERITORIU": "Geografie istorică", "CAUZALITATE": "Cauzalitate", "CIFRE": "Cifre", "DOCUMENT": "Document", "TERMEN": "Termen", "LOCALIZARE": "Localizare", "DATE_NUMERICE": "Date numerice", "HARTA": "Hartă", "CLIMA": "Climă", "RELIEF": "Relief", "HIDROGRAFIE": "Hidrografie", "POPULATIE": "Populație"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>

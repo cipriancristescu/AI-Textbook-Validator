@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Istorie Ascendia clasa a V-a — Fact-checking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="fact-checking.html">&larr; Fact-checking</a>
+  <div class="masthead">
+    <div class="eyebrow">Fact-checking</div>
+    <h1>Manual Istorie Ascendia clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>28</b> rezultate</span>
+      
+      <span class="chip"><b>6</b> categorii</span>
+      <span class="chip">pagini <b>10</b>–<b>118</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="ATRIBUIRE">Atribuire</option><option value="CIFRE">Cifre</option><option value="CONTRADICTION">CONTRADICTION</option><option value="CRONOLOGIE">Cronologie</option><option value="DOCUMENT">Document</option><option value="TERITORIU">Geografie istorică</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="10">p. 10</option><option value="14">p. 14</option><option value="22">p. 22</option><option value="24">p. 24</option><option value="26">p. 26</option><option value="27">p. 27</option><option value="31">p. 31</option><option value="40">p. 40</option><option value="41">p. 41</option><option value="54">p. 54</option><option value="59">p. 59</option><option value="65">p. 65</option><option value="70">p. 70</option><option value="71">p. 71</option><option value="74">p. 74</option><option value="78">p. 78</option><option value="79">p. 79</option><option value="80">p. 80</option><option value="85">p. 85</option><option value="93">p. 93</option><option value="98">p. 98</option><option value="118">p. 118</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "10", "categorie": "CRONOLOGIE", "text": "Astăzi, majoritatea omenirii socotește anii pornind de la nașterea lui Iisus Hristos, considerată ca marcând anul zero.", "sugestie": "Era creștină începe cu anul 1 d.Hr.; în calendarul iulian/gregorian nu există anul zero — anul 1 î.Hr. este urmat direct de anul 1 d.Hr.", "explicatie": "În sistemul de datare creștină (și în calendarul gregorian folosit astăzi) nu există un „an zero”: numărătoarea anilor începe cu anul 1 d.Hr., iar anul 1 î.Hr. este imediat anterior acestuia. Afirmația că nașterea lui Hristos ar marca „anul zero” contrazice cronologia standard.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "14", "categorie": "DOCUMENT", "text": "În ziua de 20 noiembrie 1989, Organizația Națiunilor Unite a aprobat Legea Internațională a Drepturilor Copilului.", "sugestie": "În ziua de 20 noiembrie 1989, Organizația Națiunilor Unite a adoptat Convenția cu privire la Drepturile Copilului.", "explicatie": "Data de 20 noiembrie 1989 este corectă, dar documentul adoptat de Adunarea Generală a ONU (Rezoluția 44/25) se numește Convenția cu privire la Drepturile Copilului — este un tratat internațional (convenție), nu o „lege”. Denumirea și natura juridică a documentului sunt indicate greșit.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "22", "categorie": "ATRIBUIRE", "text": "Crucea a fost înălțată la inițiativa reginei Maria și a regelui Ferdinand I al României", "sugestie": "Crucea a fost înălțată la inițiativa reginei Maria", "explicatie": "Sursele standard atribuie inițiativa construirii Crucii Eroilor Neamului de pe vârful Caraiman exclusiv reginei Maria. În plus, regele Ferdinand I a murit la 20 iulie 1927, cu peste un an înainte de finalizarea și inaugurarea monumentului (14 septembrie 1928), ceea ce face îndoielnică menționarea lui ca inițiator.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "24", "categorie": "ATRIBUIRE", "text": "iar două secole mai târziu aceștia vor fi primii din Europa care vor adopta învățământul primar obligatoriu", "sugestie": "aceștia vor fi printre primii din Europa care vor adopta învățământul primar obligatoriu", "explicatie": "Învățământul obligatoriu fusese introdus mai devreme în alte state europene: Württemberg (1559), Ducatul de Weimar (1619), Gotha (1642), Prusia (1717). Sașii transilvăneni au adoptat școala obligatorie abia în secolul al XVIII-lea (în cadrul reformei habsburgice Allgemeine Schulordnung din 1774), deci nu au fost „primii din Europa”.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "26", "categorie": "ATRIBUIRE", "text": "un palat în incinta căruia se află astăzi primul muzeu din România și din centrul Europei", "sugestie": "un palat în incinta căruia se află astăzi primul muzeu de pe teritoriul României și unul dintre primele muzee din Europa Centrală", "explicatie": "Muzeul Brukenthal (deschis publicului în 1817) este primul muzeu de pe teritoriul României de azi, dar nu și primul din Europa Centrală: în spațiul central-european existau muzee și colecții deschise publicului cu mult înainte (de ex. Grünes Gewölbe la Dresda, 1723; Fridericianum la Kassel, 1779; galeria Belvedere din Viena, 1781).", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "27", "categorie": "CONTRADICTION", "text": "c. Matematician român de origine maghiară (Janos)", "sugestie": "c. Matematician maghiar din Transilvania (Janos)", "explicatie": "Același manual îl prezintă pe János Bolyai la pagina 26 drept „matematician maghiar din Transilvania” și la pagina 28 (Evaluare, 2.c) la fel; descrierea din rebus drept „matematician român de origine maghiară” contrazice propriul text și istoriografia standard, care îl consideră matematician maghiar (născut la Târgu Mureș/Marosvásárhely, pe atunci în Regatul Ungariei).", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "31", "categorie": "ATRIBUIRE", "text": "Istoricul roman Diodorus din Sicilia ne spune că, după o victorie, geții au pregătit un ospăț pentru comandanții învinși", "sugestie": "Istoricul grec Diodorus din Sicilia", "explicatie": "Diodor din Sicilia (Diodorus Siculus, sec. I î.Hr., din Agyrium) a fost un istoric grec, care a scris în limba greacă lucrarea «Bibliotheca historica»; în istoriografia standard este menționat ca «istoricul grec Diodor din Sicilia», nu ca istoric roman.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "40", "categorie": "ATRIBUIRE", "text": "alfabet chirilic: scriere creată de doi frați, Chiril și Metodiu, răspândită în lumea slavă.", "sugestie": "alfabet glagolitic: scriere creată de frații Chiril și Metodiu; alfabetul chirilic a fost creat ulterior de ucenicii lor (Clement de Ohrid și alți discipoli, la școlile de la Preslav și Ohrid), la sfârșitul secolului al IX-lea", "explicatie": "Frații Chiril și Metodiu au creat alfabetul glagolitic (în jurul anului 863) pentru misiunea în Moravia. Alfabetul chirilic a fost elaborat de discipolii lor în Prima Țară Bulgară (școala literară de la Preslav/Ohrid), la sfârșitul secolului al IX-lea, și a fost numit ulterior în cinstea lui Chiril. Atribuirea alfabetului chirilic direct celor doi frați este o eroare clasică, verificabilă în orice sursă standard.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "41", "categorie": "CRONOLOGIE", "text": "La sfârșitul lunii februarie fac curățenie și o sărbătoresc pe Baba Marta, despre care spun că intră doar în casele curate.", "sugestie": "La începutul lunii martie (1 martie) o sărbătoresc pe Baba Marta", "explicatie": "Baba Marta (Baba Marta Day) este sărbătorită de bulgari la 1 martie, nu la sfârșitul lunii februarie; este echivalentul bulgăresc al Mărțișorului, marcând începutul primăverii, când se oferă mărțișoare (marteniți) roșii și albe.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "54", "categorie": "CRONOLOGIE", "text": "Fernando Magellan (1489-1521) a fost un explorator portughez", "sugestie": "Fernando Magellan (1480-1521) a fost un explorator portughez", "explicatie": "Anul nașterii lui Ferdinand Magellan este 1480 (Sabrosa, Portugalia), nu 1489; anul morții, 1521 (bătălia de la Mactan, Filipine), este corect.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "54", "categorie": "CIFRE", "text": "Cel care a reușit să facă înconjurul lumii în fruntea celor 38 de marinari care au supraviețuit călătoriei a fost secundul lui Magellan, Juan de Elcano.", "sugestie": "Cel care a reușit să facă înconjurul lumii în fruntea celor 18 marinari care au supraviețuit călătoriei a fost secundul lui Magellan, Juan de Elcano.", "explicatie": "Corabia Victoria, condusă de Juan Sebastián Elcano, a ajuns înapoi în Spania (Sanlúcar de Barrameda) la 6 septembrie 1522 cu 18 supraviețuitori la bord — cifra consacrată în sursele standard, nu 38.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "54", "categorie": "CIFRE", "text": "Din cei 270 de oameni care îl urmaseră pe Magellan în temerara sa încercare, doar 38 dintre ei s-au mai întors.", "sugestie": "Din cei 270 de oameni care îl urmaseră pe Magellan în temerara sa încercare, doar 18 dintre ei au încheiat înconjurul lumii.", "explicatie": "Numărul standard al supraviețuitorilor care au finalizat circumnavigația cu Elcano este 18 (septembrie 1522); cifra 38 nu corespunde niciunei numărători consacrate.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "59", "categorie": "CRONOLOGIE", "text": "În 1977 Jacques-Yves Cousteau și echipa sa au hotărât să facă o expediție în Marea Neagră și la gurile Dunării.", "sugestie": "În 1990 Jacques-Yves Cousteau și echipa sa au hotărât să facă o expediție în Marea Neagră și la gurile Dunării.", "explicatie": "Expediția navei Calypso în Marea Neagră și la gurile Dunării, cu acostarea la Constanța și studiul poluării, a avut loc în 1990 (filmările pentru documentarul despre Dunăre, în patru episoade, 1990–1991), fapt confirmat și de textul manualului care leagă proiectul de înființarea Rezervației Biosferei Delta Dunării în anii '90. Nu există o expediție Cousteau la Constanța în 1977.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "59", "categorie": "CRONOLOGIE", "text": "Între anii 1960-1964, Cousteau a condus un program numit „Precontinent”", "sugestie": "Între anii 1962-1965, Cousteau a condus un program numit „Precontinent”", "explicatie": "Programul Precontinent (Conshelf) al lui Cousteau, dedicat locuirii subacvatice, a cuprins trei etape: Conshelf I (1962), Conshelf II (1963) și Conshelf III (1965), deci a decurs în perioada 1962–1965, nu 1960–1964.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "65", "categorie": "CRONOLOGIE", "text": "Iancu de Hunedoara, cunoscut și sub numele de Ioan de Hunedoara, a fost numit voievod al Transilvaniei de regele Ungariei (1441-1456).", "sugestie": "Iancu de Hunedoara a fost voievod al Transilvaniei în 1441-1446, apoi guvernator (gubernator) al Regatului Ungariei în 1446-1453.", "explicatie": "Mandatul de voievod al Transilvaniei al lui Iancu de Hunedoara a durat din 1441 până în 1446, când a fost ales guvernator al Ungariei (1446-1453). Anul 1456 este anul morții sale, nu sfârșitul voievodatului; intervalul 1441-1456 acoperă întreaga sa activitate politico-militară, nu doar funcția de voievod.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "70", "categorie": "CRONOLOGIE", "text": "Biserica fortificată din Biertan se află în mijlocul Podișului Transilvaniei, în județul Sibiu, iar construcția ei a început în secolul al XII-lea de către primii sași care au venit în Ardeal.", "sugestie": "Construcția bisericii fortificate din Biertan a început în secolul al XV-lea (biserica actuală a fost ridicată între 1486 și 1524); prima biserică de pe acel loc datează din secolul al XIII-lea.", "explicatie": "Biertan este atestat documentar abia în 1283, iar biserica fortificată actuală a fost construită în stil gotic târziu între 1486 și 1524. Sașii s-au stabilit în zona Biertanului în secolul al XIII-lea, nu în secolul al XII-lea.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "71", "categorie": "CIFRE", "text": "Biserica de lemn din Șurdești – biserică greco-catolică, care se deosebește prin mărimea impresionantă a turnului ridicat deasupra intrării, fiind considerată una dintre cele mai înalte construcții bisericești din lume (72 de metri).", "sugestie": "Biserica de lemn din Șurdești este considerată una dintre cele mai înalte construcții bisericești de lemn din lume (72 de metri).", "explicatie": "Afirmația corectă, întâlnită în sursele standard, se referă la construcțiile bisericești DE LEMN. Fără precizarea „de lemn”, afirmația este falsă: numeroase biserici din piatră o depășesc cu mult (de exemplu, catedrala din Ulm are 161,5 m).", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "74", "categorie": "TERITORIU", "text": "REGATUL LITUANIEI", "sugestie": "MARELE DUCAT AL LITUANIEI", "explicatie": "În perioada medievală reprezentată pe hartă (secolele XIV–XV, epoca lui Basarab I, Mircea cel Bătrân și Vlad Țepeș), statul lituanian era Marele Ducat al Lituaniei, condus de mari duci (ex. Gediminas, Algirdas, Vytautas), nu un regat. Regatul Lituaniei a existat doar în scurta perioada 1251–1263, sub Mindaugas. Denumirea de epocă corectă este Marele Ducat al Lituaniei.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "78", "categorie": "ATRIBUIRE", "text": "cortul vizirilor Mamut și Isaac", "sugestie": "cortul vizirilor Mahmud și Isaac", "explicatie": "Vizirii otomani prezenți în campania lui Mahomed al II-lea din 1462 erau Mahmud Paşa și Isaac Paşa; în textul lui Nicolae Stoicescu, „Vlad Țepeș”, din care este preluat fragmentul, numele este „Mahmud”. Forma „Mamut” este un nume greșit.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "79", "categorie": "CRONOLOGIE", "text": "A avut trei domnii, în perioada din 1456 – 1462", "sugestie": "A avut trei domnii: în 1448, în 1456–1462 și în 1476", "explicatie": "Cele trei domnii ale lui Vlad Țepeș nu s-au desfășurat toate în intervalul 1456–1462: prima domnie a fost în 1448 (octombrie–decembrie), a doua (cea principală) în 1456–1462, iar a treia în noiembrie–decembrie 1476. Formularea manualului comprimă greșit toate cele trei domnii într-un singur interval.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "79", "categorie": "ATRIBUIRE", "text": "a fost spriginit, la urcarea pe tronul Țării Românești, de Iancu de Hunedoara și Ștefan cel Mare", "sugestie": "la urcarea pe tron în 1456 a fost spriginit de Iancu de Hunedoara; Ștefan cel Mare l-a spriginit la a treia domnie, în 1476", "explicatie": "Ștefan cel Mare nu putea sprijini urcarea lui Vlad Țepeș pe tron în 1456, deoarece el însuși a devenit domn al Moldovei abia în aprilie 1457 (chiar cu sprijinul lui Vlad Țepeș, fapt menționat corect în rubrica „Află mai mult”). Sprijinul lui Ștefan cel Mare pentru Vlad Țepeș datează din 1476, la ultima sa domnie. Gruparea celor doi sprijinitori la aceeași urcare pe tron este anacronică.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "80", "categorie": "CRONOLOGIE", "text": "În centrul orașului Curtea de Argeș se găsesc ruinele Curții Domnești construită în secolul al XIII-lea de Basarab I.", "sugestie": "construită în secolul al XIV-lea de Basarab I", "explicatie": "Basarab I a domnit în prima jumătate a secolului al XIV-lea (cca. 1310–1352), deci nu putea construi Curtea Domnească de la Curtea de Argeș în secolul al XIII-lea. Reședința domnească de la Curtea de Argeș este legată de întemeierea Țării Românești, în secolul al XIV-lea.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "85", "categorie": "ATRIBUIRE", "text": "a urcat pe tronul Moldovei, ajutat de domnitorul Țării Românești, Vlad Țepeș, fiul lui Bogdan al II-lea, Ștefan cel Mare", "sugestie": "a urcat pe tronul Moldovei Ștefan cel Mare, fiul lui Bogdan al II-lea, ajutat de domnitorul Țării Românești, Vlad Țepeș (fiul lui Vlad al II-lea Dracul)", "explicatie": "Așa cum este tipărită, apoziția „fiul lui Bogdan al II-lea” se leagă de Vlad Țepeș, ceea ce este fals: Vlad Țepeș era fiul lui Vlad al II-lea Dracul. Fiul lui Bogdan al II-lea era Ștefan cel Mare (fapt confirmat de altfel chiar în exercițiul 4 de la pagina 86).", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "85", "categorie": "CRONOLOGIE", "text": "cu tătarii la Lipnic (1469)", "sugestie": "cu tătarii la Lipnic (1470)", "explicatie": "Bătălia de la Lipnic, în care Ștefan cel Mare a învins oastea tătară condusă de Mamak, a avut loc în anul 1470 (20 august 1470), nu în 1469.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "85", "categorie": "CONTRADICTION", "text": "cu otomanii la Valea Albă (1476) ... A urmat o altă luptă la Războieni, în 1476, unde Ștefan a fost înfrânt.", "sugestie": "Bătălia de la Valea Albă și Bătălia de la Războieni sunt una și aceeași confruntare (26 iulie 1476), nu două lupte distincte", "explicatie": "Manualul menționează mai întâi războiul „cu otomanii la Valea Albă (1476)”, apoi prezintă „o altă luptă la Războieni, în 1476”, tratându-le ca pe două evenimente separate. În realitate, Bătălia de la Valea Albă este cunoscută și ca Bătălia de la Războieni — este aceeași înfrângere suferită de Ștefan cel Mare în fața oștii lui Mahomed al II-lea.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "93", "categorie": "CRONOLOGIE", "text": "La inaugurarea Bibliotecii Române de la Paris, din 1847, Nicolae Bălcescu spunea:", "sugestie": "La inaugurarea Bibliotecii Române de la Paris, din 1851, Nicolae Bălcescu spunea:", "explicatie": "Biblioteca Română din Paris a fost inaugurată în anul 1851, prilej cu care Nicolae Bălcescu a rostit cunoscutul cuvânt despre unitatea națională a românilor (citat în manual). Anul 1847 nu corespunde cronologiei standard; Bălcescu a ajuns în exil la Paris abia după revoluția de la 1848.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "98", "categorie": "CRONOLOGIE", "text": "(Înalt ordin de zi nr. 49 dat de principele Carol către armată, cu prilejul trecerii Dunării. Corabia, 20 august 1878)", "sugestie": "(Înalt ordin de zi nr. 49 dat de principele Carol către armată, cu prilejul trecerii Dunării. Corabia, 20 august 1877)", "explicatie": "Trecerea Dunării de către armata română (la Corabia–Bechet și în alte puncte) a avut loc în august 1877, în timpul Războiului de Independență. La 20 august 1878 războiul era deja încheiat (armistițiul de la Edirne ianuarie 1878, Pacea de la San Stefano martie 1878, Congresul de la Berlin iunie–iulie 1878), deci un ordin „cu prilejul trecerii Dunării” nu putea fi dat în 1878. Anul corect este 1877, lucru confirmat și de harta de pe aceeași pagină, care marchează operațiile armatei române în 1877–1878, traversarea propriu-zisă fiind în 1877.", "sursa": ""}, {"kind": "fact", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "118", "categorie": "ATRIBUIRE", "text": "…… a construit biserici și mănăstiri, cum ar fi: Putna, Moldovița, Sucevița.", "sugestie": "Putna a fost ctitorită de Ștefan cel Mare, dar Moldovița a fost construită de Petru Rareș (1532), iar Sucevița de Ieremia, Simion și Gheorghe Movilă (1582–1584); niciun singur domnitor nu le-a construit pe toate trei.", "explicatie": "Exercițiul de completare presupune că o singură personalitate (evident Ștefan cel Mare, ctitorul Putnei) a construit toate cele trei monumente. Acest lucru este fals din punct de vedere istoric: mănăstirea Moldovița a fost ctitorită de Petru Rareș în 1532, iar mănăstirea Sucevița de familia Movilă (Ieremia, Gheorghe și Simion Movilă) în 1582–1584, la aproape un secol după domnia lui Ștefan cel Mare (1457–1504).", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3", "TERITORIU": "Geografie istorică", "CAUZALITATE": "Cauzalitate", "CIFRE": "Cifre", "DOCUMENT": "Document", "TERMEN": "Termen", "LOCALIZARE": "Localizare", "DATE_NUMERICE": "Date numerice", "HARTA": "Hartă", "CLIMA": "Climă", "RELIEF": "Relief", "HIDROGRAFIE": "Hidrografie", "POPULATIE": "Populație"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Istorie Ascendia clasa a V-a — Gramatică</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="gramatica.html">&larr; Gramatică</a>
+  <div class="masthead">
+    <div class="eyebrow">Gramatică</div>
+    <h1>Manual Istorie Ascendia clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>39</b> rezultate</span>
+      
+      <span class="chip"><b>4</b> categorii</span>
+      <span class="chip">pagini <b>6</b>–<b>123</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="D3">DOOM3</option><option value="O">Ortografie</option><option value="P">Punctuație</option><option value="S">Sintaxă</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="6">p. 6</option><option value="20">p. 20</option><option value="24">p. 24</option><option value="27">p. 27</option><option value="35">p. 35</option><option value="43">p. 43</option><option value="45">p. 45</option><option value="46">p. 46</option><option value="47">p. 47</option><option value="48">p. 48</option><option value="51">p. 51</option><option value="61">p. 61</option><option value="66">p. 66</option><option value="71">p. 71</option><option value="73">p. 73</option><option value="79">p. 79</option><option value="80">p. 80</option><option value="82">p. 82</option><option value="85">p. 85</option><option value="87">p. 87</option><option value="90">p. 90</option><option value="93">p. 93</option><option value="102">p. 102</option><option value="103">p. 103</option><option value="105">p. 105</option><option value="106">p. 106</option><option value="110">p. 110</option><option value="112">p. 112</option><option value="113">p. 113</option><option value="118">p. 118</option><option value="123">p. 123</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "6", "categorie": "S", "text": "Grupul de oameni cu interese, credințe sau norme de viață comune alcătuiesc comunitatea locală.", "sugestie": "Grupul de oameni cu interese, credințe sau norme de viață comune alcătuiește comunitatea locală.", "explicatie": "Subiectul „Grupul” este la singular; verbul trebuie acordat în singular: „alcătuiește”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "20", "categorie": "O", "text": "muncile agricole sau evenimentele astrologice (anotimpuri, solstițiu, echinocțiu)", "sugestie": "muncile agricole sau evenimentele astronomice (anotimpuri, solstițiu, echinocțiu)", "explicatie": "Anotimpurile, solstițiul și echinocțiul sunt fenomene astronomice, nu astrologice; cuvântul folosit este incorect din punct de vedere lexical.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "24", "categorie": "P", "text": "așa numita „vecinătate”", "sugestie": "așa-numita „vecinătate”", "explicatie": "Construcția „așa-numit(a)” se scrie cu cratimă; lipsește liniuța de legătură.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "27", "categorie": "O", "text": "Matematician român de origine maghiară (Janos)", "sugestie": "Matematician român de origine maghiară (János)", "explicatie": "Numele propriu maghiar se scrie cu accent: „János”, așa cum apare corect în restul manualului (pp. 26, 28).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "35", "categorie": "S", "text": "Scrie asemănările și deosebirile d  două monumente.", "sugestie": "Scrie asemănările și deosebirile dintre cele două monumente.", "explicatie": "Construcție defectuoasă; lipsesc cuvintele „dintre cele”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "43", "categorie": "O", "text": "Sfântul Mihail din Cluj Napoca", "sugestie": "Sfântul Mihail din Cluj-Napoca", "explicatie": "Numele oficial al municipiului se scrie cu cratimă: Cluj-Napoca.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "45", "categorie": "P", "text": "Imperiul Otoman rezultat astfel a fost condus de sultani", "sugestie": "Imperiul Otoman, rezultat astfel, a fost condus de sultani", "explicatie": "Construcția participială intercalată „rezultat astfel” trebuie izolată prin virgule.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "46", "categorie": "S", "text": "Mai târziu au început să fie folosite pentru construcția locuințelor piatra, apoi cărămida.", "sugestie": "Mai târziu au început să fie folosite piatra, apoi cărămida, pentru construcția locuințelor.", "explicatie": "Topică defectuoasă: subiectul („piatra, apoi cărămida”) este despărțit de predicat de complementul prepozițional, ceea ce face enunțul confuz.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "46", "categorie": "P", "text": "izvoare, râuri, pe scurt locuitorii au toate cele ce țin de folosul", "sugestie": "izvoare, râuri, pe scurt, locuitorii au toate cele ce țin de folosul", "explicatie": "Expresia intercalată „pe scurt” trebuie urmată de virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "47", "categorie": "S", "text": "Fiecare grup își reexaminează produsele și le îmbunătățesc", "sugestie": "Fiecare grup își reexaminează produsele și le îmbunătățește", "explicatie": "Acord greșit: subiectul „fiecare grup” este la singular, deci verbul trebuie la persoana a III-a singular („îmbunătățește”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "48", "categorie": "S", "text": "După completarea opiniilor, discută cu colegii și împărtășiți-vă ideile.", "sugestie": "După completarea opiniilor, discutați cu colegii și împărtășiți-vă ideile.", "explicatie": "Inconsistență de persoană și număr: „discută” (pers. a II-a sg.) este coordonat cu „împărtășiți-vă” (pers. a II-a pl.); formele trebuie armonizate.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "51", "categorie": "P", "text": "Competențe vizate:  1.1; 1.2; 2.1; 2.2; 2.3; 3.1.; 3.2; 4.1; 4.2; 4.3", "sugestie": "Competențe vizate: 1.1; 1.2; 2.1; 2.2; 2.3; 3.1; 3.2; 4.1; 4.2; 4.3", "explicatie": "Dublă punctuație la „3.1.;” — punctul și virgula (punct și virgulă) nu se cumulează; se păstrează doar punctul și virgula, ca la celelalte elemente ale enumerării.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "61", "categorie": "O", "text": "să îi întâlniți și adresați-le", "sugestie": "să-i întâlniți și adresați-le", "explicatie": "Forma nesilabică a pronumelui personal combinată cu verbul se scrie legat, cu cratimă: „să-i întâlniți” (cf. DOOM3).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "66", "categorie": "P", "text": "„Apă ai. inimă nu ai!”", "sugestie": "„Apă ai, inimă nu ai!”", "explicatie": "Punctul desparte greșit enunțul, iar cuvântul următor rămâne cu literă mică; forma corectă a zicerii este cu virgulă: „Apă ai, inimă nu ai!”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "71", "categorie": "S", "text": "așezare străveche situate la poalele Munților Gutâi", "sugestie": "așezare străveche situată la poalele Munților Gutâi", "explicatie": "Acord greșit: participiul „situate” (plural) nu se acordă cu substantivul feminin singular „așezare”; forma corectă este „situată”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "71", "categorie": "P", "text": "Biserica de lemn din Josani - așezare străveche", "sugestie": "Biserica de lemn din Josani – așezare străveche", "explicatie": "Se folosește cratima în loc de liniuța de pauză, spre deosebire de celelalte intrări din aceeași listă, unde este folosită corect liniuța (–).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "73", "categorie": "O", "text": "Localitate înconjurată de ziduri cu rol de apărate.", "sugestie": "Localitate înconjurată de ziduri cu rol de apărare.", "explicatie": "Scriere incorectă: forma corectă a substantivului este „apărare” (cf. și pag. 69: „ziduri cu rol de apărare”), nu „apărate”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "79", "categorie": "O", "text": "prin tragererea în țeapă", "sugestie": "prin tragerea în țeapă", "explicatie": "Forma corectă a substantivului este „tragerea”; „tragererea” este o greșeală de tipar (dublare silabică).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "80", "categorie": "S", "text": "se găsesc ruinele Curții Domnești construită în secolul al XIII-lea", "sugestie": "se găsesc ruinele Curții Domnești construite în secolul al XIII-lea", "explicatie": "Acord greșit: participiul „construită” (singular) trebuie să se acorde cu „ruinele” (plural) – „construite”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "82", "categorie": "S", "text": "Țările Române la sfârșitul în secolului al XVI-lea", "sugestie": "Țările Române la sfârșitul secolului al XVI-lea", "explicatie": "Prepoziția „în” este în plus; construcția corectă este „la sfârșitul secolului al XVI-lea”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "85", "categorie": "S", "text": "a urcat pe tronul Moldovei, ajutat de domnitorul Țării Românești, Vlad Țepeș, fiul lui Bogdan al II-lea, Ștefan cel Mare", "sugestie": "a urcat pe tronul Moldovei, ajutat de domnitorul Țării Românești, Vlad Țepeș, Ștefan cel Mare, fiul lui Bogdan al II-lea", "explicatie": "Topică defectuoasă: apoziția „fiul lui Bogdan al II-lea”, plasată imediat după „Vlad Țepeș”, pare să se refere la acesta, deși îl caracterizează pe Ștefan cel Mare.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "85", "categorie": "P", "text": "cu obiecte de cult (cărți, icoane, cruci) la: Putna, Voroneț, Borzești, Huși, Dorohoi, Iași, Suceava", "sugestie": "cu obiecte de cult (cărți, icoane, cruci) la Putna, Voroneț, Borzești, Huși, Dorohoi, Iași, Suceava", "explicatie": "Două puncte folosite incorect după prepoziția „la”; enunțul nu este întrerupt, iar enumerarea nu trebuie introdusă prin două puncte aici.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "87", "categorie": "P", "text": "Pornind de la informațiile pe care le-ai învățat despre Ștefan cel Mare realizează un cvintet după modelul dat.", "sugestie": "Pornind de la informațiile pe care le-ai învățat despre Ștefan cel Mare, realizează un cvintet după modelul dat.", "explicatie": "Lipsește virgula care desparte construcția cu gerunziu, aflată înaintea propoziției regente, de restul enunțului.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "90", "categorie": "O", "text": "Alege o personalitate istorică despre care ai învățat și realizează un un poster în care să prezinți prin imagini și text:", "sugestie": "Alege o personalitate istorică despre care ai învățat și realizează un poster în care să prezinți prin imagini și text:", "explicatie": "Cuvântul „un” este dublat în mod eronat („un un poster”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "90", "categorie": "O", "text": "Scrieți pe fiecare parte câte un număr care să corespundă unui eveniment/fapt istoric studiat notat pe care l-ați notat pe un bilețel.", "sugestie": "Scrieți pe fiecare parte câte un număr care să corespundă unui eveniment/fapt istoric studiat, pe care l-ați notat pe un bilețel.", "explicatie": "Cuvântul „notat” apare în plus („studiat notat pe care l-ați notat”), rezultat al unei editări defectuoase; lipsesc și virgulele subordonatei.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "93", "categorie": "P", "text": "la finalul căruia s-a discutat, pe plan internațional, problema unirii Principatelor Române Moldova și Țara Românească.", "sugestie": "la finalul căruia s-a discutat, pe plan internațional, problema unirii Principatelor Române – Moldova și Țara Românească.", "explicatie": "Aponumerarea „Moldova și Țara Românească” trebuie separată prin liniuță (sau virgulă) de termenul pe care îl explică, „Principatelor Române”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "102", "categorie": "P", "text": "Pe tronul României îi urmează Ferdinand I care, împreună cu guvernul român de la acea vreme, voia", "sugestie": "Pe tronul României îi urmează Ferdinand I, care, împreună cu guvernul român de la acea vreme, voia", "explicatie": "Lipsește virgula care deschide subordonata atributivă nerestrictivă introdusă de „care” (aceasta este închisă corect prin virgula de după „vreme”); suplinul referitor la „Ferdinand I” trebuie izolat prin virgule.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "103", "categorie": "P", "text": "Nicolae Titulescu, viitor ministru al Afacerilor Externe declara:", "sugestie": "Nicolae Titulescu, viitor ministru al Afacerilor Externe, declara:", "explicatie": "Aposițiunea „viitor ministru al Afacerilor Externe” este deschisă prin virgulă, dar nu este închisă; lipsește virgula de după „Externe”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "105", "categorie": "O", "text": "prin Unirea Pricipatelor", "sugestie": "prin Unirea Principatelor", "explicatie": "Lipsește litera „n”: forma corectă este „Principatelor” (de la „principat”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "105", "categorie": "P", "text": "a fost numit \"Întregitorul\".", "sugestie": "a fost numit „Întregitorul”.", "explicatie": "Se folosesc ghilimele drepte englezești în locul ghilimelelor românești „...”, utilizate consecvent în restul manualului.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "106", "categorie": "O", "text": "sunt realizate de Samoil Mârza", "sugestie": "sunt realizate de Samoilă Mârza", "explicatie": "Numele propriu este „Samoilă” (cu ă final), așa cum apare corect în legenda imaginii de pe aceeași pagină („Samoilă Mârza”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "106", "categorie": "O", "text": "De ce crezi ca astăzi Ziua Națională", "sugestie": "De ce crezi că astăzi Ziua Națională", "explicatie": "Conjuncția „că” apare fără diacritic, deși restul paginii are diacritice; „ca” fără ă este altă parte de vorbire.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "106", "categorie": "P", "text": "a devenit astfel \"fotograful Unirii\".", "sugestie": "a devenit astfel „fotograful Unirii”.", "explicatie": "Se folosesc ghilimele drepte englezești în locul ghilimelelor românești „...”, utilizate consecvent în restul manualului.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "110", "categorie": "P", "text": "Competențe vizate:  1.2, 2.1, 2.3, 3.1,3.2, 4.3", "sugestie": "Competențe vizate: 1.2, 2.1, 2.3, 3.1, 3.2, 4.3", "explicatie": "Lipsește spațiul după virgulă în enumerarea „3.1,3.2”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "112", "categorie": "P", "text": "ar fi: “Cum se desfășura o zi la școală în Epoca Ceaușescu?”", "sugestie": "ar fi: „Cum se desfășura o zi la școală în Epoca Ceaușescu?”", "explicatie": "Sunt folosite ghilimele de tip englezesc în locul ghilimelelor românești „...”, folosite în restul manualului.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "113", "categorie": "P", "text": "din simfonia a IX-a , compusă de", "sugestie": "din simfonia a IX-a, compusă de", "explicatie": "Spațiu nejustificat înainte de virgulă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "113", "categorie": "P", "text": "Deviza Uniunii Europene este “Unitate în diversitate”.", "sugestie": "Deviza Uniunii Europene este „Unitate în diversitate”.", "explicatie": "Sunt folosite ghilimele de tip englezesc în locul ghilimelelor românești „...”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "118", "categorie": "D3", "text": "Iuliu Popper, Marco Polo, Badea Cârțan, Fernando Magellan, Iuri Gagarin, Cristofor Columb.", "sugestie": "Iuliu Popper, Marco Polo, Badea Cârțan, Ferdinand Magellan, Iuri Gagarin, Cristofor Columb.", "explicatie": "Forma românească standard a numelui propriu este „Ferdinand Magellan”; „Fernando” este forma spaniolă, neconformă uzului românesc consacrat.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Istorie Ascendia clasa a V-a", "pagina": "123", "categorie": "O", "text": "Numeste conducătorii", "sugestie": "Numește conducătorii", "explicatie": "Lipsește diacriticul ș în forma de imperativ „Numește”; restul paginii folosește diacritice.", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3", "TERITORIU": "Geografie istorică", "CAUZALITATE": "Cauzalitate", "CIFRE": "Cifre", "DOCUMENT": "Document", "TERMEN": "Termen", "LOCALIZARE": "Localizare", "DATE_NUMERICE": "Date numerice", "HARTA": "Hartă", "CLIMA": "Climă", "RELIEF": "Relief", "HIDROGRAFIE": "Hidrografie", "POPULATIE": "Populație"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>
