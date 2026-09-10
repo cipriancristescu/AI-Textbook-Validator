@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Romana Art Klett clasa a V-a — Gramatică</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="gramatica.html">&larr; Gramatică</a>
+  <div class="masthead">
+    <div class="eyebrow">Gramatică</div>
+    <h1>Manual Romana Art Klett clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>46</b> rezultate</span>
+      
+      <span class="chip"><b>5</b> categorii</span>
+      <span class="chip">pagini <b>7</b>–<b>190</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="D3">DOOM3</option><option value="M">Morfologie</option><option value="O">Ortografie</option><option value="P">Punctuație</option><option value="S">Sintaxă</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="7">p. 7</option><option value="12">p. 12</option><option value="25">p. 25</option><option value="27">p. 27</option><option value="29">p. 29</option><option value="30">p. 30</option><option value="33">p. 33</option><option value="38">p. 38</option><option value="45">p. 45</option><option value="51">p. 51</option><option value="53">p. 53</option><option value="54">p. 54</option><option value="55">p. 55</option><option value="67">p. 67</option><option value="76">p. 76</option><option value="78">p. 78</option><option value="80">p. 80</option><option value="82">p. 82</option><option value="84">p. 84</option><option value="90">p. 90</option><option value="106">p. 106</option><option value="118">p. 118</option><option value="131">p. 131</option><option value="134">p. 134</option><option value="141">p. 141</option><option value="145">p. 145</option><option value="147">p. 147</option><option value="149">p. 149</option><option value="150">p. 150</option><option value="163">p. 163</option><option value="179">p. 179</option><option value="181">p. 181</option><option value="184">p. 184</option><option value="186">p. 186</option><option value="190">p. 190</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "7", "categorie": "M", "text": "Monitorizarea propriei pronunții și scrieri și a pronunției și scrierii celorlalți", "sugestie": "Monitorizarea propriei pronunției și scrierii și a pronunției și scrierii celorlalți", "explicatie": "Forma de genitiv-dativ singular a substantivelor „pronunție” și „scriere” este „pronunției”, respectiv „scrierii” (cf. „propriei” – adjectiv posesiv la genitiv singular); incoerență internă, întrucât în aceeași enunțare apare corect „a pronunției și scrierii celorlalți”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "12", "categorie": "O", "text": "rasă de câini de origine controversată (mexicano-chineză, mediteraneeană, chineză)", "sugestie": "rasă de câini de origine controversată (mexicano-chineză, mediteraneană, chineză)", "explicatie": "Forma corectă conform DOOM3 este „mediteranean, -ană”, cu un singur „e” după „an”; „mediteraneeană” este scriere greșită.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "25", "categorie": "D3", "text": "Semnul două-puncte este utilizat înaintea unei enumerări.", "sugestie": "Semnul două puncte este utilizat înaintea unei enumerări.", "explicatie": "Denumirea semnului de punctuație se scrie nelegat, „două puncte”, conform DOOM3; scrierea cu cratimă este neconformă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "27", "categorie": "P", "text": "Ce informații oferă articolul dat, pentru cuvântul câine?", "sugestie": "Ce informații oferă articolul dat pentru cuvântul câine?", "explicatie": "Virgula desparte greșit grupul prepozițional „pentru cuvântul câine” de termenul regent; nu există motiv de punctuație între ele.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "29", "categorie": "O", "text": "agasat", "sugestie": "agașat", "explicatie": "Lipsă diacritică: forma corectă este „agașat” (participiu de la „a agașa” = a enerva), sinonim cu „enervat, iritat, sâcâit” din aceeași serie; restul paginii are diacritice.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "30", "categorie": "O", "text": "pentru bunucii din fotografie", "sugestie": "pentru bunicii din fotografie", "explicatie": "Transpunere de litere: forma corectă este „bunicii”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "30", "categorie": "O", "text": "Dar bunucii pentru tatăl copiilor?", "sugestie": "Dar bunicii pentru tatăl copiilor?", "explicatie": "Transpunere de litere: forma corectă este „bunicii”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "33", "categorie": "O", "text": "cățel, Quatar, kosovar", "sugestie": "cățel, Qatar, kosovar", "explicatie": "Numele statului se scrie „Qatar”, fără „u” după „q”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "33", "categorie": "O", "text": "quatarian", "sugestie": "qatarian", "explicatie": "Derivat din „Qatar”; nu se scrie cu „qu”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "33", "categorie": "S", "text": "sau când grupul de litere formează singur silabă", "sugestie": "sau când grupul de litere formează singur o silabă", "explicatie": "Construcție defectuoasă: „singur” cu valoare adverbială cere grup nominal articulat („formează singur o silabă”); altfel ar fi necesar acordul „singură silabă”, care ar schimba sensul.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "38", "categorie": "O", "text": "chiar dacă de fapt ți-e frică de mori", "sugestie": "chiar dacă de fapt ți-e frică de moarte", "explicatie": "Forma corectă este „moarte” (substantiv); „mori” este o scriere incorectă, lipsesc literele „-ate”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "45", "categorie": "O", "text": "Numeste două elemente (din categoriile obiecte casnice, mobilier, îmbrăcăminte etc.)", "sugestie": "Numește două elemente (din categoriile obiecte casnice, mobilier, îmbrăcăminte etc.)", "explicatie": "Lipsește diacriticul „ș” din forma de imperativ „numește”; restul paginii folosește corect diacriticele.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "51", "categorie": "P", "text": "prin „Regatul copiilor“.", "sugestie": "prin „Regatul copiilor”.", "explicatie": "Ghilimelele de închidere sunt de tip german („...“); norma românească cere „...”. Aceeași formă greșită apare pe pagină și la „idilele“, „la bancă“, „pași de șoricel“, „pași de elefant“, „de uriaș“.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "51", "categorie": "P", "text": "ferocitate (s. f) – cruzime", "sugestie": "ferocitate (s. f.) – cruzime", "explicatie": "Abrevierea „s. f.” (substantiv feminin) se scrie cu punct final, ca în celelalte note de subsol de pe pagină (s. f.).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "53", "categorie": "P", "text": "Lego; Monopoly; Master Mind.“", "sugestie": "Lego; Monopoly; Master Mind.”", "explicatie": "Citatul început cu „De jucat afară:” se închide cu ghilimele de tip german („...“) în loc de ghilimelele românești de închidere ”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "53", "categorie": "P", "text": "gra (poloneză), spill (norvegiană)", "sugestie": "gra (poloneză) – spill (norvegiană)", "explicatie": "În enumerarea echivalenților cuvântului „joc”, elementele sunt separate prin liniuță; aici apare o virgulă, în mod inconsecvent.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "53", "categorie": "P", "text": "Baba-oarba, Cuțitașul.", "sugestie": "Baba-oarba; Cuțitașul.", "explicatie": "În lista de jocuri, elementele sunt separate prin punct și virgulă; înaintea ultimului element apare o virgulă, în mod inconsecvent.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "54", "categorie": "S", "text": "Indicatorul importanței și succesului jocurilor pe computer sau video sunt vânzările în creștere constantă.", "sugestie": "Indicatorul importanței și succesului jocurilor pe computer sau video este vânzările în creștere constantă.", "explicatie": "Acord greșit: verbul copulativ trebuie să se acorde cu subiectul „indicatorul” (singular), nu cu numele predicativ „vânzările” (plural).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "54", "categorie": "P", "text": "jucătorii trăiesc o „senzație de eficiență“.", "sugestie": "jucătorii trăiesc o „senzație de eficiență”.", "explicatie": "Ghilimelele de închidere sunt cele în stil german („...“); norma românească prevede „...”, folosită corect pe aceeași pagină în „jocuri serioase” și „Jocurile digitale”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "55", "categorie": "P", "text": "Ține seama că în ziua prezentării, trebuie:", "sugestie": "Ține seama că în ziua prezentării trebuie:", "explicatie": "Virgula desparte incorect circumstanțialul de timp de predicat în interiorul subordonatei; izolarea prin virgule ar fi cerut o pereche de virgule, nu una singură.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "67", "categorie": "M", "text": "„am auzit” – verb predicativ, modul indicativ, timpul perfect compus, persoana I, numărul plural,", "sugestie": "„am auzit” – verb predicativ, modul indicativ, timpul perfect compus, persoana I, numărul singular,", "explicatie": "În textul analizat („Ieri, am auzit un sunet ciudat la ușă.”), forma „am auzit” aparține unui singur vorbitor (narratorul); mențiunea ulterioară „Amândoi am privit” confirmă că auzirea sunetului este atribuită doar naratorului. Modelul de analiză indică greșit numărul plural în loc de singular.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "76", "categorie": "P", "text": "și taman când trecu prin fața porții bastonul îi căzu", "sugestie": "și taman când trecu prin fața porții, bastonul îi căzu", "explicatie": "Lipsește virgula care desparte subordonata temporală („când trecu prin fața porții”) de propoziția regentă („bastonul îi căzu”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "78", "categorie": "M", "text": "Decupam toate lanțuri de hârtie colorată", "sugestie": "Decupam toate lanțurile de hârtie colorată", "explicatie": "După determinanții de tipul „toate”, substantivul trebuie articulat hotărât: „toate lanțurile”, nu „toate lanțuri”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "80", "categorie": "S", "text": "mai publice din cauză că în trăsăturile acestui motan", "sugestie": "mai publice pentru că în trăsăturile acestui motan", "explicatie": "Construcția „din cauză că” este incorectă în limba standard; corect este „pentru că” sau „din cauza faptului că”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "82", "categorie": "O", "text": "pe care pare a și le lua autoarea", "sugestie": "pe care pare a-și le lua autoarea", "explicatie": "În infinitivul lung reflexiv, pronumele „și” se leagă cu cratimă de „a”: „a-și le lua”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "82", "categorie": "M", "text": "Fiecare grupă va reciti și analiza o strofă", "sugestie": "Fiecare grupă va recita și va analiza o strofă", "explicatie": "Forma de viitor a verbului „a recita” este „va recita”; „a reciti” nu există în DOOM3.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "84", "categorie": "D3", "text": "Inteligența corporal-chinestezică", "sugestie": "Inteligența corporal-kinestezică", "explicatie": "DOOM3 (2021) consacră forma „kinestezic, -ă” (de la „kinestezie”); forma „chinestezic” nu este normată.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "90", "categorie": "P", "text": "Ce emoții sau amintiri îți trezesc ? Discutați în perechi.", "sugestie": "Ce emoții sau amintiri îți trezesc? Discutați în perechi.", "explicatie": "În limba română nu se lasă spațiu înaintea semnului întrebării; spațierea este specifică tipografiei franceze, nu celei românești.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "106", "categorie": "O", "text": "În redactarea texului, vei avea în vedere:", "sugestie": "În redactarea textului, vei avea în vedere:", "explicatie": "Lipsesc litera „t” din substantivul „textului” (genitiv-dativ singular articulat al lui „text”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "118", "categorie": "O", "text": "panouri plasate în partea de sus sau de jos a a vinietei", "sugestie": "panouri plasate în partea de sus sau de jos a vinietei", "explicatie": "Dublare greșită a prepoziției „a”; forma corectă este „a vinietei”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "131", "categorie": "M", "text": "mantile roșii", "sugestie": "mantii roșii", "explicatie": "Pluralul substantivului „mantie” este „mantii” (conform DOOM3), nu „mantile”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "134", "categorie": "O", "text": "„Colț-Alb”", "sugestie": "„Colț Alb”", "explicatie": "Titlul romanului lui Jack London se scrie nelegat, „Colț Alb”, conform DOOM3; cratima este greșită.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "141", "categorie": "O", "text": "Curățenia și buna îngrijire ce da găinilor și tuturor paserilor de la cotețele împărătești ajunsese de poveste.", "sugestie": "Curățenia și buna îngrijire ce da găinilor și tuturor păsărilor de la cotețele împărătești ajunsese de poveste.", "explicatie": "Cuvântul „paserilor” este scris fără diacritice („păsărilor”), deși restul paginii folosește diacritice în mod consecvent (ex. „găinilor”, „împărătești”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "145", "categorie": "S", "text": "Completează tabelul de mai jos cu situații din text ce reprezintă cauzele acțiunilor trecute în dreapta.", "sugestie": "Completează tabelul de mai jos cu situații din text care reprezintă cauzele acțiunilor trecute în dreapta.", "explicatie": "Pronumele relativ „ce” cu funcție de subiect aparține registrului colocvial/popular; în limba literară se impune „care”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "147", "categorie": "S", "text": "În partea din mijloc notați ceea au în comun.", "sugestie": "În partea din mijloc notați ceea ce au în comun.", "explicatie": "Lipsește „ce” din pronumele relativ compus „ceea ce”; construcția „ceea au” este defectuoasă (sarcina A).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "147", "categorie": "S", "text": "Ce crezi ar trebui să studieze un prinț?", "sugestie": "Ce crezi că ar trebui să studieze un prinț?", "explicatie": "Lipsește conjuncția „că” după verbul „a crede”; omisiunea ei este specifică registrului colocvial, nu textului normat al unui manual.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "149", "categorie": "S", "text": "a imaginat propriile basme și legende, care face parte din ceea ce specialiștii numesc folclor", "sugestie": "a imaginat propriile basme și legende, care fac parte din ceea ce specialiștii numesc folclor", "explicatie": "Acord greșit: pronumele relativ „care” se referă la „basme și legende” (plural), deci verbul trebuie la plural: „fac parte”, nu „face parte”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "150", "categorie": "S", "text": "Desenează a caiet „muntele narațiunii”", "sugestie": "Desenează pe caiet „muntele narațiunii”", "explicatie": "Construcție defectuoasă: verbul „a desena” cere prepoziția „pe” cu sensul de suport („desenează pe caiet”); „a caiet” este incorect.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "163", "categorie": "O", "text": "Numeste două aspecte te-au surprins în descrierea acestei ființe.", "sugestie": "Numește două aspecte te-au surprins în descrierea acestei ființe.", "explicatie": "Verbul „a numi” la imperativ se scrie „numește”, cu „ș”; pagina are diacritice în restul textului, deci lipsa lui „ș” este o eroare de ortografie.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "163", "categorie": "S", "text": "Numeste două aspecte te-au surprins în descrierea acestei ființe.", "sugestie": "Numește două aspecte care te-au surprins în descrierea acestei ființe.", "explicatie": "Lipsește pronumele relativ „care” care introduce subordonata atributivă; fără el, construcția „două aspecte te-au surprins” este defectuoasă sintactic.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "179", "categorie": "S", "text": "identificarea și valorizarea unuia sau a mai mulți strămoși fondatori", "sugestie": "identificarea și valorizarea unuia sau a mai multor strămoși fondatori", "explicatie": "Acord greșit în genitiv: după „valorizarea” (care cere genitiv), coordonarea „unuia sau a mai mulți” este incorectă; forma de genitiv plural este „a mai multor strămoși”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "181", "categorie": "S", "text": "Cavalerii trage spadele din teacă.", "sugestie": "Cavalerii trag spadele din teacă.", "explicatie": "Acord greșit subiect–predicat: subiectul „cavalerii” (plural) impune verbul la plural, „trag”, nu „trage”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "184", "categorie": "P", "text": "Pământul este rotund., Recunosc că am greșit.", "sugestie": "Pământul este rotund. Recunosc că am greșit.", "explicatie": "Dublă punctuație: după punct nu poate urma virgulă; cele două enunțuri asertive se despart prin punct.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "184", "categorie": "S", "text": "La parter, a fost amenajat muzeul ce adăpostește o tiparniță din secolul al XVII-lea.", "sugestie": "La parter, a fost amenajat muzeul care adăpostește o tiparniță din secolul al XVII-lea.", "explicatie": "Pronumele relativ „ce” aparține registrului popular/familiar; în text normativ se folosește „care”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "186", "categorie": "P", "text": "Astăzi, este ziua Laurei.", "sugestie": "Astăzi este ziua Laurei.", "explicatie": "Virgula desparte în mod nejustificat complementul circumstanțial de timp de predicat; nu se pune virgulă între „Astăzi” și verbul „este”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "190", "categorie": "S", "text": "Privește harta acestei bătălii și prezintă oral desfășurarea ei, pe baza a ce ai citit.", "sugestie": "Privește harta acestei bătălii și prezintă oral desfășurarea ei, pe baza a ceea ce ai citit.", "explicatie": "Construcția „pe baza a ce” este defectuoasă; forma corectă este „pe baza a ceea ce” (sau „pe baza celor citite”).", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Romana Art Klett clasa a V-a — Fact-checking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="fact-checking.html">&larr; Fact-checking</a>
+  <div class="masthead">
+    <div class="eyebrow">Fact-checking</div>
+    <h1>Manual Romana Art Klett clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>11</b> rezultate</span>
+      
+      <span class="chip"><b>5</b> categorii</span>
+      <span class="chip">pagini <b>90</b>–<b>190</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="ATRIBUIRE">Atribuire</option><option value="BIOGRAFIE">Biografie</option><option value="CONTRADICTION">CONTRADICTION</option><option value="CRONOLOGIE">Cronologie</option><option value="SPECIE">Specie</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="90">p. 90</option><option value="111">p. 111</option><option value="116">p. 116</option><option value="122">p. 122</option><option value="130">p. 130</option><option value="140">p. 140</option><option value="152">p. 152</option><option value="166">p. 166</option><option value="170">p. 170</option><option value="190">p. 190</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "90", "categorie": "BIOGRAFIE", "text": "Partitura cultă a fost compusă de Dimitrie Georgescu-Kiriac, la începutul secolului al XX-lea.", "sugestie": "Partitura cultă a fost compusă de Dumitru Georgescu Kiriac, la începutul secolului al XX-lea.", "explicatie": "Compozitorul care a armonizat colindul „O, ce veste minunată” este Dumitru Georgescu Kiriac (1866–1928), nu „Dimitrie”. Prenumele este redata eronat.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "111", "categorie": "SPECIE", "text": "Legendele oferă explicații imaginare pentru originea universului, apariția plantelor și a animalelor, a fenomenelor naturale etc.", "sugestie": "Miturile oferă explicații imaginare pentru originea universului, apariția plantelor și a animalelor, a fenomenelor naturale etc.; legendele sunt narațiuni cu substrat real (istoric sau geografic), despre fapte și personaje excepționale, în care realul se împletește cu fantasticul.", "explicatie": "Definiția dată aici „legendelor” este, în teoria literară școlară românească, definiția canonică a mitului (narațiune care explică originea lumii, a plantelor, a animalelor și a fenomenelor naturii). Legenda se distinge prin substratul real/istoric și prin centrarea pe eroi sau evenimente, nu prin funcția cosmogonică. Confuzia este întărită și de paragraful următor, care definește „legendele antice” tot prin trăsături ale mitului (intervenția zeilor în lumea umană).", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "116", "categorie": "ATRIBUIRE", "text": "Percy este, de fapt, întruchiparea eroului grec Perseu.", "sugestie": "Percy Jackson este un semizeu, fiul lui Poseidon, al cărui nume întreg (Perseus) îi fost dat în cinstea eroului grec Perseu; el nu este întruchiparea lui Perseu.", "explicatie": "În seria lui Rick Riordan, Percy Jackson este un personaj distinct, fiul lui Poseidon și al Sallei Jackson; mama lui l-a numit Perseus după eroul mitologic, deoarece Perseu a fost unul dintre puținii eroi greci cu un final fericit. Percy nu este reîncarnarea sau întruchiparea lui Perseu, ci doar poartă numele acestuia.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "122", "categorie": "ATRIBUIRE", "text": "Latinii l-au omagiat pe eroul grec Eneas, întemeietorul Romei, în epopeea Eneida de Vergiliu.", "sugestie": "Latinii l-au omagiat pe eroul troian Eneas, strămoșul legendar al romanilor, în epopeea Eneida de Vergiliu.", "explicatie": "Eneas nu este erou grec, ci troian: în Iliada și în Eneida el este prinț troian, fiul lui Anchise și al Afroditei (Venus), care fuge din Troia cucerită de greci și ajunge în Italia. Calificarea lui drept „erou grec” este o atribuire greșită a originii personajului.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "122", "categorie": "CRONOLOGIE", "text": "Primul model de erou a apărut la babilonieni, în mileniul al III-lea î.H., în Epopeea lui Ghilgameș.", "sugestie": "Primul model de erou a apărut în Mesopotamia, în mileniul al II-lea î.H., în Epopeea lui Ghilgameș (versiunea babiloniană; poemele sumeriene despre Ghilgameș datează de la sfârșitul mileniului al III-lea î.H.).", "explicatie": "Epopeea babiloniană (akadiană) a lui Ghilgameș a fost compusă în mileniul al II-lea î.H. (versiunea paleo-babiloniană, cca. sec. al XVIII-lea î.H.). Din mileniul al III-lea î.H. datează doar poemele sumeriene despre Ghilgameș, care aparțin culturii sumeriene, nu celei babiloniene. Asocierea „babilonieni + mileniul al III-lea” este anacronică.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "130", "categorie": "ATRIBUIRE", "text": "Adaptările recente pentru cinema au popularizat și mai mult personajul desenat de Stan Lee.", "sugestie": "personajul creat de Stan Lee (scenarist) și Steve Ditko (desenator)", "explicatie": "Personajul Spider-Man a fost creat de Stan Lee ca scenarist, dar desenat de Steve Ditko. Afirmația că personajul a fost „desenat de Stan Lee” este o atribuire inexactă a rolului de ilustrator. Notă: afirmația apare într-un text suport pentru exerciții de gramatică și ține de cultura populară, nu de istoria literară propriu-zisă, de aceea încrederea este moderată.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "140", "categorie": "CRONOLOGIE", "text": "Legendele sau basmele românilor (1872)", "sugestie": "Legendele sau basmele românilor (1874)", "explicatie": "Culegerea lui Petre Ispirescu „Legendele sau basmele românilor” a apărut pentru prima dată în 1874 (ediție revăzută și adăugită în 1882), nu în 1872. Anul 1874 este data consacrată în istoriografia literară și în manualele școlare.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "152", "categorie": "CRONOLOGIE", "text": "reprezintă, de fapt, numele împăratului Carol cel Mare (742-814)", "sugestie": "reprezintă, de fapt, numele împăratului Carol cel Mare (747/748-814)", "explicatie": "Conform istoriografiei moderne și a marilor lucrări de referință (ex. Encyclopaedia Britannica), Carol cel Mare s-a născut la 2 aprilie 747 sau 748; anul 742 este o ipoteză veche, depășită. Anul morții (814) este corect.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "166", "categorie": "ATRIBUIRE", "text": "Adaptare după Petre Ispirescu, Lupul cel năzdrăvan și Făt-Frumos", "sugestie": "Adaptare după Petre Ispirescu, Prâslea cel vânjos și merele de aur", "explicatie": "Fragmentul reprodus (împăratul cu trei fii, mărul cu mere de aur ale cărui roade sunt furate în fiecare noapte, fiii care pândesc și adorm) corespunde intrigii basmului „Prâslea cel vânjos și merele de aur” de Petre Ispirescu, nu basmului „Lupul cel năzdrăvan și Făt-Frumos”, care are o altă acțiune. Titlul operei-sursă este indicat greșit.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "170", "categorie": "ATRIBUIRE", "text": "prima carte slavonă tipărită din lume (dacă nu știi, află că slavona este o limbă veche în care se foloseau caracterele chirilice în care s-a scris și la noi), făcută în 1491, la Cracovia, din porunca lui Ștefan cel Mare", "sugestie": "prima carte slavonă tipărită din lume, făcută în 1491, la Cracovia, de tipograful Schweipolt Fiol, din inițiativă proprie, fără nicio legătură dovedită cu Ștefan cel Mare", "explicatie": "Primele cărți slavone tipărite cu caractere chirilice (Octoihul și Ceaslovul) au fost realizate la Cracovia în 1491 de tipograful Schweipolt Fiol, pe cheltuiala și inițiativa acestuia. Nu există nicio sursă istorică care să ateste că tipărirea ar fi fost comandată de Ștefan cel Mare; atribuirea comenzii domnitorului Moldovei este o eroare faptică verificabilă.", "sursa": ""}, {"kind": "fact", "manual": "Manual Romana Art Klett clasa a V-a", "pagina": "190", "categorie": "CONTRADICTION", "text": "Imaginează-ți un dialog de 4-8 replici între Mircea cel Bătrân, Sigismund de Luxemburg și Jean de Nevers, ducele Burgundiei.", "sugestie": "Jean de Nevers, fiul ducelui Burgundiei", "explicatie": "Exercițiul îl numește pe Jean de Nevers „ducele Burgundiei”, dar fragmentul din Neagu Djuvara reprodus la p. 189 spune explicit că armata cruciată era condusă de „fiul ducelui Burgundiei”. Istoric, la bătălia de la Nicopole (1396) duce de Burgundia era Filip Îndrăznețul (Philippe le Hardi); fiul său, Jean de Nevers (Ioan fără Frică), a devenit duce de Burgundia abia în 1404, după moartea tatălui său. Textul sursă și cerința se contrazic.", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>
