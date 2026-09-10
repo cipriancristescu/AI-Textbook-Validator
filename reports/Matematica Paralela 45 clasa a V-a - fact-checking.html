@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Matematica Paralela 45 clasa a V-a — Fact-checking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="fact-checking.html">&larr; Fact-checking</a>
+  <div class="masthead">
+    <div class="eyebrow">Fact-checking</div>
+    <h1>Manual Matematica Paralela 45 clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>21</b> rezultate</span>
+      
+      <span class="chip"><b>6</b> categorii</span>
+      <span class="chip">pagini <b>43</b>–<b>210</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="CALCUL">Calcul</option><option value="CONDITII">Condiții</option><option value="CONTRADICTION">CONTRADICTION</option><option value="DEMONSTRATIE">Demonstrație</option><option value="FORMULA">Formulă</option><option value="TEOREMA">Teoremă</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="43">p. 43</option><option value="48">p. 48</option><option value="76">p. 76</option><option value="95">p. 95</option><option value="123">p. 123</option><option value="124">p. 124</option><option value="129">p. 129</option><option value="138">p. 138</option><option value="140">p. 140</option><option value="175">p. 175</option><option value="180">p. 180</option><option value="188">p. 188</option><option value="193">p. 193</option><option value="199">p. 199</option><option value="201">p. 201</option><option value="204">p. 204</option><option value="208">p. 208</option><option value="210">p. 210</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "43", "categorie": "CONDITII", "text": "a^m < a^n, dacă m < n, unde a, m, n sunt numere naturale.", "sugestie": "a^m < a^n, dacă m < n, unde a, m, n sunt numere naturale și a ≥ 2.", "explicatie": "Regula este falsă pentru a = 0 și a = 1: de exemplu 1^2 = 1^5 = 1, deci 1^2 < 1^5 este fals deși 2 < 5; la fel 0^2 = 0^5 = 0. Monotonia strictă a puterilor cu aceeași bază necesită baza a ≥ 2. Enunțul, așa cum este tipărit, admite contraexemple, deci ipoteza a ≥ 2 lipsește.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "43", "categorie": "CONDITII", "text": "a^n < b^n, dacă a < b, unde a, b, n sunt numere naturale.", "sugestie": "a^n < b^n, dacă a < b, unde a, b sunt numere naturale și n este număr natural, n ≥ 1.", "explicatie": "Pentru n = 0 regula este falsă: manualul însuși definește a^0 = 1 (de ex. 2^0 = 1 la pag. 41), deci 2^0 = 3^0 = 1, adică 2^0 < 3^0 este fals deși 2 < 3. Este necesară condiția n ≥ 1.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "43", "categorie": "CONTRADICTION", "text": "Comparându-le, obținem 2^80 > 2^76, adică 16^20 > 8^26.", "sugestie": "Comparându-le, obținem 2^80 > 2^78, adică 16^20 > 8^26.", "explicatie": "În rezolvare s-a calculat corect 8^26 = (2^3)^26 = 2^78, dar la comparare apare 2^76 în loc de 2^78. Concluzia finală (16^20 > 8^26) este corectă, însă pasul intermediar tipărit contrazice calculul precedent: 8^26 = 2^78, nu 2^76.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "48", "categorie": "CONTRADICTION", "text": "Cel mai mare dintre numerele 2⁴⁰, 16⁹, 8¹¹ și 32⁹ este: a) 2⁴⁰; b) 16⁹; c) 8¹⁵; d) 32⁹.", "sugestie": "c) 8¹¹;", "explicatie": "Varianta de răspuns c) nu corespunde enunțului: în enunț numărul este 8¹¹, iar în variante apare 8¹⁵. Mai mult, dacă varianta ar fi 8¹⁵, atunci 8¹⁵ = 2⁴⁵ = 32⁹, adică ar exista două numere maxime egale (c și d), ceea ce ar face itemul ambiguu. Conversia corectă a numerelor din enunț: 2⁴⁰, 16⁹ = 2³⁶, 8¹¹ = 2³³, 32⁹ = 2⁴⁵, deci maximul este 32⁹ (varianta d).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "76", "categorie": "CONTRADICTION", "text": "Numerele naturale nenule care nu sunt prime se numesc numere compuse.", "sugestie": "Numerele naturale mai mari decât 1 care nu sunt prime se numesc numere compuse.", "explicatie": "Așa cum este enunțată, definiția l-ar include pe 1 printre numerele compuse, deoarece 1 este natural nenul și nu este prim; dar pe aceeași pagină se spune explicit că „Numerele 0 și 1 nu sunt nici prime, nici compuse.” Forma corectă exclude pe 1 prin condiția „mai mari decât 1”.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "95", "categorie": "CONDITII", "text": "este supraunitară pentru 6 > x − 3 ⇒ x < 6 + 3 ⇒ x < 9, adică x poate lua valorile 0, 1, 2, 3, 4, 5, 6, 7 sau 8, valori pentru care se verifică dacă fracția este sau nu ireductibilă. Obținem x = 8", "sugestie": "Condiția corectă este 0 < x − 3 < 6, adică x ∈ {4, 5, 6, 7, 8}; soluțiile sunt x = 4 (fracția 6/1) și x = 8 (fracția 6/5).", "explicatie": "Pentru ca fracția 6/(x−3) să fie supraunitară, numitorul trebuie să fie număr natural nenul mai mic decât numărătorul: 0 < x − 3 < 6. Lista din manual include x = 3, pentru care numitorul este 0 (fracția nu există), și x ∈ {0, 1, 2}, pentru care numitorul este negativ, deci fracția nu este supraunitară. În plus, dintre valorile valide, x = 4 dă fracția 6/1, care este supraunitară (6 > 1) și ireductibilă (c.m.m.d.c.(6,1) = 1), deci concluzia „Obținem x = 8\" omite soluția x = 4.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "123", "categorie": "DEMONSTRATIE", "text": "Pentru că 5 ≥ 5, iar 3 < 5, aproximarea se face prin lipsă, deci mai aproape de 50 este numărul 50,30.", "sugestie": "Pentru că 5 ≥ 5, numărul 50,50 se aproximează prin adaos la 51, iar pentru că 3 < 5, numărul 50,30 se aproximează prin lipsă la 50; deci mai aproape de 50 este numărul 50,30.", "explicatie": "Justificarea este greșită pentru primul număr: la 50,50 cifra zecimilor este 5, și cum 5 ≥ 5, rotunjirea la întregi se face prin adaos (la 51), nu prin lipsă. Afirmația „aproximarea se face prin lipsă\" este validă doar pentru 50,30 (cifra zecimilor 3 < 5). Concluzia finală (50,30 este mai aproape de 50, fiind la distanța 0,3 față de 0,5) este corectă, dar pasul de raționament tipărit contrazice regula de rotunjire enunțată chiar în caseta „Reține!\" de pe aceeași pagină.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "124", "categorie": "CALCUL", "text": "de unde 370 < n < 425. Numerele căutate sunt 371, 372, ..., 425, adică 425 – 371 + 1 = 55 de numere.", "sugestie": "de unde 370 < n < 425. Numerele căutate sunt 371, 372, ..., 424, adică 424 – 371 + 1 = 54 de numere.", "explicatie": "Inegalitatea este strictă: n < 425, deci n = 425 nu verifică relația (425/100 = 4,25, care nu este strict mai mic decât 4,25). Numerele naturale care verifică sunt 371, 372, ..., 424, în număr de 424 − 371 + 1 = 54, nu 55.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "129", "categorie": "CALCUL", "text": "Model: 82,4 = 82,4 · 10¹ = 0,824 · 10² = 0,0824 · 10³.", "sugestie": "82,4 = 8,24 · 10¹ = 0,824 · 10² = 0,0824 · 10³", "explicatie": "82,4 · 10¹ = 824, nu 82,4, deci prima egalitate din lanț este falsă. Forma corectă este 8,24 · 10¹ = 82,4 (celelalte două produse sunt corecte: 0,824 · 10² = 82,4 și 0,0824 · 10³ = 82,4).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "138", "categorie": "CONTRADICTION", "text": "Comparăm: 2 < 2,4, deci a < b.", "sugestie": "Comparăm: 1,028 < 2,4, deci a < b.", "explicatie": "În rezolvarea de mai sus s-a calculat a = 1,028 (a = 1,44 + 0,108 − 0,52 = 1,028), nu a = 2. Valoarea 2 apare doar ca pas intermediar în calculul lui b (24/12 = 2). Concluzia a < b este corectă, dar comparația scrisă „2 < 2,4\" nu folosește valoarea calculată a lui a, contrazicând rezolvarea proprie.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "140", "categorie": "CONTRADICTION", "text": "Exemplu: 3 kg de cireșe și 4,5 kg de căpșuni costă 47,7 lei, iar 5 kg de cireșe și 4 kg de căpșuni costă 62,7 lei.", "sugestie": "Exemplu: 3 kg de cireșe și 4,5 kg de căpșuni costă 47,7 lei, iar 5 kg de cireșe și 4,5 kg de căpșuni costă 62,7 lei.", "explicatie": "Enunțul spune că a doua cumpărătură conține 4 kg de căpșuni, dar în tabelul de rezolvare de mai jos apare «5 kg de cireșe ...... 4,5 kg de căpșuni ...... 62,7 lei», iar proba confirmă tot cu 4,5 kg: «5 · 7,5 + 4,5 · 5,6 = 37,5 + 25,2 = 62,7 lei (A)». Metoda comparației aplicată (scăderea celor două rânduri pentru a elimina căpșunile) funcționează doar dacă cantitatea de căpșuni este aceeași (4,5 kg) în ambele situații. Cu 4 kg de căpșuni, verificarea ar da 5 · 7,5 + 4 · 5,6 = 37,5 + 22,4 = 59,9 lei ≠ 62,7 lei, deci enunțul contrazice rezolvarea și proba. Varianta coerentă cu rezolvarea este 4,5 kg în enunț.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "175", "categorie": "TEOREMA", "text": "Unghiul alungit sau unghi cu laturile în prelungire sau unghi plin este unghiul care are laturile semidrepte opuse. Măsura unghiului alungit este de 180°.", "sugestie": "Unghiul alungit (sau unghi cu laturile în prelungire) este unghiul care are laturile semidrepte opuse; măsura sa este 180°. Unghiul plin este unghiul cu măsura de 360°.", "explicatie": "Manualul identifică termenul „unghi plin” cu unghiul alungit de 180°. În terminologia matematică standard (și în cea folosită în manualele românești), unghiul plin (perigonul) are măsura de 360°, în timp ce unghiul alungit are măsura de 180°. Cei doi termeni nu sunt sinonimi, deci definiția dată este greșită.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "180", "categorie": "TEOREMA", "text": "Axa de simetrie este dreapta care împarte o figură geometrică în două figuri congruente.", "sugestie": "Axa de simetrie este dreapta care împarte o figură geometrică în două figuri care coincid prin suprapunere (prin îndoirea figurii de-a lungul dreptei).", "explicatie": "Definiția dată este insuficientă și deci falsă: există drepte care împart o figură în două figuri congruente fără a fi axe de simetrie. Contraexemplu: diagonala unui paralelogram oarecare îl împarte în două triunghiuri congruente, dar paralelogramul (care nu este romb sau dreptunghi) nu are axă de simetrie — cele două triunghiuri nu se obțin unul din altul prin simetrie față de diagonală. Condiția esențială este ca cele două părți să coincidă prin suprapunere (îndoire), nu doar să fie congruente — așa cum precizează corect al doilea punct din aceeași casetă «Reține!».", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "188", "categorie": "CONTRADICTION", "text": "b) 30 dam + 185 hm + 2,8 m = ... cm. ... 1,85 hm = 1,85 · 10 000 cm = 18 500 cm; ... Calculăm: 30 000 cm + 18 500 cm + 280 cm = = 48 780 cm.", "sugestie": "185 hm = 185 · 10 000 cm = 1 850 000 cm; Calculăm: 30 000 cm + 1 850 000 cm + 280 cm = 1 880 280 cm.", "explicatie": "Enunțul cere transformarea lui 185 hm, dar în rezolvare a fost folosit 1,85 hm. Transformarea corectă este 185 hm = 185 · 10 000 cm = 1 850 000 cm, deci rezultatul final corect este 30 000 + 1 850 000 + 280 = 1 880 280 cm, nu 48 780 cm.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "188", "categorie": "CALCUL", "text": "3 421 mm = 3 241 : 1 000 m = 3,421 m.", "sugestie": "3 421 mm = 3 421 : 1 000 m = 3,421 m.", "explicatie": "În pasul intermediar cifrele au fost transpuse: 3 241 : 1 000 = 3,241, nu 3,421. Deși rezultatul final (24,979 m) este corect, egalitatea tipărită „3 241 : 1 000 m = 3,421 m” este falsă.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "193", "categorie": "FORMULA", "text": "În cazul nostru împărțim la 100, deoarece 100 dam² = 1 m²; 544 m² = 544 : 100 dam² = 5,44 dam².", "sugestie": "În cazul nostru împărțim la 100, deoarece 1 dam² = 100 m² (echivalent, 100 m² = 1 dam²); 544 m² = 544 : 100 dam² = 5,44 dam².", "explicatie": "Relația de conversie este scrisă invers: 1 dam² = 100 m², nu 100 dam² = 1 m² (100 dam² ar fi 10 000 m²). Rezultatul numeric final (5,44 dam²) este corect, dar justificarea conține o relație de echivalență falsă, care contrazice și relația enunțată corect pe pagina 192 (1 dam² = 100 m² = 1 ar).", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "199", "categorie": "CALCUL", "text": "În cazul nostru împărțim la 1 000, deoarece 1 000 dam³ = 1 m³", "sugestie": "În cazul nostru împărțim la 1 000, deoarece 1 dam³ = 1 000 m³", "explicatie": "Relația enunțată este falsă: 1 dam = 10 m, deci 1 dam³ = 1 000 m³, nu invers. Dacă ar fi adevărat că 1 000 dam³ = 1 m³, atunci împărțirea 2 150 : 1 000 nu ar avea justificare. Calculul final (2 150 m³ = 2,15 dam³) este corect, dar motivația scrisă contrazice transformarea efectuată.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "201", "categorie": "CONTRADICTION", "text": "192 000 : 512 = 375 de cutii", "sugestie": "192 000 : 512 = 375 de pachete", "explicatie": "Problema cere „Câte pachete încap în cutie?”, iar calculul împarte volumul cutiei la volumul unui pachet, deci rezultatul reprezintă numărul de pachete, nu de cutii. În cutie este o singură cutie; eticheta finală contrazice atât enunțul, cât și rezolvarea.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "204", "categorie": "CONTRADICTION", "text": "Folosind scara 100:1, desenează pe o coală de hârtie A4 planul casei/apartamentului. Dacă, de exemplu, sufrageria are 10 m lungime și 4 m lățime, pe hârtie o vei reprezenta printr-un dreptunghi de lungime 10 cm și lățime 4 cm.", "sugestie": "Folosind scara 1:100, desenează pe o coală de hârtie A4 planul casei/apartamentului.", "explicatie": "Exemplul dat contrazice scara enunțată: 10 m = 1000 cm în realitate sunt reprezentați prin 10 cm pe hârtie, deci raportul hârtie:realitate este 10:1000 = 1:100. Scara 100:1 ar însemna o mărire (100 cm pe hârtie pentru 1 cm real), nu o micșorare. Forma corectă este scara 1:100.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "208", "categorie": "CALCUL", "text": "11. 10² < 10 009 < 11² ⟹ 10 009 nu este pătrat perfect.", "sugestie": "11. 100² < 10 009 < 101² ⟹ 10 009 nu este pătrat perfect.", "explicatie": "10² = 100 și 11² = 121, deci inegalitatea 10² < 10 009 < 11² este falsă (10 009 > 121). Încadrarea corectă între pătrate perfecte consecutive este 100² = 10 000 < 10 009 < 10 201 = 101², din care rezultă corect că 10 009 nu este pătrat perfect.", "sursa": ""}, {"kind": "fact", "manual": "Manual Matematica Paralela 45 clasa a V-a", "pagina": "210", "categorie": "CALCUL", "text": "g) 100/106 > 100/103", "sugestie": "g) 100/106 < 100/103", "explicatie": "La fracții cu același numărător, fracția cu numitorul mai mare este mai mică. Deoarece 106 > 103, rezultă 100/106 < 100/103, nu >.", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>
