@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Geografie Ascendia clasa a IV-a — Gramatică</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="gramatica.html">&larr; Gramatică</a>
+  <div class="masthead">
+    <div class="eyebrow">Gramatică</div>
+    <h1>Manual Geografie Ascendia clasa a IV-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>45</b> rezultate</span>
+      
+      <span class="chip"><b>5</b> categorii</span>
+      <span class="chip">pagini <b>7</b>–<b>110</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="D3">DOOM3</option><option value="M">Morfologie</option><option value="O">Ortografie</option><option value="P">Punctuație</option><option value="S">Sintaxă</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="7">p. 7</option><option value="8">p. 8</option><option value="11">p. 11</option><option value="22">p. 22</option><option value="23">p. 23</option><option value="25">p. 25</option><option value="28">p. 28</option><option value="34">p. 34</option><option value="37">p. 37</option><option value="41">p. 41</option><option value="42">p. 42</option><option value="43">p. 43</option><option value="50">p. 50</option><option value="57">p. 57</option><option value="62">p. 62</option><option value="63">p. 63</option><option value="64">p. 64</option><option value="69">p. 69</option><option value="70">p. 70</option><option value="73">p. 73</option><option value="76">p. 76</option><option value="78">p. 78</option><option value="79">p. 79</option><option value="84">p. 84</option><option value="85">p. 85</option><option value="88">p. 88</option><option value="90">p. 90</option><option value="91">p. 91</option><option value="93">p. 93</option><option value="97">p. 97</option><option value="103">p. 103</option><option value="104">p. 104</option><option value="106">p. 106</option><option value="110">p. 110</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "7", "categorie": "S", "text": "Planul clasei, al locuinței, școlii, cartierului și localității", "sugestie": "Planul clasei, al locuinței, al școlii, al cartierului și al localității", "explicatie": "Coordonare neparalelă: articolul genitival „al” trebuie repetat la toți termenii seriei sau omis la toți.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "8", "categorie": "S", "text": "Împărțiți în echipe, redați prin desen", "sugestie": "Împărțiți-vă în echipe, redați prin desen", "explicatie": "Verbul „a se împărți în echipe” este reflexiv; fără clitica „-vă” construcția rămâne tranzitivă fără obiect.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "8", "categorie": "S", "text": "dacă preotul nu-i ghida pe drumul spre Almaș", "sugestie": "dacă preotul nu i-ar fi ghidat pe drumul spre Almaș", "explicatie": "În condiționala ireală corelată cu „s-ar fi întâmplat” se cere forma de conjunctiv perfect/condițional, nu imperfectul.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "11", "categorie": "O", "text": "scoală", "sugestie": "școală", "explicatie": "În legenda planului unui sat, cuvântul este scris fără diacriticul „ș”; forma corectă este „școală”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "23", "categorie": "M", "text": "faună – totalitate speciilor de animale care trăiesc într-o anumită regiune, țară;", "sugestie": "faună – totalitatea speciilor de animale care trăiesc într-o anumită regiune, țară;", "explicatie": "Lipsește articolul hotărât enclitic: „totalitatea speciilor” (paralel cu definiția următoare: „vegetație – totalitatea plantelor”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "22", "categorie": "S", "text": "coline lutoase – forme de relief mai mici decât dealul ce au pământ argilos (lut);", "sugestie": "coline lutoase – forme de relief mai mici decât dealul care au pământ argilos (lut);", "explicatie": "Pronumele relativ corect în limbajul standard este „care”, nu „ce” (uz regional/familiar).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "22", "categorie": "M", "text": "mesteacăn – specie de arbore cu scoarță albă, cu lemnul alb, gălbui sau roșiatic.", "sugestie": "mesteacăn – specie de arbore cu scoarță albă, cu lemn alb, gălbui sau roșiatic.", "explicatie": "Într-o definiție generică substantivul „lemn” se folosește fără articol hotărât: „cu lemn alb”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "25", "categorie": "O", "text": "Silistea Gumești", "sugestie": "Siliștea Gumești", "explicatie": "Numele corect al localității (comuna din județul Teleorman) este „Siliștea Gumești”; lipsește diacriticul „ș”, deși restul paginii folosește diacritice (București, Constanța).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "28", "categorie": "S", "text": "cele două puncte, Nord și Sud, situate în capătul axei de rotație a Pământului", "sugestie": "cele două puncte, Nord și Sud, situate la capetele axei de rotație a Pământului", "explicatie": "Cele două puncte se află la cele două capete ale axei, nu într-un singur capăt; este necesar pluralul „capetele” pentru acordul cu „cele două puncte”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "34", "categorie": "S", "text": "Ciorchinele realizat de fiecare dintre copii", "sugestie": "Ciorchinele realizate de fiecare dintre copii", "explicatie": "Acord greșit: participiul „realizat” (singular) nu se acordă cu subiectul plural „Ciorchinele”; forma corectă este „realizate”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "34", "categorie": "S", "text": "te va ajuta să faci asocieri", "sugestie": "te vor ajuta să faci asocieri", "explicatie": "Acord greșit: verbul „va ajuta” (singular) nu se acordă cu subiectul plural „Ciorchinele”; forma corectă este „vor ajuta”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "34", "categorie": "M", "text": "Poarta Ecaterina și Poarta Scheilor", "sugestie": "Poarta Ecaterinei și Poarta Scheilor", "explicatie": "Formă flexionară incorectă: numele obiectivului din Brașov este „Poarta Ecaterinei” (genitiv), nu „Poarta Ecaterina”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "37", "categorie": "O", "text": "Suceava.W", "sugestie": "Suceava.", "explicatie": "Caracter străin în text: litera „W” după punct este în plus, fără nicio funcție în enunț.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "41", "categorie": "P", "text": "pod ișurile forme de relief mai joase decât dealurile", "sugestie": "pod ișurile, forme de relief mai joase decât dealurile", "explicatie": "Lipsește virgula care desparte termenul de apoziția explicativă „forme de relief…”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "42", "categorie": "D3", "text": "Clima României este temperat continentală", "sugestie": "Clima României este temperat-continentală", "explicatie": "Conform DOOM3, adjectivele compuse de tipul „temperat-continental” se scriu cu cratimă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "43", "categorie": "D3", "text": "cauzele prezenței climei temperat continentale", "sugestie": "cauzele prezenței climei temperat-continentale", "explicatie": "Adjectivul compus „temperat-continental” se scrie cu cratimă în toate formele flexionare.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "50", "categorie": "S", "text": "estul țării este străbătută de râul Siret", "sugestie": "estul țării este străbătut de râul Siret", "explicatie": "Acord greșit: subiectul „estul” este masculin singular, deci participiul trebuie să fie „străbătut”, nu „străbătută”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "57", "categorie": "P", "text": "cu înălțimi între 300 și 1000m, având", "sugestie": "cu înălțimi între 300 și 1000 m, având", "explicatie": "Lipsește spațiul dintre valoarea numerică și unitatea de măsură; în restul manualului se scrie corect cu spațiu (ex. „2500 m”, „peste 1000 m”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "62", "categorie": "P", "text": "că este \"raiul păsărilor\".", "sugestie": "că este „raiul păsărilor”.", "explicatie": "Se folosesc ghilimele drepte (de tip englezesc) în locul ghilimelelor românești „...”, utilizate consecvent în restul manualului (ex. „marea câmpie a poporului român”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "63", "categorie": "S", "text": "Împărțiți în șase echipe, completați CIORCHINELE de mai jos", "sugestie": "Împărțiți-vă în șase echipe, completați CIORCHINELE de mai jos", "explicatie": "Verbul „a împărți” este folosit tranzitiv fără complement; în sensul de „a vă grupa” este necesară forma reflexivă „a se împărți”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "64", "categorie": "P", "text": "Vii , livezi, cărbuni și sare,", "sugestie": "Vii, livezi, cărbuni și sare,", "explicatie": "Spațiu nejustificat înainte de virgulă; virgula se lipește de cuvântul anterior.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "64", "categorie": "P", "text": "Găsește pe aceeași hartă, câte un oraș care se află:", "sugestie": "Găsește pe aceeași hartă câte un oraș care se află:", "explicatie": "Virgulă nejustificată între complementul circumstanțial de loc și complementul direct; nu este vorba de o incidență (lipsește a doua virgulă).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "69", "categorie": "P", "text": "(maghiari, rromi, sași și alte naționalități).Toți sunt cetățeni ai României", "sugestie": "(maghiari, rromi, sași și alte naționalități). Toți sunt cetățeni ai României", "explicatie": "Lipsește spațiul după punctul care încheie enunțul; propoziția următoare trebuie separată prin spațiu.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "70", "categorie": "P", "text": "mari (între 1.500-4.000 de locuitori)", "sugestie": "mari (între 1.500 și 4.000 de locuitori)", "explicatie": "După prepoziția „între” nu se folosește liniuța de legătură pentru a exprima intervalul; corect este „între ... și ...”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "73", "categorie": "S", "text": "Însoțește prezentarea de un afiș sau un desen sugestiv.", "sugestie": "Însoțește prezentarea cu un afiș sau un desen sugestiv.", "explicatie": "Verbul „a însoți” cere în norma cultă prepoziția „cu”, nu „de” (construcția „a însoți de” este populară/regională).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "76", "categorie": "D3", "text": "Viță de vie", "sugestie": "Viță-de-vie", "explicatie": "DOOM3 (2021) recomandă scrierea cu cratimă: „viță-de-vie”. În textul de pe aceeași pagină forma apare corect („viță-de-vie”), deci antetul de tabel este inconsecvent și incorect.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "78", "categorie": "S", "text": "Fiind supranumit și „orașul de la porțile Deltei Dunării”, o parte din economie s-a dezvoltat în jurul turismului.", "sugestie": "Fiind supranumit și „orașul de la porțile Deltei Dunării”, orașul Tulcea și-a dezvoltat o parte din economie în jurul turismului.", "explicatie": "Gerunziul „fiind supranumit” se raportează greșit la subiectul propoziției principale („o parte din economie”), deși se referă la Tulcea — gerunziu fără legătură corectă cu subiectul (construcție atârnată).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "79", "categorie": "S", "text": "producerea făinii, destinate fabricării pâinii", "sugestie": "producerea făinii, destinată fabricării pâinii", "explicatie": "Participiul trebuie să se acorde cu „făinii” (feminin singular): „destinată”, nu „destinate”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "79", "categorie": "S", "text": "ca așternut sau ca hrană pentru animale, fabricarea brichetelor", "sugestie": "ca așternut sau ca hrană pentru animale, pentru fabricarea brichetelor", "explicatie": "Coordonarea este defectuoasă: înaintea substantivului verbal „fabricarea” lipsește prepoziția „pentru”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "84", "categorie": "P", "text": "(Palatul Victoria)-sediul Parlamentului", "sugestie": "(Palatul Victoria) – sediul Parlamentului", "explicatie": "Lipsesc spațiul și liniuța despărțitoare între elementele enumerării; elementele listei trebuie separate clar.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "85", "categorie": "D3", "text": "Orașul București are o climă temperat continentală", "sugestie": "Orașul București are o climă temperat-continentală", "explicatie": "DOOM3 impune scrierea cu cratimă a adjectivului compus „temperat-continental” (analog cu „cultural-științific” folosit corect în același manual).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "88", "categorie": "M", "text": "alături de cele pe care considerai că le cunoști", "sugestie": "alături de cele pe care consideri că le cunoști", "explicatie": "Forma de imperfect „considerai” este incorectă în contextul instrucțiunilor la prezent; se cere prezentul „consideri”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "90", "categorie": "M", "text": "conduse de primarii de sector", "sugestie": "conduse de primari de sector", "explicatie": "Formă flexionară greșită: substantivul nu trebuie articulat hotărât în acest context; corect este „primari de sector”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "91", "categorie": "P", "text": "Planiglobul - imaginea Terrei", "sugestie": "Planiglobul – imaginea Terrei", "explicatie": "S-a folosit cratima în loc de liniuța de pauză (–), spre deosebire de celelalte intrări din listă („Europa – un continent…”, „Terra – planeta noastră”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "93", "categorie": "P", "text": "Panonice.Suprafața Ungariei reprezintă", "sugestie": "Panonice. Suprafața Ungariei reprezintă", "explicatie": "Lipsește spațiul după punctul de la sfârșitul propoziției.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "97", "categorie": "S", "text": "pe care se află douăsprezece stele aurii, așezare în formă de cerc", "sugestie": "pe care se află douăsprezece stele aurii, așezate în formă de cerc", "explicatie": "Este necesar participiul „așezate”, în acord cu „stele”, nu substantivul „așezare”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "103", "categorie": "P", "text": "turul galeriei.Teme propuse:", "sugestie": "turul galeriei. Teme propuse:", "explicatie": "Lipsește spațiul după punct; cele două enunțuri sunt lipite.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "103", "categorie": "P", "text": "România - membră a U.E..", "sugestie": "România – membră a U.E.", "explicatie": "Punct dublu la final (punctul abrevierii U.E. + punctul de sfârșit de enunț); se scrie un singur punct.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "104", "categorie": "M", "text": "1 enunțuri corecte", "sugestie": "1 enunț corect", "explicatie": "După numeralele cardinale 1 și 2 se folosește singularul (cf. rândurile paralele „1 răspuns corect”, „1 enunț corect” din grilele 1, 3 și 5).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "104", "categorie": "P", "text": "hotare, convenționale", "sugestie": "hotare convenționale", "explicatie": "Virgula desparte în mod eronat adjectivul de substantivul determinat; noțiunea cerută este „hotare convenționale”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "104", "categorie": "O", "text": "FRANTA", "sugestie": "FRANȚA", "explicatie": "Diacritică lipsă (Ț); harta folosește diacritice în alte denumiri (FEDERAȚIA RUSĂ, ROMÂNIA, REP. CEHĂ).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "104", "categorie": "O", "text": "ELVETIA", "sugestie": "ELVEȚIA", "explicatie": "Diacritică lipsă (Ț), în condițiile în care restul hărții utilizează diacritice.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "104", "categorie": "O", "text": "CROATIA", "sugestie": "CROAȚIA", "explicatie": "Diacritică lipsă (Ț), în condițiile în care restul hărții utilizează diacritice.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "106", "categorie": "S", "text": "Însoțește planul de o legendă", "sugestie": "Însoțește planul cu o legendă", "explicatie": "Regim cazual necorespunzător: verbul „a însoți” cu sens de „a atașa, a adăuga” se construiește cu prepoziția „cu”, nu cu „de” (uz regional/coloquial).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Geografie Ascendia clasa a IV-a", "pagina": "110", "categorie": "P", "text": "acestor \"copii ai munților\" sunt", "sugestie": "acestor „copii ai munților” sunt", "explicatie": "Ghilimelele din interiorul citatului sunt tipărite cu semne drepte englezești (\"...\"); norma românească impune ghilimele românești „...” (sau franceze «...»).", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3", "TERITORIU": "Geografie istorică", "CAUZALITATE": "Cauzalitate", "CIFRE": "Cifre", "DOCUMENT": "Document", "TERMEN": "Termen", "LOCALIZARE": "Localizare", "DATE_NUMERICE": "Date numerice", "HARTA": "Hartă", "CLIMA": "Climă", "RELIEF": "Relief", "HIDROGRAFIE": "Hidrografie", "POPULATIE": "Populație"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>
