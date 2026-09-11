@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Educatie Civica clasa a V-a — Gramatică</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --marble:#faf8f2; --parchment:#f2eee3; --linen:#e8e2d4; --mist:#d9d5c7;
+  --ink:#171b14; --ink-soft:#2c332a; --ink-muted:#5b6357; --ink-faint:#8b9184;
+  --laurel:#2f3d2c; --moss:#56684c; --sage:#8b9c7c;
+  --gild:#a8873f; --gild-soft:#c9ab6b; --rust:#9c4221;
+  --serif:'EB Garamond','Adobe Garamond Pro',Garamond,Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body { font-family:var(--serif); background:var(--marble); color:var(--ink);
+        line-height:1.6; font-size:17px; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light; opacity:.52;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 28px 96px; }
+
+/* masthead */
+.masthead { padding:30px 0 28px; border-bottom:1px solid var(--mist); margin-bottom:28px; }
+.eyebrow { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.3em; color:var(--gild); margin-bottom:18px; }
+h1 { font-size:46px; font-weight:400; letter-spacing:-.02em; line-height:1.05; }
+.lede { font-style:italic; color:var(--ink-muted); font-size:19px; margin-top:12px;
+  max-width:44rem; }
+.meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-muted); }
+.chip { border:1px solid var(--mist); background:var(--parchment);
+  border-radius:.375rem; padding:5px 10px; }
+.chip b { color:var(--laurel); font-weight:500; }
+
+/* stats */
+.stats { display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--mist);
+  border-radius:.5rem; overflow:hidden; background:#fffefb; margin-bottom:24px; }
+.stat { flex:1; min-width:120px; padding:16px 20px; cursor:pointer;
+  border-right:1px solid var(--mist); transition:background .15s var(--ease); }
+.stat:last-child { border-right:none; }
+.stat:hover { background:var(--parchment); }
+.stat.on { background:var(--linen); }
+.stat .v { font-size:30px; color:var(--laurel); line-height:1; }
+.stat .l { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); margin-top:7px; }
+
+/* controls */
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  position:sticky; top:0; z-index:10; padding:14px 0;
+  background:rgba(250,248,242,.94); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mist); margin-bottom:26px; }
+input[type=search], select { font-family:var(--mono); font-size:12px; padding:9px 13px;
+  border:1px solid var(--mist); border-radius:.375rem; background:#fffefb;
+  color:var(--ink-soft); outline:none; transition:border-color .15s var(--ease); }
+input[type=search] { flex:1; min-width:200px; }
+input[type=search]:focus, select:focus { border-color:var(--gild); }
+select { cursor:pointer; }
+.count { font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  margin-left:auto; white-space:nowrap; }
+
+/* groups + findings */
+.group-title { font-family:var(--mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.24em; color:var(--ink-faint); margin:34px 0 14px;
+  padding-bottom:8px; border-bottom:1px solid var(--mist); }
+.card { background:#fffefb; border:1px solid var(--mist); border-radius:.5rem;
+  padding:20px 22px; margin-bottom:12px; }
+.card-head { display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  flex-wrap:wrap; }
+.badge-page { font-family:var(--mono); font-size:11px; font-weight:500;
+  color:var(--marble); background:var(--laurel); padding:3px 9px; border-radius:.25rem; }
+.badge-cat { font-family:var(--mono); font-size:10px; text-transform:uppercase;
+  letter-spacing:.14em; color:var(--moss); background:var(--linen);
+  padding:4px 9px; border-radius:.25rem; }
+.badge-src { font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+  margin-left:auto; }
+.diff { display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch; }
+.side { border:1px solid var(--mist); border-radius:.375rem; padding:12px 14px;
+  background:var(--parchment); }
+.side .lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; margin-bottom:7px; }
+.side.wrong { border-left:3px solid var(--rust); }
+.side.wrong .lbl { color:var(--rust); }
+.side.right { border-left:3px solid var(--moss); background:#f4f6f0; }
+.side.right .lbl { color:var(--moss); }
+.side .val { font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word; }
+.arrow { align-self:center; color:var(--gild-soft); font-size:17px; }
+.why { margin-top:14px; padding-top:13px; border-top:1px solid var(--mist);
+  color:var(--ink-muted); font-size:16px; }
+.why b { font-family:var(--mono); font-size:9px; text-transform:uppercase;
+  letter-spacing:.2em; color:var(--ink-faint); display:block; margin-bottom:5px;
+  font-weight:500; }
+.empty { text-align:center; padding:80px 20px; color:var(--ink-faint); font-style:italic; }
+.back { display:inline-block; font-family:var(--mono); font-size:11px; color:var(--ink-faint);
+  text-decoration:none; margin:26px 0 -8px; transition:color .15s var(--ease); }
+.back:hover { color:var(--gild); }
+
+@media (max-width:760px) {
+  .wrap { padding:0 16px 60px; }
+  h1 { font-size:32px; }
+  .diff { grid-template-columns:1fr; gap:10px; }
+  .arrow { transform:rotate(90deg); justify-self:center; }
+  .badge-src { margin-left:0; }
+}
+@media print {
+  body::before, .controls, .stats { display:none !important; }
+  body { background:#fff; font-size:11pt; }
+  .card { break-inside:avoid; page-break-inside:avoid; border-color:#bbb; }
+  .wrap { max-width:none; padding:0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="gramatica.html">&larr; Gramatică</a>
+  <div class="masthead">
+    <div class="eyebrow">Gramatică</div>
+    <h1>Manual Educatie Civica clasa a V-a</h1>
+    <p class="lede">Rezultate ordonate după pagină. Fiecare intrare arată textul din
+    manual alături de forma corectă.</p>
+    <div class="meta">
+      <span class="chip"><b>36</b> rezultate</span>
+      
+      <span class="chip"><b>5</b> categorii</span>
+      <span class="chip">pagini <b>14</b>–<b>96</b></span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="Caută în text, corectură sau explicație...">
+    
+    <select id="fCat"><option value="">Toate categoriile</option><option value="D3">DOOM3</option><option value="M">Morfologie</option><option value="O">Ortografie</option><option value="P">Punctuație</option><option value="S">Sintaxă</option></select>
+    <select id="fPage"><option value="">Toate paginile</option><option value="14">p. 14</option><option value="17">p. 17</option><option value="18">p. 18</option><option value="23">p. 23</option><option value="26">p. 26</option><option value="32">p. 32</option><option value="37">p. 37</option><option value="42">p. 42</option><option value="43">p. 43</option><option value="44">p. 44</option><option value="45">p. 45</option><option value="46">p. 46</option><option value="51">p. 51</option><option value="56">p. 56</option><option value="62">p. 62</option><option value="67">p. 67</option><option value="74">p. 74</option><option value="76">p. 76</option><option value="78">p. 78</option><option value="83">p. 83</option><option value="86">p. 86</option><option value="91">p. 91</option><option value="93">p. 93</option><option value="94">p. 94</option><option value="95">p. 95</option><option value="96">p. 96</option></select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const DATA = [{"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "14", "categorie": "P", "text": "cu tema „Numai oamenii sunt persoane“.", "sugestie": "cu tema „Numai oamenii sunt persoane”.", "explicatie": "Ghilimelele de închidere sunt incorecte: s-a folosit semnul “ (stil englezesc) în loc de ” (ghilimele românești de închidere), deși deschiderea este cu „.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "17", "categorie": "D3", "text": "Ajută-te de enciclopedia on-line ro.wikipedia.org", "sugestie": "Ajută-te de enciclopedia online ro.wikipedia.org", "explicatie": "DOOM3 (2021) recomandă scrierea legată „online”, nu cu cratimă („on-line”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "17", "categorie": "P", "text": "Ajută-te de enciclopedia on-line ro.wikipedia.org", "sugestie": "Ajută-te de enciclopedia online ro.wikipedia.org.", "explicatie": "Lipsește punctul final al enunțului (celelalte cerințe numerotate se termină cu semn de punctuație).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "18", "categorie": "O", "text": "Băiatu-avea pielea albă,", "sugestie": "Băiatu'-avea pielea albă,", "explicatie": "Elidarea articolului hotărât enclitic (-l) se marchează cu apostrof: „băiatu'-avea”, conform DOOM3.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "23", "categorie": "O", "text": "fie pr naștere", "sugestie": "fie prin naștere", "explicatie": "Prepoziția corectă este „prin”; forma „pr” este o scriere greșită (lipsesc literele „in”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "23", "categorie": "S", "text": "pentru că adesea sunt mai buni, mai curajoși, mai încrezători, mai prietenoși, mai veseli, mai puternici decât noi", "sugestie": "pentru că adesea sunt mai bune, mai curajoase, mai încrezătoare, mai prietenoase, mai vesele, mai puternice decât noi", "explicatie": "Acord greșit în gen: adjectivele se referă la „persoanele” (substantiv feminin plural, reluat prin „ele”), deci trebuie să fie la feminin plural, nu la masculin.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "26", "categorie": "O", "text": "și noteaz-o în tabel", "sugestie": "și notează-o în tabel", "explicatie": "Lipsește diacriticul ă; forma corectă a imperativului este „notează-o”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "32", "categorie": "P", "text": "— Lasă, bunică, știu eu! zise Fănică.", "sugestie": "— Lasă, bunică, știu eu! – zise Fănică.", "explicatie": "Enunțul autorului care urmează după replică se desparte de aceasta prin liniuță de dialog; liniuța lipsește.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "37", "categorie": "O", "text": "Goe nu vrea sa intre în cupeu.", "sugestie": "Goe nu vrea să intre în cupeu.", "explicatie": "Conjuncția «să» apare fără diacriticul «ă», deși restul paginii are diacritice; forma corectă este «să».", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "42", "categorie": "P", "text": "Dacă descoperi că o persoană te-a mințit o dată poți să mai ai încredere în ea?", "sugestie": "Dacă descoperi că o persoană te-a mințit o dată, poți să mai ai încredere în ea?", "explicatie": "Lipsește virgula care desparte subordonata condițională introdusă prin „dacă” de propoziția regentă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "43", "categorie": "S", "text": "Ce trăsătură morală demonstrează în luptă voievodul român? Dar al turcilor?", "sugestie": "Ce trăsătură morală demonstrează în luptă voievodul român? Dar a turcilor?", "explicatie": "Articoul demonstrativ „al” (masculin) nu se acordă cu „trăsătură” (feminin); forma corectă este „a turcilor”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "44", "categorie": "O", "text": "Răspunde cu da sau nu la următoarele nunturi:", "sugestie": "Răspunde cu da sau nu la următoarele enunțuri:", "explicatie": "Cuvântul corect este „enunțuri” (propoziții de analizat), nu „nunturi”; eroare de tipar.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "44", "categorie": "S", "text": "Sari să oprești un copil care pornește după mingea ce a ajuns pe carosabil.", "sugestie": "Sari să oprești un copil care pornește după mingea care a ajuns pe carosabil.", "explicatie": "În limba standard, pronumele relativ atributiv este „care”; „ce” cu valoare de relativ este colocvial.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "45", "categorie": "M", "text": "Nici de aceasta dată, cea de-a treia femeie nu a spus nimic.", "sugestie": "Nici de această dată, cea de-a treia femeie nu a spus nimic.", "explicatie": "Înainte de substantiv se folosește forma adjectivală „această”; „aceasta” este formă pronominală.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "46", "categorie": "M", "text": "atitudine rezervată, decentă față de propriile merite; lipsit de îngâmfare sau pretenții.", "sugestie": "atitudine rezervată, decentă față de propriile merite; lipsită de îngâmfare sau pretenții.", "explicatie": "Participiul trebuie să se acorde în gen cu „atitudine” (feminin): „lipsită”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "46", "categorie": "O", "text": "trufie, orgoliu, fală; infatuare.", "sugestie": "trufie, orgoliu, fală; înfățuare.", "explicatie": "Forma corectă este „înfățuare”; lipsesc diacriticele, deși restul paginii le folosește.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "46", "categorie": "O", "text": "● infatuat", "sugestie": "● înfățuat", "explicatie": "Forma corectă este „înfățuat”; lipsesc diacriticele, deși restul paginii le folosește.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "51", "categorie": "P", "text": "Atunci când ofer bomboane colegilor dau dovadă de ….", "sugestie": "Atunci când ofer bomboane colegilor, dau dovadă de ….", "explicatie": "Lipsește virgula care desparte subordonata circumstanțială de timp („Atunci când ofer bomboane colegilor”) de propoziția principală; în enunțurile paralele din aceeași pagină virgula este folosită corect.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "51", "categorie": "P", "text": "Atunci când nu-mi recunosc greșeala dau dovadă de ….", "sugestie": "Atunci când nu-mi recunosc greșeala, dau dovadă de ….", "explicatie": "Lipsește virgula dintre subordonata circumstanțială de timp și propoziția principală.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "51", "categorie": "P", "text": "Atunci când dau firimituri păsărelelor dau dovadă de ….", "sugestie": "Atunci când dau firimituri păsărelelor, dau dovadă de ….", "explicatie": "Lipsește virgula dintre subordonata circumstanțială de timp și propoziția principală.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "56", "categorie": "S", "text": "Statul va ajuta părinții să valorifice acest drept și vor oferi, în caz de nevoie, asistență materială", "sugestie": "Statul va ajuta părinții să valorifice acest drept și va oferi, în caz de nevoie, asistență materială", "explicatie": "Acord greșit: subiectul „Statul” este la singular, deci al doilea predicat trebuie să fie tot la singular („va oferi”), nu la plural („vor oferi”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "62", "categorie": "D3", "text": "Urmărește on-line un film de desene amuzant", "sugestie": "Urmărește online un film de desene amuzant", "explicatie": "DOOM3 (2021) înregistrează neologismul „online” scris legat (adv./adj. invariabil); forma cu cratimă „on-line” este neconformă.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "67", "categorie": "P", "text": "Cum arată? (formă, dimensiuni, culoare etc.) Din ce este confecționat?", "sugestie": "Cum arată? (formă, dimensiuni, culoare etc.). Din ce este confecționat?", "explicatie": "După paranteza care încheie enunțul „Cum arată?” lipsește punctul final; fără el, cele două întrebări se contopesc greșit.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "67", "categorie": "P", "text": "Completează adecvat cu: S – patru termeni; B – șase termeni, FB – opt termeni.", "sugestie": "Completează adecvat cu: S – patru termeni; B – șase termeni; FB – opt termeni.", "explicatie": "În enumerare se amestecă separatorii: punct și virgulă între primii doi termeni, apoi virgulă simplă înainte de „FB”; separatorii trebuie să fie consecvenți (punct și virgulă, ca în rubricile similare de pe aceeași pagină).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "74", "categorie": "P", "text": "Discută împreună cu colegii tăi, situațiile prezentate mai jos și comportamentul oamenilor în aceste situații.", "sugestie": "Discută împreună cu colegii tăi situațiile prezentate mai jos și comportamentul oamenilor în aceste situații.", "explicatie": "Virgula separă greșit verbul de complementul său direct („situațiile prezentate mai jos”); nu există niciun motiv sintactic pentru pauză.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "76", "categorie": "S", "text": "alcătuire corp", "sugestie": "alcătuirea corpului", "explicatie": "Construcție substantivală defectuoasă: substantivul „alcătuire” cere completarea cu genitivul articulat („alcătuirea corpului”), la fel ca în rubricile vecine („modul de comunicare”, „adaptările la mediu”).", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "78", "categorie": "O", "text": "Atitudinea omului fata de ele", "sugestie": "Atitudinea omului față de ele", "explicatie": "Lipsește diacriticul: „fata” în loc de „față” (locuțiunea prepozițională „față de”); restul paginii folosește diacritice, deci este o omisiune reală, nu o problemă de randare.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "83", "categorie": "P", "text": "În ce-o să-și ia băiatul mâncarea?, striga bunicul.", "sugestie": "În ce-o să-și ia băiatul mâncarea? striga bunicul.", "explicatie": "După semnul întrebării care încheie replica din dialog nu se pune virgulă înaintea incisei („striga bunicul”); semnul întrebării este suficient.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "83", "categorie": "P", "text": "Așa că, toată familia participa acum la ultimele pregătiri", "sugestie": "Așa că toată familia participa acum la ultimele pregătiri", "explicatie": "Nu se pune virgulă după conjuncția „așa că” aflată la începutul propoziției.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "86", "categorie": "S", "text": "accept ușor alți copii să intre în grupul meu de joacă", "sugestie": "accept ca alți copii să intre ușor în grupul meu de joacă", "explicatie": "Construcția acuzativ + conjunctiv fără „ca”/„pe” este necorespunzătoare în limba standard; verbul „a accepta” cere fie subordonată cu „ca”, fie complement direct cu „pe”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "91", "categorie": "P", "text": "Fapta lui fusese însă observată de Elena care le-a relatat-o colegilor.", "sugestie": "Fapta lui fusese însă observată de Elena, care le-a relatat-o colegilor.", "explicatie": "Subordonata atributivă cu valoare explicativă (nerestrictivă) se desparte prin virgulă; lipsește virgula înainte de „care”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "93", "categorie": "P", "text": "Se vor discuta, dezbate lucrările realizate.", "sugestie": "Se vor discuta și dezbate lucrările realizate.", "explicatie": "Virgula este folosită incorect între două predicate omogene coordonate; este necesară conjuncția „și”, nu virgula.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "93", "categorie": "D3", "text": "În nici un caz nu este bine să recurgi la violență.", "sugestie": "În niciun caz nu este bine să recurgi la violență.", "explicatie": "Conform DOOM3 (2021), „niciun” se scrie legat, ca un singur cuvânt.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "94", "categorie": "P", "text": "un afiș pentru a anunța acest eveniment, fluturași pentru colegii altor clase", "sugestie": "un afiș pentru a anunța acest eveniment; fluturași pentru colegii altor clase", "explicatie": "În enumerare, elementele se despart consecvent prin punct și virgulă; primul separator este „;”, iar al doilea este greșit „,”.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "95", "categorie": "P", "text": "Completează adecvat cu: S – 5 sau 6 termeni; B – șapte sau opt termeni, FB – nouă sau zece termeni.", "sugestie": "Completează adecvat cu: S – 5 sau 6 termeni; B – șapte sau opt termeni; FB – nouă sau zece termeni.", "explicatie": "În seria de criterii S/B/FB separatorul corect este punct și virgulă, nu virgulă înainte de FB.", "sursa": ""}, {"kind": "gramatica", "manual": "Manual Educatie Civica clasa a V-a", "pagina": "96", "categorie": "P", "text": "Enunță: S – trei reguli adecvate; B – șase reguli adecvate, FB – nouă reguli adecvate.", "sugestie": "Enunță: S – trei reguli adecvate; B – șase reguli adecvate; FB – nouă reguli adecvate.", "explicatie": "În seria de criterii S/B/FB separatorul corect este punct și virgulă, nu virgulă înainte de FB.", "sursa": ""}];
+const LBL  = {"CALCUL": "Calcul", "FORMULA": "Formulă", "DEMONSTRATIE": "Demonstrație", "CONDITII": "Condiții", "TEOREMA": "Teoremă", "NOTATIE": "Notație", "CONTRADICTIE": "Contradicție", "ATRIBUIRE": "Atribuire", "CRONOLOGIE": "Cronologie", "CURENT": "Curent literar", "SPECIE": "Specie", "TEORIE_LITERARA": "Teorie literară", "BIOGRAFIE": "Biografie", "CITAT": "Citat", "COD": "Cod", "PSEUDOCOD": "Pseudocod", "ALGORITM": "Algoritm", "COMPLEXITATE": "Complexitate", "STRUCTURA_DATE": "Structuri de date", "DEFINITIE": "Definiție", "STANDARD": "Standard", "O": "Ortografie", "M": "Morfologie", "S": "Sintaxă", "P": "Punctuație", "D3": "DOOM3", "TERITORIU": "Geografie istorică", "CAUZALITATE": "Cauzalitate", "CIFRE": "Cifre", "DOCUMENT": "Document", "TERMEN": "Termen", "LOCALIZARE": "Localizare", "DATE_NUMERICE": "Date numerice", "HARTA": "Hartă", "CLIMA": "Climă", "RELIEF": "Relief", "HIDROGRAFIE": "Hidrografie", "POPULATIE": "Populație"};
+const lbl  = c => LBL[c] || c;
+const esc  = s => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
+
+const q = document.getElementById("q");
+const fManual = document.getElementById("fManual");
+const SINGLE = true;
+const fCat = document.getElementById("fCat");
+const fPage = document.getElementById("fPage");
+
+function renderStats() {
+  const c = {};
+  DATA.forEach(i => c[i.categorie] = (c[i.categorie] || 0) + 1);
+  document.getElementById("stats").innerHTML = Object.entries(c)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `<div class="stat" data-cat="${esc(k)}">
+        <div class="v">${v}</div><div class="l">${esc(lbl(k))}</div></div>`).join("");
+  document.querySelectorAll(".stat").forEach(el => el.onclick = () => {
+    const c = el.dataset.cat;
+    fCat.value = (fCat.value === c) ? "" : c;
+    render();
+  });
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const rows = DATA.filter(i =>
+    (!fManual || !fManual.value || i.manual === fManual.value) &&
+    (!fCat.value || i.categorie === fCat.value) &&
+    (!fPage.value || i.pagina === fPage.value) &&
+    (!term || (i.text + " " + i.sugestie + " " + i.explicatie).toLowerCase().includes(term))
+  );
+
+  document.getElementById("count").textContent = rows.length + " / " + DATA.length;
+  document.querySelectorAll(".stat").forEach(el =>
+    el.classList.toggle("on", el.dataset.cat === fCat.value));
+
+  if (!rows.length) {
+    document.getElementById("list").innerHTML =
+      '<div class="empty">Niciun rezultat pentru filtrele alese.</div>';
+    return;
+  }
+
+  const groups = {};
+  rows.forEach(i => (groups[i.manual] = groups[i.manual] || []).push(i));
+
+  document.getElementById("list").innerHTML = Object.entries(groups).map(([manual, list]) => {
+    const cards = list
+      .slice()
+      .sort((a, b) => (parseInt(a.pagina) || 0) - (parseInt(b.pagina) || 0))
+      .map(i => `
+        <div class="card">
+          <div class="card-head">
+            <span class="badge-page">p. ${esc(i.pagina)}</span>
+            <span class="badge-cat">${esc(lbl(i.categorie))}</span>
+            <span class="badge-src">${esc(i.sursa)}</span>
+          </div>
+          <div class="diff">
+            <div class="side wrong">
+              <div class="lbl">În manual</div>
+              <div class="val">${esc(i.text)}</div>
+            </div>
+            <div class="arrow">&rarr;</div>
+            <div class="side right">
+              <div class="lbl">Forma corectă</div>
+              <div class="val">${esc(i.sugestie) || "—"}</div>
+            </div>
+          </div>
+          ${i.explicatie ? `<div class="why"><b>De ce</b>${esc(i.explicatie)}</div>` : ""}
+        </div>`).join("");
+    return SINGLE ? cards
+      : `<div class="group-title">${esc(manual)} &middot; ${list.length}</div>${cards}`;
+  }).join("");
+}
+
+[q, fManual, fCat, fPage].filter(Boolean).forEach(el =>
+  el.addEventListener(el.tagName === "INPUT" ? "input" : "change", render));
+renderStats();
+render();
+</script>
+</body>
+</html>
